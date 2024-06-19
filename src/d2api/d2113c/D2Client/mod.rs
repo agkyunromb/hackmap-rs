@@ -3,6 +3,8 @@ use super::types;
 pub mod net;
 pub mod ui;
 
+pub use super::D2RVA;
+
 #[allow(unused_imports)]
 pub use net as Net;
 

@@ -1,5 +1,6 @@
 use super::types::*;
 use std::arch::asm;
+use super::D2RVA;
 
 pub struct NetOffset {
     pub SendPacket: FuncAddress,
@@ -30,6 +31,6 @@ pub fn SendPacket(payload: PVOID, size: usize) -> usize {
 
 pub(super) fn init(d2client: usize) {
     AddressTable.initialize(NetOffset {
-        SendPacket: d2client + 0x6FAC43E0,
+        SendPacket: d2client + D2RVA::D2Client(0x6FAC43E0),
     });
 }

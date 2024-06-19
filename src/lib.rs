@@ -21,6 +21,7 @@ fn init(_base_address: PVOID) -> BOOL {
     D2Client::init(0x20000000);
 
     D2Client::UI::SetUIVar(0, 0, 0);
+    D2Client::Net::SendPacket(std::ptr::null_mut(), 0);
     D2Common::StatList::GetUnitBaseStat(std::ptr::null_mut(), 0, 0);
 
     TRUE

@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::ptr::addr_of;
 use std::ops::Deref;
 use std::os::raw::c_void;
@@ -108,5 +109,37 @@ impl<T> Deref for Holder<T> {
     type Target = T;
     fn deref(&self) -> &Self::Target {
         self.inner.get().unwrap()
+    }
+}
+
+pub trait D2ImageBase {
+    const D2Client  : usize;
+    const D2Common  : usize;
+    const D2Win     : usize;
+    const D2Multi   : usize;
+    const Storm     : usize;
+}
+
+pub(crate) struct D2RVA<T: D2ImageBase>(PhantomData<T>);
+
+impl<T: D2ImageBase> D2RVA<T> {
+    pub fn D2Client(va: usize) -> usize {
+        va - T::D2Client
+    }
+
+    pub fn D2Common(va: usize) -> usize {
+        va - T::D2Common
+    }
+
+    pub fn D2Win(va: usize) -> usize {
+        va - T::D2Win
+    }
+
+    pub fn D2Multi(va: usize) -> usize {
+        va - T::D2Multi
+    }
+
+    pub fn Storm(va: usize) -> usize {
+        va - T::Storm
     }
 }

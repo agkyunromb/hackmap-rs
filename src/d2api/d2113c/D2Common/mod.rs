@@ -1,5 +1,7 @@
 use super::types;
 
+pub use super::D2RVA;
+
 pub mod stat_list;
 pub use stat_list as StatList;
 

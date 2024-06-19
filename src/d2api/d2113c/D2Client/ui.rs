@@ -1,4 +1,5 @@
 use super::types::*;
+use super::D2RVA;
 
 pub struct UIOffset {
     pub SetUIVar: FuncAddress,
@@ -17,7 +18,7 @@ pub fn HandleUIVars(this: PVOID) {
 
 pub(super) fn init(d2client: usize) {
     AddressTable.initialize(UIOffset {
-        SetUIVar: d2client + 0x100000,
-        HandleUIVars: d2client + 0x200000,
+        SetUIVar        : d2client + D2RVA::D2Client(0x6FB72790),
+        HandleUIVars    : d2client + D2RVA::D2Client(0x6FAF437B),
     });
 }

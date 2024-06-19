@@ -1,4 +1,5 @@
 use super::types::*;
+use super::D2RVA;
 
 pub struct StatListOffset {
     pub GetUnitBaseStat: FuncAddress,
@@ -12,6 +13,6 @@ pub fn GetUnitBaseStat(unit: PVOID, statId: i32, layer:u16) -> usize {
 
 pub(super) fn init(d2common: usize) {
     AddressTable.initialize(StatListOffset {
-        GetUnitBaseStat: d2common + 0x12345,
+        GetUnitBaseStat: d2common + D2RVA::D2Common(0x6FD88B70),
     });
 }
