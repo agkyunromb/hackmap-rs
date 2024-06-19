@@ -10,6 +10,9 @@ pub type PVOID = *mut c_void;
 pub trait Handler<Args>: Clone + 'static {
     type Output;
     type FuncType;
+    type FastCall;
+    type StdCall;
+    type Cdecl;
 
     fn invoke(&self, args: Args) -> Self::Output;
 }
@@ -21,6 +24,9 @@ macro_rules! factory_tuple ({ $($param:ident)* } => {
     {
         type Output = Ret;
         type FuncType = fn($($param),*) -> Ret;
+        type FastCall = extern "fastcall" fn($($param),*) -> Ret;
+        type StdCall = extern "stdcall" fn($($param),*) -> Ret;
+        type Cdecl = extern "cdecl" fn($($param),*) -> Ret;
 
         #[inline]
         #[allow(non_snake_case)]
@@ -49,11 +55,33 @@ factory_tuple! { Arg1 Arg2 Arg3 Arg4 Arg5 Arg6 Arg7 Arg8 }
 factory_tuple! { Arg1 Arg2 Arg3 Arg4 Arg5 Arg6 Arg7 Arg8 Arg9 }
 factory_tuple! { Arg1 Arg2 Arg3 Arg4 Arg5 Arg6 Arg7 Arg8 Arg9 Arg10 }
 
-pub fn addr_to_fn<F, T>(_: F, addr: usize) -> F::FuncType
+pub fn addr_to_stdcall<F, T>(_: F, addr: usize) -> F::StdCall
 where
     F: Handler<T>,
 {
-    let f: Option<F::FuncType> = None;
+    let f: Option<F::StdCall> = None;
+    unsafe {
+        *(addr_of!(f) as *mut usize) = addr;
+    }
+    f.unwrap()
+}
+
+pub fn addr_to_fastcall<F, T>(_: F, addr: usize) -> F::FastCall
+where
+    F: Handler<T>,
+{
+    let f: Option<F::FastCall> = None;
+    unsafe {
+        *(addr_of!(f) as *mut usize) = addr;
+    }
+    f.unwrap()
+}
+
+pub fn addr_to_cdecl<F, T>(_: F, addr: usize) -> F::Cdecl
+where
+    F: Handler<T>,
+{
+    let f: Option<F::Cdecl> = None;
     unsafe {
         *(addr_of!(f) as *mut usize) = addr;
     }

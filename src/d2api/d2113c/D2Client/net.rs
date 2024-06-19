@@ -1,4 +1,5 @@
 use super::types::*;
+use std::arch::asm;
 
 pub struct NetOffset {
     pub SendPacket: FuncAddress,
@@ -7,11 +8,28 @@ pub struct NetOffset {
 pub static AddressTable: Holder<NetOffset> = Holder::new();
 
 pub fn SendPacket(payload: PVOID, size: usize) -> usize {
-    addr_to_fn(SendPacket, AddressTable.SendPacket)(payload, size)
+    let seqId: usize;
+
+    unsafe {
+        asm!(
+            "push ebx",
+            "mov  ebx, {1}",
+            "push {0}",
+            "call {2}",
+            "pop  ebx",
+            in(reg) payload,
+            in(reg) size,
+            in(reg) AddressTable.SendPacket,
+            lateout("eax") seqId,
+            options(nostack),
+        );
+    }
+
+    seqId
 }
 
 pub(super) fn init(d2client: usize) {
     AddressTable.initialize(NetOffset {
-        SendPacket: d2client + 0x12345,
+        SendPacket: d2client + 0x6FAC43E0,
     });
 }
