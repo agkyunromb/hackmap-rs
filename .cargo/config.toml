@@ -1,0 +1,13 @@
+# cargo build --release -Z build-std --target i686-win7-windows-msvc
+
+[build]
+target = "i686-pc-windows-msvc"
+
+[target.i686-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
+
+[target.i686-win7-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
+
+# [unstable]
+# build-std = ["std", "core", "alloc"]

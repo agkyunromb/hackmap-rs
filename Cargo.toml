@@ -1,0 +1,12 @@
+[package]
+name = "hackmap-rs"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+lazy_static = "1.4.0"
+windows-sys = { version = "0.52.0", features = ["Win32_Foundation", "Win32_System_SystemServices", "Win32_System_LibraryLoader", "Win32_UI_WindowsAndMessaging"] }
+windows-targets = "0.52.5"
