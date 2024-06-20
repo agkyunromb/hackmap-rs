@@ -5,7 +5,7 @@ pub struct D2MultiOffset {
     pub EnterBNLobby: types::FuncAddress,
 }
 
-pub static AddressTable: types::Holder<D2MultiOffset> = types::Holder::new();
+pub static AddressTable: types::OnceHolder<D2MultiOffset> = types::OnceHolder::new();
 
 pub mod BNet {
     use windows_sys::Win32::Foundation::BOOL;

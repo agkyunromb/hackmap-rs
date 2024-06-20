@@ -1,26 +1,28 @@
-use super::types;
-
-pub use super::D2RVA;
+use super::common::*;
 
 pub struct StatListOffset {
-    pub GetUnitBaseStat: types::FuncAddress,
+    pub GetUnitBaseStat: FuncAddress,
 }
 
 pub struct DataTblsOffset {
-    pub sgptDataTbls    : types::FuncAddress,
-    pub CompileTxt      : types::FuncAddress,
+    pub sgptDataTbls    : FuncAddress,
+    pub CompileTxt      : FuncAddress,
+}
+
+pub struct UnitsOffset {
+    pub TestCollisionWithUnit: FuncAddress,
 }
 
 pub struct D2CommonOffset {
-    pub DataTbls: DataTblsOffset,
-    pub StatList: StatListOffset,
+    pub DataTbls    : DataTblsOffset,
+    pub StatList    : StatListOffset,
+    pub Units       : UnitsOffset,
 }
 
-pub static AddressTable: types::Holder<D2CommonOffset> = types::Holder::new();
+pub static AddressTable: OnceHolder<D2CommonOffset> = OnceHolder::new();
 
 pub mod StatList {
-    use super::types::*;
-    use super::D2RVA;
+    use super::super::common::*;
     use super::AddressTable;
 
     pub fn GetUnitBaseStat(unit: PVOID, statId: i32, layer:u16) -> usize {
@@ -29,8 +31,7 @@ pub mod StatList {
 }
 
 pub mod DataTbls {
-    use super::types::*;
-    use super::D2RVA;
+    use super::super::common::*;
     use super::AddressTable;
 
     pub struct DataTable(PVOID);
@@ -55,19 +56,31 @@ pub mod DataTbls {
         }
     }
 
-    pub fn CompileTxt(archive: PVOID, name: *const u8, tbl: PVOID, recordCount: *mut i32, recordSize: usize) -> PVOID {
+    pub fn CompileTxt(archive: PVOID, name: *const u8, tbl: PVOID, recordCount: &mut i32, recordSize: usize) -> PVOID {
         addr_to_stdcall(CompileTxt, AddressTable.DataTbls.CompileTxt)(archive, name, tbl, recordCount, recordSize)
+    }
+}
+
+pub mod Units {
+    use super::super::common::*;
+    use super::AddressTable;
+
+    pub fn TestCollisionWithUnit(unit1: PVOID, unit2: PVOID, collision_mask: i32) -> BOOL {
+        addr_to_stdcall(TestCollisionWithUnit, AddressTable.Units.TestCollisionWithUnit)(unit1, unit2, collision_mask)
     }
 }
 
 pub fn init(d2common: usize) {
     AddressTable.initialize(D2CommonOffset{
         DataTbls: DataTblsOffset{
-            sgptDataTbls    : d2common + D2RVA::D2Common(0x6FDE9E1C),
-            CompileTxt      : d2common + D2RVA::D2Common(0x6FDAEF40),
+            sgptDataTbls            : d2common + D2RVA::D2Common(0x6FDE9E1C),
+            CompileTxt              : d2common + D2RVA::D2Common(0x6FDAEF40),
         },
         StatList: StatListOffset{
-            GetUnitBaseStat : d2common + D2RVA::D2Common(0x6FD88B70),
+            GetUnitBaseStat         : d2common + D2RVA::D2Common(0x6FD88B70),
         },
+        Units: UnitsOffset{
+            TestCollisionWithUnit   : d2common + D2RVA::D2Common(0x6FD814A0),
+        }
     });
 }

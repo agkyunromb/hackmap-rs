@@ -1,7 +1,5 @@
 use super::common::*;
-use windows_sys::Win32::System::Diagnostics::Debug::IMAGE_NT_HEADERS32;
-
-::windows_targets::link!("ntdll.dll" "system" fn RtlImageNtHeader(Base: PVOID) -> *const IMAGE_NT_HEADERS32);
+use super::HackMap;
 
 struct Stubs {
     UI_HandleUIVars: Option<extern "stdcall" fn(PVOID)>,
@@ -16,10 +14,8 @@ fn get_stubs() -> &'static Stubs {
     unsafe { &STUBS }
 }
 
-extern "stdcall" fn HandleUIVars(this: PVOID) {
-    D2Client::UI::SetUIVar(13, 0, 0);
-    get_stubs().UI_HandleUIVars.unwrap()(this);
-    D2Client::UI::SetUIVar(13, 1, 0);
+extern "stdcall" fn HandleUIVars(obj: PVOID) {
+    HackMap::get().handle_perm_show_items(obj);
 }
 
 extern "stdcall" fn MISC_CalculateShadowRGBA(r: &mut u8, g: &mut u8, b: &mut u8, a: &mut u8) {
@@ -29,11 +25,48 @@ extern "stdcall" fn MISC_CalculateShadowRGBA(r: &mut u8, g: &mut u8, b: &mut u8,
     *b = 0xFF;
 }
 
-extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(_unit1: PVOID, _unit2: PVOID, _collision_mask: i32) -> BOOL {
-    FALSE
+extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PVOID, collision_mask: i32) -> BOOL {
+    let (success, hide) = HackMap::get().should_hide_unit(unit2);
+
+    if success == false {
+        return D2Common::Units::TestCollisionWithUnit(unit1, unit2, collision_mask);
+    }
+
+    if hide { FALSE } else { TRUE }
+}
+
+impl HackMap {
+    fn should_hide_unit(&self, _unit: PVOID) -> (bool, bool) {
+        let success = true;
+        let hide = false;
+
+        (success, hide)
+    }
+
+    fn handle_perm_show_items(&self, obj: PVOID) {
+        let UI_HandleUIVars = get_stubs().UI_HandleUIVars.unwrap();
+
+        if self.options.perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
+            UI_HandleUIVars(obj);
+            return;
+        }
+
+        D2Client::UI::SetUIVar(D2UIvars::HoldAlt, 0, 0);
+        UI_HandleUIVars(obj);
+        D2Client::UI::SetUIVar(D2UIvars::HoldAlt, 1, 0);
+    }
 }
 
 pub fn init(modules: &D2Modules) -> Result<(), HookError> {
+    HackMap::get().on_key_down(|vk| -> bool {
+        if vk == 'Y' as u16 {
+            let hm = HackMap::get();
+            hm.options.perm_show_items_toggle = !hm.options.perm_show_items_toggle;
+        }
+
+        false
+    });
+
     unsafe {
         // 永久显示地面物品
         let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);

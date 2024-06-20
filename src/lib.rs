@@ -1,4 +1,5 @@
 #![allow(non_snake_case, non_camel_case_types, dead_code, non_upper_case_globals, unused_imports)]
+#![feature(reentrant_lock)]
 
 mod d2api;
 mod hackmap;
@@ -12,14 +13,12 @@ use windows_sys::{
         WindowsProgramming::RtlInitUnicodeString,
         SystemServices::{DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH},
         Diagnostics::Debug::IMAGE_NT_HEADERS32,
-        // LibraryLoader::*,
     },
 };
 
 use d2api::*;
 
 ::windows_targets::link!("ntdll.dll" "system" fn LdrDisableThreadCalloutsForDll(DllHandle : PVOID) -> NTSTATUS);
-::windows_targets::link!("ntdll.dll" "system" fn RtlImageNtHeader(Base: PVOID) -> *const IMAGE_NT_HEADERS32);
 ::windows_targets::link!("ntdll.dll" "system" fn LdrLoadDll(PathToFile: PCWSTR, DllCharacteristics: *mut u32, ModuleFileName: *mut UNICODE_STRING, DllHandle: *mut PVOID) -> NTSTATUS);
 
 fn ldr_load_dll(dll_name: &str) -> PVOID {
@@ -46,7 +45,6 @@ fn init(base_address: PVOID) -> BOOL {
 
     unsafe {
         LdrDisableThreadCalloutsForDll(base_address);
-        RtlImageNtHeader(base_address);
     }
 
     let mut d2modules = d2api::types::D2Modules::default();

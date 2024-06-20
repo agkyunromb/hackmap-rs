@@ -10,7 +10,7 @@ pub struct D2GfxOffset {
     pub Window: WindowOffset,
 }
 
-pub static AddressTable: types::Holder<D2GfxOffset> = types::Holder::new();
+pub static AddressTable: types::OnceHolder<D2GfxOffset> = types::OnceHolder::new();
 
 pub mod Window {
     use super::types::*;

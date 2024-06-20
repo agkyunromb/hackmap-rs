@@ -1,14 +1,17 @@
-use super::types;
+mod uivars;
 
-pub use super::D2RVA;
+pub use uivars::*;
+use super::common::*;
 
 pub struct NetOffset {
-    pub SendPacket    : types::FuncAddress,
+    pub SendPacket    : FuncAddress,
 }
 
 pub struct UIOffset {
-    pub SetUIVar      : types::FuncAddress,
-    pub HandleUIVars  : types::FuncAddress,
+    pub SetUIVar        : FuncAddress,
+    pub HandleUIVars    : FuncAddress,
+
+    pub gUIVars         : FuncAddress,
 }
 
 pub struct D2ClientOffset {
@@ -17,12 +20,10 @@ pub struct D2ClientOffset {
 }
 
 
-pub static AddressTable: types::Holder<D2ClientOffset> = types::Holder::new();
+pub static AddressTable: OnceHolder<D2ClientOffset> = OnceHolder::new();
 
 pub mod Net {
-    use super::types::*;
-    use std::arch::asm;
-    use super::D2RVA;
+    use super::super::common::*;
     use super::AddressTable;
 
     pub fn SendPacket(payload: PVOID, size: usize) -> usize {
@@ -48,12 +49,15 @@ pub mod Net {
 }
 
 pub mod UI {
-    use super::types::*;
-    use super::D2RVA;
+    use super::super::common::*;
     use super::AddressTable;
 
-    pub fn SetUIVar(index: i32, state: i32, arg3: i32) {
+    pub fn SetUIVar(index: super::D2UIvars, state: i32, arg3: i32) {
         addr_to_fastcall(SetUIVar, AddressTable.UI.SetUIVar)(index, state, arg3)
+    }
+
+    pub fn GetUIVar(var: super::D2UIvars) -> i32 {
+        read_at(AddressTable.UI.gUIVars + var as usize * 4)
     }
 
     pub fn HandleUIVars(this: PVOID) {
@@ -66,6 +70,8 @@ pub fn init(d2client: usize) {
         UI: UIOffset {
             SetUIVar        : d2client + D2RVA::D2Client(0x6FB72790),
             HandleUIVars    : d2client + D2RVA::D2Client(0x6FAF437B),
+
+            gUIVars         : d2client + D2RVA::D2Client(0x6FBAAD80),
         },
         Net: NetOffset{
             SendPacket: d2client + D2RVA::D2Client(0x6FAC43E0),

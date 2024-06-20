@@ -29,7 +29,7 @@ impl CStringToStr for *const i8 {
     }
 }
 
-pub fn read_addr<R>(addr: usize) -> R {
+pub fn read_at<R>(addr: usize) -> R {
     unsafe {
         std::ptr::read(addr as *const R)
     }
@@ -143,11 +143,11 @@ where
     f.unwrap()
 }
 
-pub struct Holder<T> {
+pub struct OnceHolder<T> {
     inner: OnceLock<T>,
 }
 
-impl<T> Holder<T> {
+impl<T> OnceHolder<T> {
     pub const fn new() -> Self {
         Self {
             inner: OnceLock::new(),
@@ -159,7 +159,7 @@ impl<T> Holder<T> {
     }
 }
 
-impl<T> Deref for Holder<T> {
+impl<T> Deref for OnceHolder<T> {
     type Target = T;
     fn deref(&self) -> &Self::Target {
         self.inner.get().unwrap()

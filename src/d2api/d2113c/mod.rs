@@ -1,5 +1,9 @@
+mod common;
+mod d2consts;
+
 use super::types as types;
 
+pub use d2consts::*;
 pub use types::*;
 pub mod D2Common;
 pub mod D2Client;
@@ -7,11 +11,9 @@ pub mod D2Gfx;
 pub mod D2Win;
 pub mod D2Multi;
 
-use types::D2ImageBase;
-
 pub struct D2ImageBase113C;
 
-impl D2ImageBase for D2ImageBase113C {
+impl types::D2ImageBase for D2ImageBase113C {
     const D2Client  : usize = 0x6FAB0000;
     const D2Common  : usize = 0x6FD50000;
     const D2Win     : usize = 0x6F8E0000;

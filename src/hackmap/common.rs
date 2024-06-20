@@ -4,11 +4,18 @@ pub use ml::hooker::{err::HookError, x86::*};
 
 pub use windows_sys::{
     core::{PCSTR, PCWSTR},
-    Win32::Foundation::{BOOL, FALSE, TRUE, NTSTATUS, UNICODE_STRING},
-    Win32::System::{
-        WindowsProgramming::RtlInitUnicodeString,
-        SystemServices::{DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH},
-        Diagnostics::Debug::IMAGE_NT_HEADERS32,
-        // LibraryLoader::*,
+    Win32::{
+        UI::WindowsAndMessaging::WM_KEYDOWN,
+        UI::Input::KeyboardAndMouse::VK_OEM_PLUS,
+
+        Foundation::{HWND, BOOL, FALSE, TRUE, NTSTATUS, UNICODE_STRING},
+
+        System::{
+            WindowsProgramming::RtlInitUnicodeString,
+            SystemServices::{DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH},
+            Diagnostics::Debug::IMAGE_NT_HEADERS32,
+        },
     },
 };
+
+::windows_targets::link!("ntdll.dll" "system" fn RtlImageNtHeader(Base: PVOID) -> *const IMAGE_NT_HEADERS32);
