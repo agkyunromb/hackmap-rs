@@ -16,7 +16,7 @@ use windows_sys::{
     },
 };
 
-use d2api::d2113c::*;
+use d2api::*;
 
 ::windows_targets::link!("ntdll.dll" "system" fn LdrDisableThreadCalloutsForDll(DllHandle : PVOID) -> NTSTATUS);
 ::windows_targets::link!("ntdll.dll" "system" fn RtlImageNtHeader(Base: PVOID) -> *const IMAGE_NT_HEADERS32);
@@ -41,44 +41,43 @@ fn ldr_load_dll(dll_name: &str) -> PVOID {
 }
 
 fn init(base_address: PVOID) -> BOOL {
+    use d2api::d2113c::*;
+    use hackmap;
+
     unsafe {
         LdrDisableThreadCalloutsForDll(base_address);
         RtlImageNtHeader(base_address);
     }
 
-    let mut D2Sigma   : PVOID = null_mut();
-    let mut D2Client  : PVOID = null_mut();
-    let mut D2Win     : PVOID = null_mut();
-    let mut D2Common  : PVOID = null_mut();
-    let mut D2Gfx     : PVOID = null_mut();
-    let mut D2Multi   : PVOID = null_mut();
-    let mut Storm     : PVOID = null_mut();
-    let mut glide3x   : PVOID = null_mut();
+    let mut d2modules = d2api::types::D2Modules::default();
 
-    let dlls = &mut [
-        (&mut D2Sigma,  "D2Sigma.dll"),
-        (&mut D2Client, "D2Client.dll"),
-        (&mut D2Win,    "D2Win.dll"),
-        (&mut D2Common, "D2Common.dll"),
-        (&mut D2Gfx,    "D2Gfx.dll"),
-        (&mut D2Multi,  "D2Multi.dll"),
-        (&mut Storm,    "Storm.dll"),
-        (&mut glide3x,  "glide3x.dll"),
+    let dlls: &mut [(&mut Option<usize>, Option<fn(usize)>, &str)]  = &mut [
+        (&mut d2modules.D2Sigma,  None,                 "D2Sigma2.dll"),
+        (&mut d2modules.D2Client, Some(D2Client::init), "D2Client.dll"),
+        (&mut d2modules.D2Win,    Some(D2Win::init),    "D2Win.dll"),
+        (&mut d2modules.D2Common, Some(D2Common::init), "D2Common.dll"),
+        (&mut d2modules.D2Gfx,    Some(D2Gfx::init),    "D2Gfx.dll"),
+        (&mut d2modules.D2Multi,  Some(D2Multi::init),  "D2Multi.dll"),
+        // (&mut d2modules.Storm,    None,                 "Storm.dll"),
+        (&mut d2modules.glide3x,  None,                 "glide3x.dll"),
     ];
 
-    for (dll_base, dll_name) in dlls.iter_mut() {
-        **dll_base = ldr_load_dll(dll_name);
-        if dll_base.is_null() {
+    for (dll_base, _, dll_name) in dlls.iter_mut() {
+        let base = ldr_load_dll(dll_name);
+        if base.is_null() {
             return FALSE;
+        }
+
+        **dll_base = Some(base as usize);
+    }
+
+    for (&mut dll_base, init_func, _) in dlls.iter() {
+        if let Some(init_func) = init_func {
+            init_func(dll_base.unwrap() as usize);
         }
     }
 
-    D2Common::init(D2Common as usize);
-    D2Client::init(D2Client as usize);
-
-    D2Client::UI::SetUIVar(0, 0, 0);
-    D2Client::Net::SendPacket(null_mut(), 0);
-    D2Common::StatList::GetUnitBaseStat(null_mut(), 0, 0);
+    hackmap::init(&d2modules);
 
     TRUE
 }

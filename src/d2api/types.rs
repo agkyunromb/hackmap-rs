@@ -7,6 +7,60 @@ use std::sync::OnceLock;
 pub type FuncAddress = usize;
 pub type PVOID = *mut c_void;
 
+pub trait CStringToStr {
+    fn to_str(self) -> &'static str;
+}
+
+impl CStringToStr for *const u8 {
+    fn to_str(self) -> &'static str {
+        if self.is_null() {
+            return "";
+        }
+
+        unsafe {
+            std::ffi::CStr::from_ptr(self as *const i8).to_str().unwrap()
+        }
+    }
+}
+
+impl CStringToStr for *const i8 {
+    fn to_str(self) -> &'static str {
+        (self as *const u8).to_str()
+    }
+}
+
+pub fn read_addr<R>(addr: usize) -> R {
+    unsafe {
+        std::ptr::read(addr as *const R)
+    }
+}
+
+pub struct D2Modules {
+    pub D2Sigma     : Option<usize>,
+    pub D2Client    : Option<usize>,
+    pub D2Win       : Option<usize>,
+    pub D2Common    : Option<usize>,
+    pub D2Gfx       : Option<usize>,
+    pub D2Multi     : Option<usize>,
+    pub Storm       : Option<usize>,
+    pub glide3x     : Option<usize>,
+}
+
+impl Default for D2Modules {
+    fn default() -> Self {
+        Self {
+            D2Sigma   : None,
+            D2Client  : None,
+            D2Win     : None,
+            D2Common  : None,
+            D2Gfx     : None,
+            D2Multi   : None,
+            Storm     : None,
+            glide3x   : None,
+        }
+    }
+}
+
 // https://github.com/actix/actix-web/blob/66905efd7b02a464f0becff59685c8ce58f243c2/actix-web/src/handler.rs#L89
 pub trait Handler<Args>: Clone + 'static {
     type Output;
@@ -121,9 +175,9 @@ pub trait D2ImageBase {
     const Storm     : usize;
 }
 
-pub(crate) struct D2RVA<T: D2ImageBase>(PhantomData<T>);
+pub(crate) struct D2RVA_BASE<T: D2ImageBase>(PhantomData<T>);
 
-impl<T: D2ImageBase> D2RVA<T> {
+impl<T: D2ImageBase> D2RVA_BASE<T> {
     pub fn D2Client(va: usize) -> usize {
         va - T::D2Client
     }

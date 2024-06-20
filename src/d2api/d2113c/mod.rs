@@ -5,6 +5,7 @@ pub mod D2Common;
 pub mod D2Client;
 pub mod D2Gfx;
 pub mod D2Win;
+pub mod D2Multi;
 
 use types::D2ImageBase;
 
@@ -19,4 +20,4 @@ impl D2ImageBase for D2ImageBase113C {
     const Storm     : usize = 0x6FBF0000;
 }
 
-pub type D2RVA = types::D2RVA<D2ImageBase113C>;
+pub type D2RVA = types::D2RVA_BASE<D2ImageBase113C>;
