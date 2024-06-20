@@ -12,8 +12,8 @@ pub struct UIOffset {
 }
 
 pub struct D2ClientOffset {
-    UI    : UIOffset,
-    Net   : NetOffset,
+    pub UI    : UIOffset,
+    pub Net   : NetOffset,
 }
 
 

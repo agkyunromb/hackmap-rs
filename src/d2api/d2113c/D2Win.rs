@@ -7,7 +7,7 @@ pub struct EditBoxOffset {
 }
 
 pub struct D2WinOffset {
-    EditBox: EditBoxOffset,
+    pub EditBox: EditBoxOffset,
 }
 
 pub static AddressTable: types::Holder<D2WinOffset> = types::Holder::new();

@@ -7,7 +7,7 @@ pub struct WindowOffset {
 }
 
 pub struct D2GfxOffset {
-    Window: WindowOffset,
+    pub Window: WindowOffset,
 }
 
 pub static AddressTable: types::Holder<D2GfxOffset> = types::Holder::new();
