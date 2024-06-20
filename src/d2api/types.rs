@@ -117,6 +117,7 @@ pub trait D2ImageBase {
     const D2Common  : usize;
     const D2Win     : usize;
     const D2Multi   : usize;
+    const D2Gfx     : usize;
     const Storm     : usize;
 }
 
@@ -137,6 +138,10 @@ impl<T: D2ImageBase> D2RVA<T> {
 
     pub fn D2Multi(va: usize) -> usize {
         va - T::D2Multi
+    }
+
+    pub fn D2Gfx(va: usize) -> usize {
+        va - T::D2Gfx
     }
 
     pub fn Storm(va: usize) -> usize {
