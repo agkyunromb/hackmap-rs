@@ -32,7 +32,7 @@ extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PV
         return D2Common::Units::TestCollisionWithUnit(unit1, unit2, collision_mask);
     }
 
-    if hide { FALSE } else { TRUE }
+    if hide { TRUE } else { FALSE }
 }
 
 impl HackMap {

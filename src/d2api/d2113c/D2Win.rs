@@ -1,5 +1,9 @@
 use super::common::*;
 
+pub struct ControlOffset {
+    pub CreateControl         : FuncAddress,
+}
+
 pub struct EditBoxOffset {
     pub SetTextW              : FuncAddress,
     pub SelectAll             : FuncAddress,
@@ -10,11 +14,53 @@ pub struct MsgHandlerOffset {
 }
 
 pub struct D2WinOffset {
+    pub Control               : ControlOffset,
     pub EditBox               : EditBoxOffset,
     pub MsgHandler            : MsgHandlerOffset,
 }
 
 pub static AddressTable: OnceHolder<D2WinOffset> = OnceHolder::new();
+
+pub mod Control {
+    use super::super::common::*;
+    use super::AddressTable;
+
+    #[repr(i32)]
+    pub enum D2ControlTypes {
+        Editbox       = 1,
+        Image         = 2,
+        Animimage     = 3,
+        Textbox       = 4,
+        Scrollbar     = 5,
+        Button        = 6,
+        List          = 7,
+        Timer         = 8,
+        Smack         = 9,
+        Progressbar   = 10,
+        Popup         = 11,
+        Accountlist   = 12,
+        Image2        = 13,
+    }
+
+    pub type PerformFnType = extern "stdcall" fn(ctrl: PVOID) -> BOOL;
+
+    #[repr(C)]
+    pub struct D2WinControlInitStrc {
+        pub ctrl_type   : D2ControlTypes,
+        pub x           : i32,
+        pub y           : i32,
+        pub width       : i32,
+        pub height      : i32,
+        pub field_14    : i32,
+        pub string_id   : i32,
+        pub field_1C    : PVOID,
+        pub perform     : PerformFnType,
+    }
+
+    pub fn CreateControl(init_info: &D2WinControlInitStrc) -> PVOID {
+        addr_to_stdcall(CreateControl, AddressTable.Control.CreateControl)(init_info)
+    }
+}
 
 pub mod EditBox {
     use super::super::common::*;
@@ -72,9 +118,12 @@ pub mod MsgHandler {
 
 pub fn init(d2win: usize) {
     AddressTable.initialize(D2WinOffset{
+        Control: ControlOffset{
+            CreateControl         : d2win + D2RVA::D2Win(0x6F8F8560),
+        },
         EditBox: EditBoxOffset{
-            SetTextW              : d2win + D2RVA::D2Win(0x6FA87FB0),
-            SelectAll             : d2win + D2RVA::D2Win(0x6FA87FB0),
+            SetTextW              : d2win + D2RVA::D2Win(0x6F8F4DF0),
+            SelectAll             : d2win + D2RVA::D2Win(0x6F8F3720),
         },
         MsgHandler: MsgHandlerOffset{
             RegisterMsgHandler    : d2win + D2RVA::D2Win(0x6F8F1240),

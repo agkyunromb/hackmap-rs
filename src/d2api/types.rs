@@ -29,6 +29,22 @@ impl CStringToStr for *const i8 {
     }
 }
 
+pub trait StrToUTF16 {
+    fn to_utf16(&self) -> Vec<u16>;
+}
+
+impl StrToUTF16 for &str {
+    fn to_utf16(&self) -> Vec<u16> {
+        self.encode_utf16().chain(std::iter::once(0)).collect()
+    }
+}
+
+impl StrToUTF16 for String {
+    fn to_utf16(&self) -> Vec<u16> {
+        self.as_str().to_utf16()
+    }
+}
+
 pub fn read_at<R>(addr: usize) -> R {
     unsafe {
         std::ptr::read(addr as *const R)

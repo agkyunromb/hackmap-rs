@@ -3,6 +3,7 @@ use super::{
     unit_color,
     tweaks,
     input,
+    quick_next,
 };
 
 pub(super) struct HackMapConfig {
@@ -17,16 +18,35 @@ impl HackMapConfig {
     }
 }
 
-impl Default for HackMapConfig {
-    fn default() -> Self {
-        Self::new()
+type OnKeyDownCallback = fn(vk: u16) -> bool;
+
+pub(super) struct QuickNextGameInfo {
+    pub auto_create_game                    : bool,
+    pub auto_game_name                      : String,
+    pub auto_game_password                  : String,
+    pub auto_game_index                     : Option<i32>,
+    pub create_game_button                  : Option<PVOID>,
+    pub on_create_game_tab_button_clicked   : Option<D2Win::Control::PerformFnType>,
+    pub on_create_game_button_clicked       : Option<D2Win::Control::PerformFnType>,
+}
+
+impl QuickNextGameInfo {
+    const fn new() -> Self {
+        Self {
+            auto_create_game                    : false,
+            auto_game_name                      : String::new(),
+            auto_game_password                  : String::new(),
+            auto_game_index                     : None,
+            create_game_button                  : None,
+            on_create_game_tab_button_clicked   : None,
+            on_create_game_button_clicked       : None,
+        }
     }
 }
 
-type OnKeyDownCallback = fn(vk: u16) -> bool;
-
 pub(super) struct HackMap {
     pub options                 : HackMapConfig,
+    pub quick_next_game         : QuickNextGameInfo,
     pub on_keydown_callbacks    : Vec<OnKeyDownCallback>,
 }
 
@@ -34,8 +54,13 @@ impl HackMap {
     const fn new() -> Self {
         Self{
             options                 : HackMapConfig::new(),
+            quick_next_game         : QuickNextGameInfo::new(),
             on_keydown_callbacks    : vec![],
         }
+    }
+
+    pub fn on_key_down(&mut self, f: OnKeyDownCallback) {
+        self.on_keydown_callbacks.push(f);
     }
 
     pub fn get() -> &'static mut HackMap {
@@ -43,20 +68,19 @@ impl HackMap {
             &mut *std::ptr::addr_of_mut!(HACKMAP)
         }
     }
-
-    pub fn on_key_down(&mut self, f: OnKeyDownCallback) {
-        self.on_keydown_callbacks.push(f);
-    }
 }
 
 static mut HACKMAP: HackMap = HackMap::new();
 
 pub fn init(modules: &D2Modules) {
-    // let mut hm = HACKMAP.lock();
+    let initializer: &[(&str, fn(&D2Modules) -> Result<(), HookError>)] = &[
+        ("init",        input::init),
+        ("unit_color",  unit_color::init),
+        ("tweaks",      tweaks::init),
+        ("quick_next",  quick_next::init),
+    ];
 
-    // hm.options.perm_show_items_toggle = false;
-
-    unit_color::init(&modules).unwrap();
-    tweaks::init(&modules).unwrap();
-    input::init(&modules).unwrap();
+    for m in initializer {
+        m.1(&modules).expect(m.0);
+    }
 }
