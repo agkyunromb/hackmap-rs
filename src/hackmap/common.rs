@@ -6,7 +6,7 @@ pub use windows_sys::{
     core::{PCSTR, PCWSTR},
     Win32::{
         UI::WindowsAndMessaging::WM_KEYDOWN,
-        UI::Input::KeyboardAndMouse::{VK_OEM_PLUS, VK_SHIFT, VK_CONTROL},
+        UI::Input::KeyboardAndMouse::{GetKeyState, VK_OEM_PLUS, VK_SHIFT, VK_CONTROL},
 
         Foundation::{HWND, BOOL, FALSE, TRUE, NTSTATUS, UNICODE_STRING},
 

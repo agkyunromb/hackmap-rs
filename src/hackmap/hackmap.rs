@@ -1,9 +1,11 @@
 use super::common::*;
 use super::{
+    auto_map,
     unit_color,
     tweaks,
     input,
     quick_next,
+    helper_bot,
 };
 
 pub(super) struct HackMapConfig {
@@ -48,6 +50,7 @@ pub(super) struct HackMap {
     pub options                 : HackMapConfig,
     pub quick_next_game         : QuickNextGameInfo,
     pub on_keydown_callbacks    : Vec<OnKeyDownCallback>,
+    pub current_monster_name    : Vec<u16>,
 }
 
 impl HackMap {
@@ -56,6 +59,7 @@ impl HackMap {
             options                 : HackMapConfig::new(),
             quick_next_game         : QuickNextGameInfo::new(),
             on_keydown_callbacks    : vec![],
+            current_monster_name    : vec![],
         }
     }
 
@@ -74,10 +78,12 @@ static mut HACKMAP: HackMap = HackMap::new();
 
 pub fn init(modules: &D2Modules) {
     let initializer: &[(&str, fn(&D2Modules) -> Result<(), HookError>)] = &[
-        ("init",        input::init),
+        ("auto_map",    auto_map::init),
+        ("input",       input::init),
         ("unit_color",  unit_color::init),
         ("tweaks",      tweaks::init),
         ("quick_next",  quick_next::init),
+        ("helper_bot",  helper_bot::init),
     ];
 
     for m in initializer {

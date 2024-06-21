@@ -1,20 +1,17 @@
-use super::types;
-pub use super::D2RVA;
+use super::common::*;
 
 pub struct BNetOffset {
-    pub EnterBNLobby: types::FuncAddress,
+    pub EnterBNLobby: FuncAddress,
 }
 
 pub struct D2MultiOffset {
     pub BNet: BNetOffset,
 }
 
-pub static AddressTable: types::OnceHolder<D2MultiOffset> = types::OnceHolder::new();
+pub static AddressTable: OnceHolder<D2MultiOffset> = OnceHolder::new();
 
 pub mod BNet {
-    use windows_sys::Win32::Foundation::BOOL;
-    use super::types::*;
-    use super::D2RVA;
+    use super::super::common::*;
     use super::AddressTable;
 
     pub fn EnterBNLobby() -> BOOL {

@@ -35,6 +35,33 @@ extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PV
     if hide { TRUE } else { FALSE }
 }
 
+extern "fastcall" fn D2Sigma_Monster_GetName(unit: PVOID) -> PCWSTR {
+
+    let name = D2Sigma::Units::Monster_GetName(unit).to_string();
+
+    let dr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::DamageResist, 0);
+    let mr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MagicResist, 0);
+    let fr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::FireResist, 0);
+    let lr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::LightResist, 0);
+    let cr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::ColdResist, 0);
+    let pr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::PoisonResist, 0);
+    let hp = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::HitPoints, 0) as f64;
+    let max_hp = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MaxHp, 0) as f64;
+
+    let class_id: u32 = read_at(unit as usize + 4);
+
+    let monster_name = if unsafe { GetKeyState(VK_SHIFT as i32) < 0 } {
+        format!("{name}({class_id}, 0x{class_id:X}) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
+    } else {
+        let percent = (hp * 100.0 / max_hp) as usize;
+        format!("{name}({percent}%%) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
+    };
+
+    let hm = HackMap::get();
+    hm.current_monster_name = monster_name.to_utf16();
+    hm.current_monster_name.as_ptr()
+}
+
 impl HackMap {
     fn should_hide_unit(&self, _unit: PVOID) -> (bool, bool) {
         let success = true;
@@ -88,6 +115,10 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
 
         // 透视
         inline_hook_call::<()>(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
+
+        // 显示抗性
+        inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
+        inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
     }
 
     Ok(())

@@ -1,7 +1,5 @@
 use super::common::*;
 use super::HackMap;
-use windows_sys::Win32::UI::Input::KeyboardAndMouse::GetKeyState;
-use windows_sys::Win32::UI::Input::KeyboardAndMouse::VK_CONTROL;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
 
 struct Stubs {

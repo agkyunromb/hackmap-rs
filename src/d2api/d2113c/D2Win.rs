@@ -25,23 +25,6 @@ pub mod Control {
     use super::super::common::*;
     use super::AddressTable;
 
-    #[repr(i32)]
-    pub enum D2ControlTypes {
-        Editbox       = 1,
-        Image         = 2,
-        Animimage     = 3,
-        Textbox       = 4,
-        Scrollbar     = 5,
-        Button        = 6,
-        List          = 7,
-        Timer         = 8,
-        Smack         = 9,
-        Progressbar   = 10,
-        Popup         = 11,
-        Accountlist   = 12,
-        Image2        = 13,
-    }
-
     pub type PerformFnType = extern "stdcall" fn(ctrl: PVOID) -> BOOL;
 
     #[repr(C)]

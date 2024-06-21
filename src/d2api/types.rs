@@ -29,6 +29,28 @@ impl CStringToStr for *const i8 {
     }
 }
 
+pub trait UTF16ToString {
+    fn to_string(self) -> String;
+}
+
+impl UTF16ToString for *const u16 {
+    fn to_string(self) -> String {
+        if self.is_null() {
+            return String::new();
+        }
+
+        let mut len = 0;
+        unsafe {
+            while *self.offset(len) != 0 {
+                len += 1;
+            }
+
+            let slice = std::slice::from_raw_parts(self, len as usize);
+            String::from_utf16_lossy(slice)
+        }
+    }
+}
+
 pub trait StrToUTF16 {
     fn to_utf16(&self) -> Vec<u16>;
 }

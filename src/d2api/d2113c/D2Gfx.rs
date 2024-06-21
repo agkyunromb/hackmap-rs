@@ -1,21 +1,17 @@
-use super::types;
-
-pub use super::D2RVA;
+use super::common::*;
 
 pub struct WindowOffset {
-    pub GetWindow: types::FuncAddress,
+    pub GetWindow: FuncAddress,
 }
 
 pub struct D2GfxOffset {
     pub Window: WindowOffset,
 }
 
-pub static AddressTable: types::OnceHolder<D2GfxOffset> = types::OnceHolder::new();
+pub static AddressTable: OnceHolder<D2GfxOffset> = OnceHolder::new();
 
 pub mod Window {
-    use super::types::*;
-    use super::D2RVA;
-    use windows_sys::Win32::Foundation::HWND;
+    use super::super::common::*;
     use super::AddressTable;
 
     pub fn GetWindow() -> HWND {

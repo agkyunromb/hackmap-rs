@@ -1,6 +1,3 @@
-mod uivars;
-
-pub use uivars::*;
 use super::common::*;
 
 pub struct NetOffset {
@@ -34,8 +31,8 @@ pub mod Net {
     use super::super::common::*;
     use super::AddressTable;
 
-    type D2GSHandler = extern "fastcall" fn(payload: *const u8);
-    type UnitProcessor = extern "fastcall" fn(unit: PVOID, payload: *const u8);
+    pub type D2GSHandler = extern "fastcall" fn(payload: *const u8);
+    pub type UnitProcessor = extern "fastcall" fn(unit: PVOID, payload: *const u8);
 
     pub const D2GS_MAX_CMD: usize = 175;
 
@@ -91,11 +88,11 @@ pub mod UI {
     use super::super::common::*;
     use super::AddressTable;
 
-    pub fn SetUIVar(index: super::D2UIvars, state: i32, arg3: i32) {
+    pub fn SetUIVar(index: D2UIvars, state: i32, arg3: i32) {
         addr_to_fastcall(SetUIVar, AddressTable.UI.SetUIVar)(index, state, arg3)
     }
 
-    pub fn GetUIVar(var: super::D2UIvars) -> i32 {
+    pub fn GetUIVar(var: D2UIvars) -> i32 {
         read_at(AddressTable.UI.gUIVars + var as usize * 4)
     }
 

@@ -25,7 +25,7 @@ pub mod StatList {
     use super::super::common::*;
     use super::AddressTable;
 
-    pub fn GetUnitBaseStat(unit: PVOID, statId: i32, layer:u16) -> usize {
+    pub fn GetUnitBaseStat(unit: PVOID, statId: D2ItemStats, layer:u16) -> usize {
         addr_to_stdcall(GetUnitBaseStat, AddressTable.StatList.GetUnitBaseStat)(unit, statId, layer)
     }
 }
