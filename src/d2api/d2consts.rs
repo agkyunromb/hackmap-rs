@@ -443,3 +443,17 @@ pub enum D2ItemStats {
     Passive_Mag_Mastery               = 357,
     Passive_Mag_Pierce                = 358,
 }
+
+#[repr(i32)]
+#[derive(PartialEq)]
+pub enum D2DrawMode
+{
+  Trans25           = 0,
+  Trans50           = 1,
+  Trans75           = 2,
+  Modulate          = 3,
+  Burn              = 4,
+  Normal            = 5,
+  TransHighLight    = 6,
+  HighLight         = 7,
+}

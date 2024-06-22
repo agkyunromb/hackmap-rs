@@ -18,12 +18,19 @@ pub struct GameOffset {
     pub Info            : FuncAddress,
 }
 
-pub struct D2ClientOffset {
-    pub UI    : UIOffset,
-    pub Net   : NetOffset,
-    pub Game  : GameOffset,
+pub struct AutoMapOffset {
+    pub NewAutomapCell          : FuncAddress,
+
+    pub gAutoMapCellBlockHead   : FuncAddress,
+    pub gAutoMapCellCount       : FuncAddress,
 }
 
+pub struct D2ClientOffset {
+    pub UI      : UIOffset,
+    pub Net     : NetOffset,
+    pub Game    : GameOffset,
+    pub AutoMap : AutoMapOffset,
+}
 
 pub static AddressTable: OnceHolder<D2ClientOffset> = OnceHolder::new();
 
@@ -126,22 +133,61 @@ pub mod Game {
     }
 }
 
+pub mod AutoMap {
+    use super::super::common::*;
+    use super::AddressTable;
+
+    #[repr(C, packed(1))]
+    pub struct D2AutomapCellData {
+        /* 0x0000 */ pub fSaved     : u32,
+        /* 0x0004 */ pub nCellNo    : u16,
+        /* 0x0006 */ pub xPixel     : u16,
+        /* 0x0008 */ pub yPixel     : u16,
+        /* 0x000a */ pub wWeight    : u16,
+        /* 0x000c */ pub pPrev      : *mut D2AutomapCellData,
+        /* 0x0010 */ pub pNext      : *mut D2AutomapCellData,
+    }
+
+    #[repr(C, packed(1))]
+    pub struct D2AutomapCellBlock {
+        pub Elements    : [D2AutomapCellData; 0x200],
+        pub NextBlock   : *mut D2AutomapCellBlock,
+    }
+
+    pub fn NewAutomapCell() -> &'static mut D2AutomapCellData {
+        addr_to_stdcall(NewAutomapCell, AddressTable.AutoMap.NewAutomapCell)()
+    }
+
+    pub fn AutoMapCellBlockHead() -> &'static mut *mut D2AutomapCellBlock {
+        unsafe { &mut *(AddressTable.AutoMap.gAutoMapCellBlockHead as *mut *mut D2AutomapCellBlock) }
+    }
+
+    pub fn AutoMapCellCount() -> &'static mut usize {
+        unsafe { &mut *(AddressTable.AutoMap.gAutoMapCellCount as *mut usize) }
+    }
+}
+
 pub fn init(d2client: usize) {
     AddressTable.initialize(D2ClientOffset{
         UI: UIOffset {
-            SetUIVar        : d2client + D2RVA::D2Client(0x6FB72790),
-            HandleUIVars    : d2client + D2RVA::D2Client(0x6FAF437B),
+            SetUIVar                : d2client + D2RVA::D2Client(0x6FB72790),
+            HandleUIVars            : d2client + D2RVA::D2Client(0x6FAF437B),
 
-            gUIVars         : d2client + D2RVA::D2Client(0x6FBAAD80),
+            gUIVars                 : d2client + D2RVA::D2Client(0x6FBAAD80),
         },
         Net: NetOffset{
-            SendPacket      : d2client + D2RVA::D2Client(0x6FAC43E0),
+            SendPacket              : d2client + D2RVA::D2Client(0x6FAC43E0),
 
-            gD2GSHandlers   : d2client + D2RVA::D2Client(0x6FB8DE60),
+            gD2GSHandlers           : d2client + D2RVA::D2Client(0x6FB8DE60),
         },
         Game: GameOffset{
-            Info            : d2client + D2RVA::D2Client(0x6FBCB980),
-            SaveAndExitGame : d2client + D2RVA::D2Client(0x6FB15E00),
-        }
+            Info                    : d2client + D2RVA::D2Client(0x6FBCB980),
+            SaveAndExitGame         : d2client + D2RVA::D2Client(0x6FB15E00),
+        },
+        AutoMap: AutoMapOffset{
+            NewAutomapCell          : d2client + D2RVA::D2Client(0x6FB0F6B0),
+            gAutoMapCellBlockHead   : d2client + D2RVA::D2Client(0x6FBCC1B8),
+            gAutoMapCellCount       : d2client + D2RVA::D2Client(0x6FBCC1BC),
+        },
     });
 }

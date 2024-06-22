@@ -1,7 +1,8 @@
 use super::common::*;
 
 pub struct AutoMapOffset {
-    pub RevealMap: FuncAddress,
+    pub RevealMap   : FuncAddress,
+    pub DrawAutoMap : FuncAddress,
 }
 
 pub struct UnitsOffset {
@@ -57,6 +58,7 @@ pub fn init(d2sigma: usize) {
             AddressTable.initialize(D2SigmaOffset{
                 AutoMap: AutoMapOffset{
                     RevealMap         : vmslide + 0x10091A90,
+                    DrawAutoMap       : vmslide + 0x100511D0,
                 },
                 Units: UnitsOffset{
                     Monster_GetName   : vmslide + 0x100B8A20,
@@ -74,6 +76,7 @@ pub fn init(d2sigma: usize) {
             AddressTable.initialize(D2SigmaOffset{
                 AutoMap: AutoMapOffset{
                     RevealMap         : vmslide + 0x10091C10,
+                    DrawAutoMap       : 0,
                 },
                 Units: UnitsOffset{
                     Monster_GetName   : vmslide + 0x100B8D80,
