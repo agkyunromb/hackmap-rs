@@ -117,8 +117,10 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         inline_hook_call::<()>(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
 
         // 显示抗性
-        inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
-        inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
+        if D2Sigma::initialized() {
+            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
+            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
+        }
     }
 
     Ok(())

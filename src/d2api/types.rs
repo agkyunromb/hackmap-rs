@@ -80,6 +80,7 @@ pub struct D2Modules {
     pub D2Common    : Option<usize>,
     pub D2Gfx       : Option<usize>,
     pub D2Multi     : Option<usize>,
+    pub Fog         : Option<usize>,
     pub Storm       : Option<usize>,
     pub glide3x     : Option<usize>,
 }
@@ -93,6 +94,7 @@ impl Default for D2Modules {
             D2Common  : None,
             D2Gfx     : None,
             D2Multi   : None,
+            Fog       : None,
             Storm     : None,
             glide3x   : None,
         }
@@ -182,18 +184,25 @@ where
 }
 
 pub struct OnceHolder<T> {
-    inner: OnceLock<T>,
+    inner       : OnceLock<T>,
+    initialized : OnceLock<bool>,
 }
 
 impl<T> OnceHolder<T> {
     pub const fn new() -> Self {
         Self {
-            inner: OnceLock::new(),
+            inner       : OnceLock::new(),
+            initialized : OnceLock::new(),
         }
     }
 
     pub fn initialize(&self, t: T) {
         self.inner.set(t).ok().unwrap();
+        self.initialized.set(true).ok().unwrap();
+    }
+
+    pub fn initialized(&self) -> bool {
+        *self.initialized.get().unwrap_or(&false)
     }
 }
 
@@ -210,6 +219,7 @@ pub trait D2ImageBase {
     const D2Win     : usize;
     const D2Multi   : usize;
     const D2Gfx     : usize;
+    const Fog       : usize;
     const Storm     : usize;
 }
 
@@ -234,6 +244,10 @@ impl<T: D2ImageBase> D2RVA_BASE<T> {
 
     pub fn D2Gfx(va: usize) -> usize {
         va - T::D2Gfx
+    }
+
+    pub fn Fog(va: usize) -> usize {
+        va - T::Fog
     }
 
     pub fn Storm(va: usize) -> usize {

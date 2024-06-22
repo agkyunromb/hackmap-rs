@@ -87,6 +87,7 @@ pub fn init(modules: &D2Modules) {
     ];
 
     for m in initializer {
+        Fog::Trace(format!("init {}", m.0).as_str());
         m.1(&modules).expect(m.0);
     }
 }

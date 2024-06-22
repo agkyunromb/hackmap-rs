@@ -26,7 +26,9 @@ pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
     // let D2Sigma = modules.D2Sigma.unwrap();
 
     unsafe {
-        STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
+        if D2Sigma::initialized() {
+            STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
+        }
     }
 
     Ok(())

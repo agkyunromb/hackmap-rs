@@ -21,12 +21,12 @@ extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
     #[repr(C, packed(1))]
     struct D2GS_CHAT {
         PacketId        : u8,
-        nChatType       : u8,
-        nLanguageCode   : u8,
-        nUnitType       : u8,
-        nUnitGUID       : i32,
-        nChatColor      : D2StringColorCodes,
-        nChatSubType    : u8,
+        chat_type       : u8,
+        language_code   : u8,
+        unit_type       : u8,
+        unit_guid       : i32,
+        chat_color      : D2StringColorCodes,
+        chat_sub_type    : u8,
         // std::string szNick;
         // std::string szMessage;
     }
@@ -34,27 +34,27 @@ extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
     let chat = unsafe { &*(payload as *const D2GS_CHAT) };
 
     loop {
-        if chat.nChatType != 3 {
+        if chat.chat_type != 3 {
             break;
         }
 
-        if chat.nLanguageCode != 0 {
+        if chat.language_code != 0 {
             break;
         }
 
-        if chat.nUnitType != 0 {
+        if chat.unit_type != 0 {
             break;
         }
 
-        if chat.nUnitGUID != 0 {
+        if chat.unit_guid != 0 {
             break;
         }
 
-        if chat.nChatColor != D2StringColorCodes::Red {
+        if chat.chat_color != D2StringColorCodes::Red {
             break;
         }
 
-        if chat.nChatSubType != 1 {
+        if chat.chat_sub_type != 1 {
             break;
         }
 
@@ -72,7 +72,7 @@ pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
     // let D2Sigma = modules.D2Sigma.unwrap();
 
     unsafe {
-        STUBS.Handle_D2GS_CHAT_26 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_CHAT_26));
+        STUBS.Handle_D2GS_CHAT_26 = Some(D2Client::Net::SwapD2GSHandler(0x26, Handle_D2GS_CHAT_26));
     }
 
     Ok(())

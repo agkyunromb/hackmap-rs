@@ -39,6 +39,10 @@ pub mod Units {
     }
 }
 
+pub fn initialized() ->bool {
+    AddressTable.initialized()
+}
+
 pub fn init(d2sigma: usize) {
     let timestamp = unsafe { (&*RtlImageNtHeader(d2sigma as PVOID)).FileHeader.TimeDateStamp };
 
