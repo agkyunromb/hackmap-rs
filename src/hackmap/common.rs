@@ -1,3 +1,4 @@
+pub use std::ptr::{addr_of, addr_of_mut};
 pub use crate::d2api::{*, d2113c::*};
 pub use std::{iter::Once, marker::PhantomData, os::raw::c_void, ptr::{null, null_mut}, sync::OnceLock};
 pub use ml::hooker::{err::HookError, x86::*};

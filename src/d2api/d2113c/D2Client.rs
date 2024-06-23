@@ -20,9 +20,17 @@ pub struct GameOffset {
 
 pub struct AutoMapOffset {
     pub NewAutomapCell          : FuncAddress,
+    pub AddAutomapCell          : FuncAddress,
+
+    pub CallDrawAutoMapCell     : FuncAddress,
 
     pub gAutoMapCellBlockHead   : FuncAddress,
     pub gAutoMapCellCount       : FuncAddress,
+    pub gCurrentAutoMapLayer    : FuncAddress,
+}
+
+pub struct UnitsOffset {
+    pub gClientPlayer           : FuncAddress,
 }
 
 pub struct D2ClientOffset {
@@ -30,6 +38,7 @@ pub struct D2ClientOffset {
     pub Net     : NetOffset,
     pub Game    : GameOffset,
     pub AutoMap : AutoMapOffset,
+    pub Units   : UnitsOffset,
 }
 
 pub static AddressTable: OnceHolder<D2ClientOffset> = OnceHolder::new();
@@ -138,32 +147,65 @@ pub mod AutoMap {
     use super::AddressTable;
 
     #[repr(C, packed(1))]
-    pub struct D2AutomapCellData {
-        /* 0x0000 */ pub fSaved     : u32,
-        /* 0x0004 */ pub nCellNo    : u16,
-        /* 0x0006 */ pub xPixel     : u16,
-        /* 0x0008 */ pub yPixel     : u16,
-        /* 0x000a */ pub wWeight    : u16,
-        /* 0x000c */ pub pPrev      : *mut D2AutomapCellData,
-        /* 0x0010 */ pub pNext      : *mut D2AutomapCellData,
+    #[derive(Copy, Clone)]
+    pub struct D2AutoMapCellData {
+        pub fSaved     : u32,                       // 0x00
+        pub nCellNo    : u16,                       // 0x04
+        pub xPixel     : u16,                       // 0x06
+        pub yPixel     : u16,                       // 0x08
+        pub wWeight    : u16,                       // 0x0a
+        pub pPrev      : *mut D2AutoMapCellData,    // 0x0c
+        pub pNext      : *mut D2AutoMapCellData,    // 0x10
     }
 
     #[repr(C, packed(1))]
-    pub struct D2AutomapCellBlock {
-        pub Elements    : [D2AutomapCellData; 0x200],
-        pub NextBlock   : *mut D2AutomapCellBlock,
+    pub struct D2AutoMapCellBlock {
+        pub Elements    : [D2AutoMapCellData; 0x200],
+        pub NextBlock   : *mut D2AutoMapCellBlock,
     }
 
-    pub fn NewAutomapCell() -> &'static mut D2AutomapCellData {
+    #[repr(C, packed(4))]
+    pub struct D2AutoMapLayer {
+        pub nLayerNo    : u32,                      // 0x00
+        pub fSaved      : u32,                      // 0x04
+        pub pFloors     : *mut D2AutoMapCellData,   // 0x08
+        pub pWalls      : *mut D2AutoMapCellData,   // 0x0c
+        pub pObjects    : *mut D2AutoMapCellData,   // 0x10
+        pub pExtras     : *mut D2AutoMapCellData,   // 0x14
+        pub pNext       : *mut D2AutoMapCellData,   // 0x18
+    }
+
+    pub fn NewAutomapCell() -> &'static mut D2AutoMapCellData {
         addr_to_stdcall(NewAutomapCell, AddressTable.AutoMap.NewAutomapCell)()
     }
 
-    pub fn AutoMapCellBlockHead() -> &'static mut *mut D2AutomapCellBlock {
-        unsafe { &mut *(AddressTable.AutoMap.gAutoMapCellBlockHead as *mut *mut D2AutomapCellBlock) }
+    pub fn AddAutomapCell(cell: &D2AutoMapCellData, objectList: *mut *mut D2AutoMapCellData) {
+        addr_to_fastcall(AddAutomapCell, AddressTable.AutoMap.AddAutomapCell)(cell, objectList)
+    }
+
+    pub fn AutoMapCellBlockHead() -> *mut *mut D2AutoMapCellBlock {
+        unsafe { &mut *(AddressTable.AutoMap.gAutoMapCellBlockHead as *mut *mut D2AutoMapCellBlock) }
     }
 
     pub fn AutoMapCellCount() -> &'static mut usize {
         unsafe { &mut *(AddressTable.AutoMap.gAutoMapCellCount as *mut usize) }
+    }
+
+    pub fn CurrentAutoMapLayer() -> Option<&'static mut D2AutoMapLayer> {
+        let layer: *mut D2AutoMapLayer = read_at(AddressTable.AutoMap.gCurrentAutoMapLayer);
+        ptr_to_ref_mut(layer)
+    }
+
+}
+
+pub mod Units {
+    use super::super::common::*;
+    use super::AddressTable;
+    use super::super::D2Common::Units::D2Unit;
+
+    pub fn GetClientPlayer() -> Option<&'static mut D2Unit> {
+        let clinet_player: *mut D2Unit = read_at(AddressTable.Units.gClientPlayer);
+        ptr_to_ref_mut(clinet_player)
     }
 }
 
@@ -186,8 +228,16 @@ pub fn init(d2client: usize) {
         },
         AutoMap: AutoMapOffset{
             NewAutomapCell          : d2client + D2RVA::D2Client(0x6FB0F6B0),
+            AddAutomapCell          : d2client + D2RVA::D2Client(0x6FB11320),
+
+            CallDrawAutoMapCell     : d2client + D2RVA::D2Client(0x6FB104EA),
+
             gAutoMapCellBlockHead   : d2client + D2RVA::D2Client(0x6FBCC1B8),
             gAutoMapCellCount       : d2client + D2RVA::D2Client(0x6FBCC1BC),
+            gCurrentAutoMapLayer    : d2client + D2RVA::D2Client(0x6FBCC1C4),
+        },
+        Units: UnitsOffset{
+            gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
         },
     });
 }

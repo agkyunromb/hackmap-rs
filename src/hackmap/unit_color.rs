@@ -57,8 +57,8 @@ impl HackMap {
 
         let mut mon_stats_3 = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, recordSize * recordCount) };
 
-        let mut mon_stats_txt = D2Common::DataTbls::sgptDataTbls().mon_stats_txt() as usize;
-        let mon_stats_txt_record_count = D2Common::DataTbls::sgptDataTbls().mon_stats_txt_record_count();
+        let mut mon_stats_txt = D2Common::DataTbls::sgptDataTables().mon_stats_txt() as usize;
+        let mon_stats_txt_record_count = D2Common::DataTbls::sgptDataTables().mon_stats_txt_record_count();
 
         for i in 0..mon_stats_txt_record_count {
             let mon_stats_flags: u32 = read_at(mon_stats_txt + 0x0C);

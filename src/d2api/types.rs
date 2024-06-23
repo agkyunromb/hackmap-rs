@@ -183,6 +183,10 @@ where
     f.unwrap()
 }
 
+pub fn ptr_to_ref_mut<T>(ptr: *mut T) -> Option<&'static mut T> {
+    if ptr.is_null() { None } else { unsafe { Some(&mut *ptr) } }
+}
+
 pub struct OnceHolder<T> {
     inner       : OnceLock<T>,
     initialized : OnceLock<bool>,

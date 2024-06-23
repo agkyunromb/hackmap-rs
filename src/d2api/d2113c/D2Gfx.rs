@@ -29,7 +29,7 @@ pub mod Texture {
     use super::AddressTable;
 
     #[repr(C, packed(1))]
-    pub struct D2GfxDataStrc {
+    pub struct D2GfxData {
         pCurrentCell    : PVOID,
         pCellFile       : PVOID,
         nFrame          : u32,
@@ -42,7 +42,7 @@ pub mod Texture {
         // ...
     }
 
-    pub fn CelDrawClipped(pData: &D2GfxDataStrc, nXPos: i32, nYPos: i32, pCropRect: PVOID, eDrawMode: D2DrawMode) {
+    pub fn CelDrawClipped(pData: &D2GfxData, nXPos: i32, nYPos: i32, pCropRect: PVOID, eDrawMode: D2DrawMode) {
         addr_to_stdcall(CelDrawClipped, AddressTable.Texture.CelDrawClipped)(pData, nXPos, nYPos, pCropRect, eDrawMode)
     }
 }
@@ -50,10 +50,10 @@ pub mod Texture {
 pub fn init(d2gfx: usize) {
     AddressTable.initialize(D2GfxOffset{
         Window: WindowOffset{
-            GetWindow: d2gfx + D2RVA::D2Gfx(0x6FA87FB0),
+            GetWindow       : d2gfx + D2RVA::D2Gfx(0x6FA87FB0),
         },
         Texture: TextureOffset{
-            CelDrawClipped: d2gfx + D2RVA::D2Gfx(0x6FA87FB0),
+            CelDrawClipped  : d2gfx + D2RVA::D2Gfx(0x6FA8AFF0),
         },
     });
 }

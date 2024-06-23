@@ -13,10 +13,17 @@ pub struct MsgHandlerOffset {
     pub RegisterMsgHandler    : FuncAddress,
 }
 
+pub struct TextOffset {
+    pub SetFont               : FuncAddress,
+    pub GetTextDimensions     : FuncAddress,
+    pub DrawText              : FuncAddress,
+}
+
 pub struct D2WinOffset {
     pub Control               : ControlOffset,
     pub EditBox               : EditBoxOffset,
     pub MsgHandler            : MsgHandlerOffset,
+    pub Text                  : TextOffset,
 }
 
 pub static AddressTable: OnceHolder<D2WinOffset> = OnceHolder::new();
@@ -99,17 +106,47 @@ pub mod MsgHandler {
     }
 }
 
+pub mod Text {
+    use super::super::common::*;
+    use super::AddressTable;
+    use super::super::super::d2consts::*;
+
+    pub fn SetFont(font: D2Font) -> D2Font {
+        addr_to_fastcall(SetFont, AddressTable.Text.SetFont)(font)
+    }
+
+    pub fn _GetTextDimensions(_text: PCWSTR, _width: *mut i32, _height: *mut i32) {}
+
+    pub fn GetTextDimensions(text: PCWSTR) -> (i32, i32) {
+        let mut width: i32 = 0;
+        let mut height: i32 = 0;
+
+        addr_to_fastcall(_GetTextDimensions, AddressTable.Text.GetTextDimensions)(text, &mut width, &mut height);
+
+        (width, height)
+    }
+
+    pub fn DrawText(text: PCWSTR, x: i32, y: i32, color: D2StringColorCodes, center: BOOL) {
+        addr_to_fastcall(DrawText, AddressTable.Text.DrawText)(text, x, y, color, center)
+    }
+}
+
 pub fn init(d2win: usize) {
     AddressTable.initialize(D2WinOffset{
         Control: ControlOffset{
-            CreateControl         : d2win + D2RVA::D2Win(0x6F8F8560),
+            CreateControl       : d2win + D2RVA::D2Win(0x6F8F8560),
         },
         EditBox: EditBoxOffset{
-            SetTextW              : d2win + D2RVA::D2Win(0x6F8F4DF0),
-            SelectAll             : d2win + D2RVA::D2Win(0x6F8F3720),
+            SetTextW            : d2win + D2RVA::D2Win(0x6F8F4DF0),
+            SelectAll           : d2win + D2RVA::D2Win(0x6F8F3720),
         },
         MsgHandler: MsgHandlerOffset{
-            RegisterMsgHandler    : d2win + D2RVA::D2Win(0x6F8F1240),
-        }
+            RegisterMsgHandler  : d2win + D2RVA::D2Win(0x6F8F1240),
+        },
+        Text: TextOffset{
+            SetFont             : d2win + D2RVA::D2Win(0x6F8F2FE0),
+            GetTextDimensions   : d2win + D2RVA::D2Win(0x6F8F2700),
+            DrawText            : d2win + D2RVA::D2Win(0x6F8F2FA0),
+        },
     });
 }

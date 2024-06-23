@@ -51,6 +51,7 @@ pub(super) struct HackMap {
     pub quick_next_game         : QuickNextGameInfo,
     pub on_keydown_callbacks    : Vec<OnKeyDownCallback>,
     pub current_monster_name    : Vec<u16>,
+    pub automap_cells_for_layers: Option<std::collections::HashMap<u32, Vec<auto_map::D2AutoMapCellDataEx>>>,
 }
 
 impl HackMap {
@@ -60,6 +61,7 @@ impl HackMap {
             quick_next_game         : QuickNextGameInfo::new(),
             on_keydown_callbacks    : vec![],
             current_monster_name    : vec![],
+            automap_cells_for_layers: None,
         }
     }
 

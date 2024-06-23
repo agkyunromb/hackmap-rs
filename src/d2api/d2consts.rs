@@ -1,5 +1,5 @@
 #[repr(u8)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum D2StringColorCodes {
     White       = 0,
     Red         = 1,
@@ -18,7 +18,7 @@ pub enum D2StringColorCodes {
 }
 
 #[repr(i32)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum D2UIvars {
     Game            = 0x00, // 0
     Inventory       = 0x01, // 1
@@ -62,7 +62,7 @@ pub enum D2UIvars {
 
 
 #[repr(i32)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum D2ControlTypes {
     Editbox       = 1,
     Image         = 2,
@@ -80,7 +80,7 @@ pub enum D2ControlTypes {
 }
 
 #[repr(i32)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum D2ItemStats {
     Invalid                           = -1,
     Strength                          = 0,
@@ -445,7 +445,7 @@ pub enum D2ItemStats {
 }
 
 #[repr(i32)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum D2DrawMode
 {
   Trans25           = 0,
@@ -456,4 +456,90 @@ pub enum D2DrawMode
   Normal            = 5,
   TransHighLight    = 6,
   HighLight         = 7,
+}
+
+#[repr(i32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2DrlgTypes
+{
+    Maze    = 1,
+    Preset  = 2,
+    Outdoor = 3,
+    Max     = 4,
+}
+
+#[repr(i32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2UnitTypes
+{
+    Player    = 0,
+    Monster   = 1,
+    Object    = 2,
+    Missile   = 3,
+    Item      = 4,
+    Tile      = 5,
+    Max       = 6,
+}
+
+#[repr(i32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2ObjectSubClasses
+{
+    Shrine        = 0x01,
+    Obelisk       = 0x02,
+    TownPortal    = 0x04,
+    Chest         = 0x08,
+    Portal        = 0x10,
+    Well          = 0x20,
+    WayPoint      = 0x40,
+    Door          = 0x80,
+}
+
+#[repr(u32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2AutoMapCells
+{
+    RedCross        = 221,
+    Hammer          = 302,
+    CainCage        = 303,
+    MephOrb         = 305,
+    DiabloSeal      = 306,
+    WayPoint        = 307,
+    Well            = 309,
+    Shrine          = 310,
+    FallcampFlag    = 312,
+    IniTree         = 313,
+    CainRock        = 314,
+    Gidbinn         = 315,  // 吉得宾
+    QHammer         = 316,
+    BlueCross       = 317,
+    QChest          = 318,
+    Stash           = 319,
+    ArcanePortal    = 339,
+    RogueFire       = 405,
+    Book            = 427,
+    PlaceHolder     = 1176,
+    BarriTower      = 1258,
+}
+
+#[repr(u32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2Font
+{
+    Font8                 = 0,
+    Font16                = 1,
+    Font30                = 2,
+    Font42                = 3,
+    FontFormal10          = 4,
+    FontFormal12          = 5,
+    Font6                 = 6,
+    Font24                = 7,
+    FontFormal11          = 8,
+    FontExocet10          = 9,
+    FontRidiculous        = 10,
+    FontExocet8           = 11,
+    ReallyTheLastSucker   = 12,
+    FontInGameChat        = 13,
+
+    Max,
 }

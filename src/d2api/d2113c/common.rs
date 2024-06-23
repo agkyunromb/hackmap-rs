@@ -1,3 +1,4 @@
+pub use std::ptr::null_mut;
 pub use super::types::*;
 pub use super::D2RVA;
 pub use std::arch::asm;
