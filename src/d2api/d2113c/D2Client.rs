@@ -143,7 +143,6 @@ pub mod AutoMap {
     use super::AddressTable;
 
     #[repr(C, packed(1))]
-    // #[derive(Copy, Clone)]
     pub struct D2AutoMapCellData {
         pub fSaved     : u32,                       // 0x00
         pub nCellNo    : u16,                       // 0x04

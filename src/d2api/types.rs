@@ -154,33 +154,27 @@ pub fn addr_to_stdcall<F, T>(_: F, addr: usize) -> F::StdCall
 where
     F: Handler<T>,
 {
-    let f: Option<F::StdCall> = None;
     unsafe {
-        *(addr_of!(f) as *mut usize) = addr;
+        std::mem::transmute_copy(&addr)
     }
-    f.unwrap()
 }
 
 pub fn addr_to_fastcall<F, T>(_: F, addr: usize) -> F::FastCall
 where
     F: Handler<T>,
 {
-    let f: Option<F::FastCall> = None;
     unsafe {
-        *(addr_of!(f) as *mut usize) = addr;
+        std::mem::transmute_copy(&addr)
     }
-    f.unwrap()
 }
 
 pub fn addr_to_cdecl<F, T>(_: F, addr: usize) -> F::Cdecl
 where
     F: Handler<T>,
 {
-    let f: Option<F::Cdecl> = None;
     unsafe {
-        *(addr_of!(f) as *mut usize) = addr;
+        std::mem::transmute_copy(&addr)
     }
-    f.unwrap()
 }
 
 pub fn ptr_to_ref_mut<T>(ptr: *mut T) -> Option<&'static mut T> {

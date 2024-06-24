@@ -24,7 +24,6 @@ fn get_stubs() -> &'static Stubs {
     unsafe { &STUBS }
 }
 
-// #[derive(Copy, Clone)]
 pub enum ExtraCellType {
     CellNo(u32),
     LevelId(D2LevelId),
@@ -32,7 +31,6 @@ pub enum ExtraCellType {
 }
 
 #[repr(C, packed(1))]
-// #[derive(Copy, Clone)]
 pub(super) struct D2AutoMapCellDataEx {
     pub data        : D2Client::AutoMap::D2AutoMapCellData,
     pub cell_type   : Option<ExtraCellType>,
@@ -56,31 +54,6 @@ extern "fastcall" fn Handle_D2GS_LOADCOMPLETE_04(payload: *const u8) {
 
     let _ = reveal_map_ex();
 }
-
-// extern "stdcall" fn D2Client_AutoMap_Init_CurrentAutoMapLayer() {
-//     let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
-//     let current_layer_id = layer.nLayerNo;
-
-//     get_stubs().D2Client_AutoMap_Init_CurrentAutoMapLayer.unwrap()();
-
-//     let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
-
-//     if layer.nLayerNo != current_layer_id {
-//         let automap_cells_for_layers = HackMap::get().automap_cells_for_layers.as_ref().unwrap();
-//         let cells = automap_cells_for_layers.get(&layer.nLayerNo);
-
-//         if let Some(cells) = cells {
-//             for cell in cells.iter() {
-//                 let cell2 = ptr_to_ref_mut(NewAutomapCell()).unwrap();
-//                 *cell2 = *cell;
-//                 // println!("AddAutomapCell");
-//                 D2Client::AutoMap::AddAutomapCell(&cell2.data, &mut layer.pObjects);
-//             }
-//         }
-
-//         // let _ = reveal_map_ex();
-//     }
-// }
 
 extern "fastcall" fn D2Client_AutoMap_DrawCells(cell: &D2AutoMapCellDataEx, arg2: usize) {
     let D2Client_AutoMap_DrawCells = get_stubs().D2Client_AutoMap_DrawCells.unwrap();
@@ -108,8 +81,6 @@ fn reveal_map_ex() -> Result<(), ()> {
     let client_player   = D2Client::Units::GetClientPlayer().ok_or(())?;
     let drlg_act        = client_player.get_drlg_act();
 
-    // println!("drlg_act: {drlg_act:p}");
-
     let drlg            = D2Common::Dungeon::GetDrlgFromAct(drlg_act).ok_or(())?;
     let current_act     = drlg_act.nAct;
     let max_level_id    = D2Common::DataTbls::sgptDataTables().levels_txt_record_count();
@@ -124,7 +95,6 @@ fn reveal_map_ex() -> Result<(), ()> {
             None => continue,
         };
 
-        // println!("reveal_level_ex: {level_id}");
         let _ = reveal_level_ex(level);
     }
 
@@ -164,8 +134,6 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::DrlgDrlg::D2DrlgRoom) -> Re
     let level_id = D2Common::DrlgRoom::GetLevelId(drlg_room);
     let level_def = D2Common::DataTbls::GetLevelDefRecord(level_id).unwrap();
     let layer_id = level_def.dwLayer;
-
-    // println!("add_custom_automap_cell: {drlg_room:p}");
 
     let levels_txt_record_count = D2Common::DataTbls::sgptDataTables().levels_txt_record_count();
 
@@ -212,15 +180,12 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::DrlgDrlg::D2DrlgRoom) -> Re
 
                             if cellno != 0 {
                                 cell_type = Some(ExtraCellType::CellNo(cellno));
-                                // println!("overwrite cellno {cellno}");
                             }
                         },
                     }
                 },
 
                 D2UnitTypes::Tile => {
-                    // println!("D2UnitTypes::Tile: {preset_unit_index}, {drlg_room:p}");
-
                     let mut room_tiles = ptr_to_ref_mut(drlg_room.pRoomTiles);
 
                     while let Some(tiles) = room_tiles {
@@ -237,8 +202,6 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::DrlgDrlg::D2DrlgRoom) -> Re
                             // let data_tables = D2Common::DataTbls::sgptDataTables();
                             // let level_txt = data_tables.get_levels_txt_record(level_id).unwrap();
                             // let level_name = level_txt.get_level_name();
-
-                            // println!("found tile: {level_id} @ {x}, {y}, `{level_name}`");
 
                             cell_type = Some(ExtraCellType::LevelId(level_id));
                         }
@@ -257,13 +220,8 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::DrlgDrlg::D2DrlgRoom) -> Re
             let x1 = drlg_room.nTileXPos * 5 + preset_unit.nXpos;
             let y1 = drlg_room.nTileYPos * 5 + preset_unit.nYpos;
 
-            // println!("x1 = {x1}, y1 = {y1}");
-
             let x2 = ((x1 - y1) * 16) / 10 + 1;
             let y2 = ((x1 + y1) * 8) / 10 - 3;
-
-            // Fog::Trace(&format!("x = {x2}, y = {y2}, type = {}", preset_unit.nUnitType as i32));
-            // println!("x = {x2}, y = {y2}, type = {}", preset_unit.nUnitType as i32);
 
             let mut cell = D2AutoMapCellDataEx{
                 data        : D2Client::AutoMap::D2AutoMapCellData { fSaved: 0, nCellNo: 0, xPixel: 0, yPixel: 0, wWeight: 0, pPrev: null_mut(), pNext: null_mut() },
@@ -358,7 +316,6 @@ impl HackMap {
     fn draw_automap_cell(&self, cell: &mut D2AutoMapCellDataEx, x: i32, y: i32) -> bool {
         match cell.cell_type {
             Some(ExtraCellType::LevelId(level_id)) => {
-                // println!("draw cell: {:p}", cell as *mut D2AutoMapCellDataEx);
                 self.draw_tile_name(level_id, x, y);
 
                 return true;
@@ -382,8 +339,6 @@ impl HackMap {
 
         let old_font = D2Win::Text::SetFont(D2Font::Font6);
         let (width, _) = D2Win::Text::GetTextDimensions(level_name);
-
-        // println!("draw tile: {x}, {y}, {}", level_txt.get_level_name());
 
         D2Win::Text::DrawText(level_name, x - (width / 2), y, color, TRUE);
 
