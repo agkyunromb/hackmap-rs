@@ -16,6 +16,7 @@ pub struct DataTblsOffset {
 
 pub struct UnitsOffset {
     pub TestCollisionWithUnit   : FuncAddress,
+    pub GetRoom                 : FuncAddress,
 }
 
 pub struct DrlgDrlgOffset {
@@ -35,7 +36,9 @@ pub struct DrlgPresetOffset {
 pub struct DungeonOffset {
     pub GetDrlgFromAct              : FuncAddress,
     pub IsTownLevelId               : FuncAddress,
+    pub IsRoomInTown                : FuncAddress,
     pub GetHoradricStaffTombLevelId : FuncAddress,
+    pub GetRoomFromAct              : FuncAddress,
 }
 
 pub struct D2CommonOffset {
@@ -135,10 +138,16 @@ pub mod DataTbls {
 pub mod Units {
     use super::super::common::*;
     use super::AddressTable;
+    use super::drlg::*;
     pub use super::units::*;
 
     pub fn TestCollisionWithUnit(unit1: PVOID, unit2: PVOID, collision_mask: i32) -> BOOL {
         addr_to_stdcall(TestCollisionWithUnit, AddressTable.Units.TestCollisionWithUnit)(unit1, unit2, collision_mask)
+    }
+
+    pub fn _GetRoom(_unit: &D2Unit) -> *mut D2ActiveRoom { null_mut() }
+    pub fn GetRoom(unit: &D2Unit) -> Option<&mut D2ActiveRoom> {
+        ptr_to_ref_mut(addr_to_stdcall(_GetRoom, AddressTable.Units.GetRoom)(unit))
     }
 }
 
@@ -206,8 +215,16 @@ pub mod Dungeon {
         addr_to_stdcall(IsTownLevelId, AddressTable.Dungeon.IsTownLevelId)(levelId)
     }
 
+    pub fn IsRoomInTown(activeRoom: &D2ActiveRoom) -> BOOL {
+        addr_to_stdcall(IsRoomInTown, AddressTable.Dungeon.IsRoomInTown)(activeRoom)
+    }
+
     pub fn GetHoradricStaffTombLevelId(drlgAct: &D2DrlgAct) -> D2LevelId {
         addr_to_stdcall(GetHoradricStaffTombLevelId, AddressTable.Dungeon.GetHoradricStaffTombLevelId)(drlgAct)
+    }
+
+    pub fn GetRoomFromAct(drlgAct: &D2DrlgAct) -> Option<&mut D2ActiveRoom> {
+        addr_to_stdcall(GetRoomFromAct, AddressTable.Dungeon.GetRoomFromAct)(drlgAct)
     }
 }
 
@@ -234,6 +251,7 @@ pub fn init(d2common: usize) {
         },
         Units: UnitsOffset{
             TestCollisionWithUnit       : d2common + D2RVA::D2Common(0x6FD814A0),
+            GetRoom                     : d2common + D2RVA::D2Common(0x6FD7FE10),
         },
         DrlgDrlg: DrlgDrlgOffset{
             GetActNoFromLevelId         : d2common + D2RVA::D2Common(0x6FD7D2C0),
@@ -249,7 +267,9 @@ pub fn init(d2common: usize) {
         Dungeon: DungeonOffset{
             GetDrlgFromAct              : d2common + D2RVA::D2Common(0x6FD8B270),
             IsTownLevelId               : d2common + D2RVA::D2Common(0x6FD8B230),
+            IsRoomInTown                : d2common + D2RVA::D2Common(0x6FD8C390),
             GetHoradricStaffTombLevelId : d2common + D2RVA::D2Common(0x6FD8B080),
+            GetRoomFromAct              : d2common + D2RVA::D2Common(0x6FD8B550),
         },
     });
 }

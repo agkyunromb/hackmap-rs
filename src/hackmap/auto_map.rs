@@ -25,6 +25,7 @@ fn get_stubs() -> &'static Stubs {
 }
 
 pub enum ExtraCellType {
+    None,
     CellNo(u32),
     LevelId(D2LevelId),
     ShrineType(u32),
@@ -33,7 +34,7 @@ pub enum ExtraCellType {
 #[repr(C, packed(1))]
 pub(super) struct D2AutoMapCellDataEx {
     pub data        : D2Client::AutoMap::D2AutoMapCellData,
-    pub cell_type   : Option<ExtraCellType>,
+    pub cell_type   : ExtraCellType,
 
     _pad            : u32,
 }
@@ -225,20 +226,20 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::DrlgDrlg::D2DrlgRoom) -> Re
 
             let mut cell = D2AutoMapCellDataEx{
                 data        : D2Client::AutoMap::D2AutoMapCellData { fSaved: 0, nCellNo: 0, xPixel: 0, yPixel: 0, wWeight: 0, pPrev: null_mut(), pNext: null_mut() },
-                cell_type   : None,
+                cell_type   : ExtraCellType::None,
                 _pad        : 0,
             };
 
             match cell_type {
                 ExtraCellType::CellNo(cellno) => {
-                    cell.cell_type = None;
+                    cell.cell_type = ExtraCellType::None;
                     cell.data.nCellNo = cellno as u16;
                     cell.data.xPixel = (x2 + x) as u16;
                     cell.data.yPixel = (y2 + y) as u16;
                 },
 
                 ExtraCellType::LevelId(_) => {
-                    cell.cell_type = Some(cell_type);
+                    cell.cell_type = cell_type;
                     cell.data.nCellNo = 0;
                     cell.data.xPixel = (x2 + x) as u16;
                     cell.data.yPixel = (y2 + y) as u16;
@@ -294,7 +295,7 @@ fn new_automap_cell(g_cell_block_head: *mut *mut D2AutoMapCellBlockEx, g_automap
         let cell = &mut (&mut *head).Elements[block_index];
         std::ptr::write_bytes(cell, 0, 1);
 
-        cell.cell_type = None;
+        cell.cell_type = ExtraCellType::None;
 
         cell
     }
@@ -315,13 +316,13 @@ extern "stdcall" fn CelDrawClipped(data: &D2GfxData, x: i32, y: i32, crop_rect: 
 impl HackMap {
     fn draw_automap_cell(&self, cell: &mut D2AutoMapCellDataEx, x: i32, y: i32) -> bool {
         match cell.cell_type {
-            Some(ExtraCellType::LevelId(level_id)) => {
+            ExtraCellType::LevelId(level_id) => {
                 self.draw_tile_name(level_id, x, y);
 
                 return true;
             },
 
-            Some(ExtraCellType::ShrineType(_shrine_type)) => {},
+            ExtraCellType::ShrineType(_shrine_type) => {},
             _ => {},
         }
 

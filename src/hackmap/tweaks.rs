@@ -62,6 +62,65 @@ extern "fastcall" fn D2Sigma_Monster_GetName(unit: PVOID) -> PCWSTR {
     hm.current_monster_name.as_ptr()
 }
 
+fn is_player_in_town() -> bool {
+    let player = match D2Client::Units::GetClientPlayer() {
+        Some(p) => p,
+        None => return false,
+    };
+
+    let active_room = D2Common::Units::GetRoom(&player).unwrap();
+
+    D2Common::Dungeon::IsRoomInTown(active_room) != FALSE
+}
+
+extern "fastcall" fn D2Client_IsPlayerRunning(is_running: BOOL, arg2: u32) -> u32 {
+    let mut flags: u32;
+
+    unsafe {
+        std::arch::asm!(
+            "",
+            out("eax") flags,
+        );
+    }
+
+    if is_running != FALSE || is_player_in_town() {
+        flags |= 8
+    }
+
+    unsafe {
+        std::arch::asm!(
+            "",
+            in("edx") arg2,
+        )
+    }
+
+    flags
+}
+
+extern "fastcall" fn D2Client_IsPlayerRunning2(arg1: usize, is_running: BOOL) -> u32 {
+    let mut flags: u32;
+
+    unsafe {
+        std::arch::asm!(
+            "",
+            out("eax") flags,
+        );
+    }
+
+    if is_running != FALSE || is_player_in_town() {
+        flags |= 8
+    }
+
+    unsafe {
+        std::arch::asm!(
+            "",
+            in("ecx") arg1,
+        )
+    }
+
+    flags
+}
+
 impl HackMap {
     fn should_hide_unit(&self, _unit: PVOID) -> (bool, bool) {
         let success = true;
@@ -94,12 +153,14 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         false
     });
 
+    let D2Client = modules.D2Client.unwrap();
+
     unsafe {
         // 永久显示地面物品
         let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);
 
         inline_hook_call(0, D2Client::AddressTable.UI.HandleUIVars, HandleUIVars as usize, Some(&mut STUBS.UI_HandleUIVars), None)?;
-        patch_memory_value(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB0948B), 0xEB, 1)?;
+        patch_memory_value(D2Client, D2RVA::D2Client(0x6FB0948B), 0xEB, 1)?;
 
         // HDText_drawFramedText_is_alt_clicked
         match glide3x.FileHeader.TimeDateStamp {
@@ -111,10 +172,14 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         }
 
         // 去除阴影
-        inline_hook_jmp::<()>(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB59A20), MISC_CalculateShadowRGBA as usize, None, None)?;
+        inline_hook_jmp::<()>(D2Client, D2RVA::D2Client(0x6FB59A20), MISC_CalculateShadowRGBA as usize, None, None)?;
 
         // 透视
-        inline_hook_call::<()>(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
+        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
+
+        // 在城里默认跑步
+        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), D2Client_IsPlayerRunning as usize, None, None)?;
+        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), D2Client_IsPlayerRunning2 as usize, None, None)?;
 
         // 显示抗性
         if D2Sigma::initialized() {
