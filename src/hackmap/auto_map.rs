@@ -24,7 +24,7 @@ fn get_stubs() -> &'static Stubs {
     unsafe { &STUBS }
 }
 
-#[derive(Copy, Clone)]
+// #[derive(Copy, Clone)]
 pub enum ExtraCellType {
     CellNo(u32),
     LevelId(D2LevelId),
@@ -32,7 +32,7 @@ pub enum ExtraCellType {
 }
 
 #[repr(C, packed(1))]
-#[derive(Copy, Clone)]
+// #[derive(Copy, Clone)]
 pub(super) struct D2AutoMapCellDataEx {
     pub data        : D2Client::AutoMap::D2AutoMapCellData,
     pub cell_type   : Option<ExtraCellType>,
@@ -54,30 +54,30 @@ extern "fastcall" fn Handle_D2GS_LOADCOMPLETE_04(payload: *const u8) {
     let _ = reveal_map_ex();
 }
 
-extern "stdcall" fn D2Client_AutoMap_Init_CurrentAutoMapLayer() {
-    let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
-    let current_layer_id = layer.nLayerNo;
+// extern "stdcall" fn D2Client_AutoMap_Init_CurrentAutoMapLayer() {
+//     let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
+//     let current_layer_id = layer.nLayerNo;
 
-    get_stubs().D2Client_AutoMap_Init_CurrentAutoMapLayer.unwrap()();
+//     get_stubs().D2Client_AutoMap_Init_CurrentAutoMapLayer.unwrap()();
 
-    let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
+//     let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
 
-    if layer.nLayerNo != current_layer_id {
-        let automap_cells_for_layers = HackMap::get().automap_cells_for_layers.as_ref().unwrap();
-        let cells = automap_cells_for_layers.get(&layer.nLayerNo);
+//     if layer.nLayerNo != current_layer_id {
+//         let automap_cells_for_layers = HackMap::get().automap_cells_for_layers.as_ref().unwrap();
+//         let cells = automap_cells_for_layers.get(&layer.nLayerNo);
 
-        if let Some(cells) = cells {
-            for cell in cells.iter() {
-                let cell2 = ptr_to_ref_mut(NewAutomapCell()).unwrap();
-                *cell2 = *cell;
-                // println!("AddAutomapCell");
-                D2Client::AutoMap::AddAutomapCell(&cell2.data, &mut layer.pObjects);
-            }
-        }
+//         if let Some(cells) = cells {
+//             for cell in cells.iter() {
+//                 let cell2 = ptr_to_ref_mut(NewAutomapCell()).unwrap();
+//                 *cell2 = *cell;
+//                 // println!("AddAutomapCell");
+//                 D2Client::AutoMap::AddAutomapCell(&cell2.data, &mut layer.pObjects);
+//             }
+//         }
 
-        // let _ = reveal_map_ex();
-    }
-}
+//         // let _ = reveal_map_ex();
+//     }
+// }
 
 extern "fastcall" fn D2Client_AutoMap_DrawCells(cell: &D2AutoMapCellDataEx, arg2: usize) {
     let D2Client_AutoMap_DrawCells = get_stubs().D2Client_AutoMap_DrawCells.unwrap();

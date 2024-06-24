@@ -83,16 +83,12 @@ pub mod Net {
 
         unsafe {
             asm!(
-                "push ebx",
-                "mov  ebx, {1}",
                 "push {0}",
-                "call {2}",
-                "pop  ebx",
+                "call {1}",
                 in(reg) payload,
-                in(reg) size,
                 in(reg) AddressTable.Net.SendPacket,
+                in("ebx") size,
                 lateout("eax") seqId,
-                options(nostack),
             );
         }
 
@@ -147,7 +143,7 @@ pub mod AutoMap {
     use super::AddressTable;
 
     #[repr(C, packed(1))]
-    #[derive(Copy, Clone)]
+    // #[derive(Copy, Clone)]
     pub struct D2AutoMapCellData {
         pub fSaved     : u32,                       // 0x00
         pub nCellNo    : u16,                       // 0x04

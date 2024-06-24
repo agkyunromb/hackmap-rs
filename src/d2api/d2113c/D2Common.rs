@@ -175,12 +175,10 @@ pub mod DrlgRoom {
 
         unsafe {
             asm!(
-                "mov  eax, {0}",
-                "call {1}",
-                in(reg) drlgRoom,
-                in(reg) AddressTable.DrlgRoom.GetLevelId,
+                "call ecx",
+                in("eax") drlgRoom,
+                in("ecx") AddressTable.DrlgRoom.GetLevelId,
                 lateout("eax") levelId,
-                options(nostack),
             );
         }
 
