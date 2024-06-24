@@ -50,7 +50,10 @@ struct D2AutoMapCellBlockEx {
 
 extern "fastcall" fn Handle_D2GS_LOADCOMPLETE_04(payload: *const u8) {
     get_stubs().Handle_D2GS_LOADCOMPLETE_04.unwrap()(payload);
-    D2Sigma::AutoMap::RevealMap();
+    if D2Sigma::initialized() {
+        D2Sigma::AutoMap::RevealMap();
+    }
+
     let _ = reveal_map_ex();
 }
 
@@ -397,9 +400,7 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
     HackMap::get().automap_cells_for_layers = Some(std::collections::HashMap::new());
 
     unsafe {
-        if D2Sigma::initialized() {
-            STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
-        }
+        STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
 
         // patch_memory_value(_modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB11D32), 0x80, 1)?;
         // inline_hook_jmp(_modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB12AF0), D2Client_AutoMap_Init_CurrentAutoMapLayer as usize, Some(&mut STUBS.D2Client_AutoMap_Init_CurrentAutoMapLayer), None)?;

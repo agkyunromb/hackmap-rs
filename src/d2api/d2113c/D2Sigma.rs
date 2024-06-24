@@ -41,6 +41,7 @@ pub mod Units {
 }
 
 pub fn initialized() ->bool {
+    // return false;
     AddressTable.initialized()
 }
 
