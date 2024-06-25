@@ -1,6 +1,7 @@
 mod common;
+mod config;
 mod hackmap;
-mod auto_map;
+mod automap;
 mod unit_color;
 mod tweaks;
 mod input;

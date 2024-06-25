@@ -1,5 +1,6 @@
 use super::common::*;
 use super::HackMap;
+use super::config::Config;
 
 struct Stubs {
     UI_HandleUIVars: Option<extern "stdcall" fn(PVOID)>,
@@ -15,7 +16,7 @@ fn get_stubs() -> &'static Stubs {
 }
 
 extern "stdcall" fn HandleUIVars(obj: PVOID) {
-    HackMap::get().handle_perm_show_items(obj);
+    HackMap::tweaks().handle_perm_show_items(obj);
 }
 
 extern "stdcall" fn MISC_CalculateShadowRGBA(r: &mut u8, g: &mut u8, b: &mut u8, a: &mut u8) {
@@ -26,7 +27,7 @@ extern "stdcall" fn MISC_CalculateShadowRGBA(r: &mut u8, g: &mut u8, b: &mut u8,
 }
 
 extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PVOID, collision_mask: i32) -> BOOL {
-    let (success, hide) = HackMap::get().should_hide_unit(unit2);
+    let (success, hide) = HackMap::tweaks().should_hide_unit(unit2);
 
     if success == false {
         return D2Common::Units::TestCollisionWithUnit(unit1, unit2, collision_mask);
@@ -57,7 +58,7 @@ extern "fastcall" fn D2Sigma_Monster_GetName(unit: PVOID) -> PCWSTR {
         format!("{name}({percent}%%) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
     };
 
-    let hm = HackMap::get();
+    let hm = HackMap::tweaks();
     hm.current_monster_name = monster_name.to_utf16();
     hm.current_monster_name.as_ptr()
 }
@@ -121,7 +122,31 @@ extern "fastcall" fn D2Client_IsPlayerRunning2(arg1: usize, is_running: BOOL) ->
     flags
 }
 
-impl HackMap {
+pub(super) struct Tweaks {
+    pub current_monster_name: Vec<u16>,
+}
+
+impl Tweaks {
+    pub const fn new() -> Self {
+        Self{
+            current_monster_name: vec![],
+        }
+    }
+
+    fn get_config(&self) -> &mut Config {
+        HackMap::config()
+    }
+
+    fn on_key_down(&self, vk: u16) -> bool {
+        let cfg = self.get_config();
+
+        if vk == 'Y' as u16 {
+            cfg.perm_show_items_toggle = !cfg.perm_show_items_toggle;
+        }
+
+        false
+    }
+
     fn should_hide_unit(&self, _unit: PVOID) -> (bool, bool) {
         let success = true;
         let hide = false;
@@ -132,7 +157,7 @@ impl HackMap {
     fn handle_perm_show_items(&self, obj: PVOID) {
         let UI_HandleUIVars = get_stubs().UI_HandleUIVars.unwrap();
 
-        if self.options.perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
+        if self.get_config().perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
             UI_HandleUIVars(obj);
             return;
         }
@@ -144,13 +169,8 @@ impl HackMap {
 }
 
 pub fn init(modules: &D2Modules) -> Result<(), HookError> {
-    HackMap::get().on_key_down(|vk| -> bool {
-        if vk == 'Y' as u16 {
-            let hm = HackMap::get();
-            hm.options.perm_show_items_toggle = !hm.options.perm_show_items_toggle;
-        }
-
-        false
+    HackMap::input().on_key_down(|vk| -> bool {
+        HackMap::tweaks().on_key_down(vk)
     });
 
     let D2Client = modules.D2Client.unwrap();

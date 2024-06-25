@@ -18,7 +18,7 @@ fn get_stubs() -> &'static Stubs {
 }
 
 extern "stdcall" fn InGame_OnKeyDown(msg: &mut StormMsgHandlerParams) {
-    HackMap::get().in_game_on_key_down(msg);
+    HackMap::input().in_game_on_key_down(msg);
     get_stubs().InGame_OnKeyDown.unwrap()(msg)
 }
 
@@ -34,7 +34,23 @@ extern "fastcall" fn RegisterMsgHandler(hwnd: HWND, msg_type: u32, msg: u32, han
     get_stubs().RegisterMsgHandler.unwrap()(hwnd, msg_type, msg, handler);
 }
 
-impl HackMap {
+pub(super) type OnKeyDownCallback = fn(vk: u16) -> bool;
+
+pub(super) struct Input {
+    on_keydown_callbacks    : Vec<OnKeyDownCallback>,
+}
+
+impl Input {
+    pub const fn new() -> Self{
+        Self{
+            on_keydown_callbacks: vec![],
+        }
+    }
+
+    pub fn on_key_down(&mut self, f: OnKeyDownCallback) {
+        self.on_keydown_callbacks.push(f);
+    }
+
     fn in_game_on_key_down(&mut self, msg: &mut StormMsgHandlerParams) {
         if msg.returned != FALSE || msg.message != WM_KEYDOWN || msg.key_pressed() {
             return;

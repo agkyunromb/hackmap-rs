@@ -63,7 +63,7 @@ extern "fastcall" fn D2Client_AutoMap_DrawCells(cell: &D2AutoMapCellDataEx, arg2
 
     let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
 
-    let automap_cells_for_layers = HackMap::get().automap_cells_for_layers.as_ref().unwrap();
+    let automap_cells_for_layers = HackMap::automap().automap_cells_for_layers.as_ref().unwrap();
     let cells = automap_cells_for_layers.get(&layer.nLayerNo);
 
     if let Some(cells) = cells {
@@ -74,7 +74,7 @@ extern "fastcall" fn D2Client_AutoMap_DrawCells(cell: &D2AutoMapCellDataEx, arg2
 }
 
 extern "stdcall" fn D2Client_LeaveGameCleanUp() {
-    HackMap::get().automap_cells_for_layers.as_mut().unwrap().clear();
+    HackMap::automap().automap_cells_for_layers.as_mut().unwrap().clear();
     get_stubs().D2Client_LeaveGameCleanUp.unwrap()()
 }
 
@@ -251,7 +251,7 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::DrlgDrlg::D2DrlgRoom) -> Re
             // let cell2 = ptr_to_ref_mut(NewAutomapCell()).unwrap();
             // *cell2 = cell;
 
-            HackMap::get().automap_cells_for_layers.as_mut().unwrap().entry(layer_id).or_insert(vec![]).push(cell);
+            HackMap::automap().automap_cells_for_layers.as_mut().unwrap().entry(layer_id).or_insert(vec![]).push(cell);
 
             // let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
             // D2Client::AutoMap::AddAutomapCell(&cell2.data, &mut layer.pObjects);
@@ -308,12 +308,22 @@ extern "stdcall" fn NewAutomapCell() -> *mut D2AutoMapCellDataEx {
 extern "stdcall" fn CelDrawClipped(data: &D2GfxData, x: i32, y: i32, crop_rect: PVOID, draw_mode: D2DrawMode) {
     let cell: &mut D2AutoMapCellDataEx = read_at(data as *const D2GfxData as usize - 0x20);
 
-    if HackMap::get().draw_automap_cell(cell, x, y) == false {
+    if HackMap::automap().draw_automap_cell(cell, x, y) == false {
         D2Gfx::Texture::CelDrawClipped(data, x, y, crop_rect, draw_mode)
     }
 }
 
-impl HackMap {
+pub(super) struct AutoMap {
+    automap_cells_for_layers: Option<std::collections::HashMap<u32, Vec<D2AutoMapCellDataEx>>>,
+}
+
+impl AutoMap {
+    pub const fn new() -> Self {
+        Self {
+            automap_cells_for_layers: None,
+        }
+    }
+
     fn draw_automap_cell(&self, cell: &mut D2AutoMapCellDataEx, x: i32, y: i32) -> bool {
         match cell.cell_type {
             ExtraCellType::LevelId(level_id) => {
@@ -353,7 +363,7 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
     //     ::windows_sys::Win32::System::Console::AllocConsole();
     // }
 
-    HackMap::get().automap_cells_for_layers = Some(std::collections::HashMap::new());
+    HackMap::automap().automap_cells_for_layers = Some(std::collections::HashMap::new());
 
     unsafe {
         STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));

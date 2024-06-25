@@ -20,7 +20,7 @@ fn get_stubs() -> &'static Stubs {
 }
 
 extern "fastcall" fn SaveAndExitGame(_: i32, hwnd: &HWND) {
-    HackMap::get().on_save_and_exit();
+    HackMap::quick_next().on_save_and_exit();
     get_stubs().SaveAndExitGame.unwrap()(0, hwnd);
 }
 
@@ -28,7 +28,7 @@ extern "stdcall" fn CreateControl(init_info: &D2Win::Control::D2WinControlInitSt
     let ctrl = get_stubs().CreateControl.unwrap()(init_info);
 
     if ctrl.is_null() == false {
-        HackMap::get().on_create_lobby_controls(ctrl, init_info);
+        HackMap::quick_next().on_create_lobby_controls(ctrl, init_info);
     }
 
     ctrl
@@ -39,12 +39,35 @@ extern "stdcall" fn EnterBNLobby() -> BOOL {
         return FALSE;
     }
 
-    let _ = HackMap::get().on_enter_lobby();
+    let _ = HackMap::quick_next().on_enter_lobby();
 
     TRUE
 }
 
-impl HackMap {
+
+pub(super) struct QuickNextGame {
+    pub auto_create_game                    : bool,
+    pub auto_game_name                      : String,
+    pub auto_game_password                  : String,
+    pub auto_game_index                     : Option<i32>,
+    pub create_game_button                  : Option<PVOID>,
+    pub on_create_game_tab_button_clicked   : Option<D2Win::Control::PerformFnType>,
+    pub on_create_game_button_clicked       : Option<D2Win::Control::PerformFnType>,
+}
+
+impl QuickNextGame {
+    pub const fn new() -> Self {
+        Self {
+            auto_create_game                    : false,
+            auto_game_name                      : String::new(),
+            auto_game_password                  : String::new(),
+            auto_game_index                     : None,
+            create_game_button                  : None,
+            on_create_game_tab_button_clicked   : None,
+            on_create_game_button_clicked       : None,
+        }
+    }
+
     fn on_save_and_exit(&mut self) {
         self.generate_next_game_info(0);
     }
@@ -58,7 +81,7 @@ impl HackMap {
         }
 
         if delta != 0 && unsafe { GetKeyState(VK_SHIFT as i32) } >= 0 {
-            self.quick_next_game.auto_create_game = true;
+            self.auto_create_game = true;
         }
 
         let mut end = name.len();
@@ -74,9 +97,9 @@ impl HackMap {
         let index = &name[end..];
         let name = &name[..end];
 
-        self.quick_next_game.auto_game_name = name[..end].to_string();
-        self.quick_next_game.auto_game_index = if index.is_empty() { None } else { Some(index.parse::<i32>().unwrap() + delta) };
-        self.quick_next_game.auto_game_password = game_info.get_password();
+        self.auto_game_name = name[..end].to_string();
+        self.auto_game_index = if index.is_empty() { None } else { Some(index.parse::<i32>().unwrap() + delta) };
+        self.auto_game_password = game_info.get_password();
     }
 
     fn on_create_lobby_controls(&mut self, ctrl: PVOID, init_info: &D2Win::Control::D2WinControlInitStrc) {
@@ -113,13 +136,13 @@ impl HackMap {
                 if (init_info.x == 548 && init_info.y == 199 && init_info.width == 158 && init_info.height == 20) ||   // create game name
                    (init_info.x == 548 && init_info.y == 165 && init_info.width == 155 && init_info.height == 20)      // join game name
                 {
-                    match self.quick_next_game.auto_game_index {
+                    match self.auto_game_index {
                         Some(index) => {
-                            D2Win::EditBox::SetTextW(ctrl, format!("{}{}", self.quick_next_game.auto_game_name, index).to_utf16().as_ptr());
+                            D2Win::EditBox::SetTextW(ctrl, format!("{}{}", self.auto_game_name, index).to_utf16().as_ptr());
                         },
 
                         None => {
-                            D2Win::EditBox::SetTextW(ctrl, self.quick_next_game.auto_game_name.to_utf16().as_ptr());
+                            D2Win::EditBox::SetTextW(ctrl, self.auto_game_name.to_utf16().as_ptr());
                         },
                     }
 
@@ -128,7 +151,7 @@ impl HackMap {
                 } else if (init_info.x == 778 && init_info.y == 199 && init_info.width == 158 && init_info.height == 20) ||     // create game password
                           (init_info.x == 778 && init_info.y == 165 && init_info.width == 155 && init_info.height == 20)        // join game password
                 {
-                    D2Win::EditBox::SetTextW(ctrl, self.quick_next_game.auto_game_password.to_utf16().as_ptr());
+                    D2Win::EditBox::SetTextW(ctrl, self.auto_game_password.to_utf16().as_ptr());
                     D2Win::EditBox::SelectAll(ctrl);
                 }
             },
@@ -170,11 +193,11 @@ impl HackMap {
 
                 if init_info.x == 583 && init_info.y == 605 && init_info.width == 205 && init_info.height == 25 {
                     // lobby create game tab button
-                    self.quick_next_game.on_create_game_tab_button_clicked = Some(init_info.perform);
+                    self.on_create_game_tab_button_clicked = Some(init_info.perform);
 
                 } else if init_info.x == 713 && init_info.y == 546 && init_info.width == 272 && init_info.height == 30 {
-                    self.quick_next_game.create_game_button = Some(ctrl);
-                    self.quick_next_game.on_create_game_button_clicked = Some(init_info.perform);
+                    self.create_game_button = Some(ctrl);
+                    self.on_create_game_button_clicked = Some(init_info.perform);
                 }
             },
 
@@ -183,27 +206,25 @@ impl HackMap {
     }
 
     fn on_enter_lobby(&mut self) -> Result<(), ()> {
-        let quick_next_game = &mut self.quick_next_game;
-
-        if quick_next_game.auto_create_game == false {
+        if self.auto_create_game == false {
             return Ok(());
         }
 
-        let on_create_game_tab_button_clicked = quick_next_game.on_create_game_tab_button_clicked.ok_or(())?;
+        let on_create_game_tab_button_clicked = self.on_create_game_tab_button_clicked.ok_or(())?;
 
         if on_create_game_tab_button_clicked(null_mut()) == FALSE {
             return Err(());
         }
 
-        let on_create_game_button_clicked = quick_next_game.on_create_game_button_clicked.ok_or(())?;
-        let create_game_button = quick_next_game.create_game_button.ok_or(())?;
+        let on_create_game_button_clicked = self.on_create_game_button_clicked.ok_or(())?;
+        let create_game_button = self.create_game_button.ok_or(())?;
 
         on_create_game_button_clicked(create_game_button);
 
-        quick_next_game.on_create_game_button_clicked       = None;
-        quick_next_game.on_create_game_tab_button_clicked   = None;
-        quick_next_game.create_game_button                  = None;
-        quick_next_game.auto_create_game                    = false;
+        self.on_create_game_button_clicked       = None;
+        self.on_create_game_tab_button_clicked   = None;
+        self.create_game_button                  = None;
+        self.auto_create_game                    = false;
 
         Ok(())
     }
@@ -211,9 +232,9 @@ impl HackMap {
 }
 
 pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
-    HackMap::get().on_key_down(|vk| {
+    HackMap::input().on_key_down(|vk| {
         if vk == VK_OEM_PLUS {
-            HackMap::get().generate_next_game_info(if unsafe { GetKeyState(VK_CONTROL as i32) } < 0 { 0 } else { 1 });
+            HackMap::quick_next().generate_next_game_info(if unsafe { GetKeyState(VK_CONTROL as i32) } < 0 { 0 } else { 1 });
             let hwnd = D2Gfx::Window::GetWindow();
             get_stubs().SaveAndExitGame.unwrap()(0, &hwnd);
         }
