@@ -1,6 +1,6 @@
 use super::common::*;
 use super::HackMap;
-use super::config::Config;
+use super::config::ConfigRef;
 
 struct Stubs {
     UI_HandleUIVars: Option<extern "stdcall" fn(PVOID)>,
@@ -123,22 +123,20 @@ extern "fastcall" fn D2Client_IsPlayerRunning2(arg1: usize, is_running: BOOL) ->
 }
 
 pub(super) struct Tweaks {
+    pub cfg: super::config::ConfigRef,
     pub current_monster_name: Vec<u16>,
 }
 
 impl Tweaks {
-    pub const fn new() -> Self {
+    pub fn new(cfg: ConfigRef) -> Self{
         Self{
+            cfg,
             current_monster_name: vec![],
         }
     }
 
-    fn get_config(&self) -> &mut Config {
-        HackMap::config()
-    }
-
     fn on_key_down(&self, vk: u16) -> bool {
-        let cfg = self.get_config();
+        let mut cfg = self.cfg.borrow_mut();
 
         if vk == 'Y' as u16 {
             cfg.perm_show_items_toggle = !cfg.perm_show_items_toggle;
@@ -157,7 +155,7 @@ impl Tweaks {
     fn handle_perm_show_items(&self, obj: PVOID) {
         let UI_HandleUIVars = get_stubs().UI_HandleUIVars.unwrap();
 
-        if self.get_config().perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
+        if self.cfg.borrow_mut().perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
             UI_HandleUIVars(obj);
             return;
         }
@@ -205,6 +203,7 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         if D2Sigma::initialized() {
             inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
             inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
+            patch_memory_value(0, D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar, 0x80, 1)?;
         }
     }
 

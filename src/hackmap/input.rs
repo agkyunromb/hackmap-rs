@@ -1,5 +1,6 @@
 use super::common::*;
 use super::HackMap;
+use super::config::ConfigRef;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
 
 struct Stubs {
@@ -37,12 +38,14 @@ extern "fastcall" fn RegisterMsgHandler(hwnd: HWND, msg_type: u32, msg: u32, han
 pub(super) type OnKeyDownCallback = fn(vk: u16) -> bool;
 
 pub(super) struct Input {
+    cfg                     : ConfigRef,
     on_keydown_callbacks    : Vec<OnKeyDownCallback>,
 }
 
 impl Input {
-    pub const fn new() -> Self{
+    pub fn new(cfg: ConfigRef) -> Self{
         Self{
+            cfg,
             on_keydown_callbacks: vec![],
         }
     }

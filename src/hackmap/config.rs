@@ -1,3 +1,7 @@
+use super::common::*;
+
+pub(super) type ConfigRef = Rc<RefCell<Config>>;
+
 pub(super) struct Config {
     pub perm_show_items_toggle: bool,
 }

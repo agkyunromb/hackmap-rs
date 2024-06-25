@@ -22,7 +22,7 @@ impl HackMapConfig {
 }
 
 pub(super) struct HackMap {
-    pub config                  : config::Config,
+    pub config                  : config::ConfigRef,
     pub input                   : input::Input,
     pub automap                 : automap::AutoMap,
     pub quick_next_game         : quick_next::QuickNextGame,
@@ -30,24 +30,34 @@ pub(super) struct HackMap {
 }
 
 impl HackMap {
-    const fn new() -> Self {
+    fn new() -> Self {
+        let config = Rc::new(RefCell::new(config::Config::new()));
+
         Self{
-            config              : config::Config::new(),
-            input               : input::Input::new(),
+            config              : Rc::clone(&config),
+            input               : input::Input::new(Rc::clone(&config)),
             automap             : automap::AutoMap::new(),
             quick_next_game     : quick_next::QuickNextGame::new(),
-            tweaks              : tweaks::Tweaks::new(),
+            tweaks              : tweaks::Tweaks::new(Rc::clone(&config)),
         }
     }
 
-    pub fn get() -> &'static mut HackMap {
+    pub fn get() -> &'static mut Self {
+        static mut HACKMAP: Option<HackMap> = None;
+
         unsafe {
-            &mut *std::ptr::addr_of_mut!(HACKMAP)
+            if HACKMAP.is_none() {
+                HACKMAP = Some(HackMap::new());
+            }
+
+            HACKMAP.as_mut().unwrap()
+            // &mut *std::ptr::addr_of_mut!(HACKMAP.unwrap())
         }
     }
 
-    pub fn config() -> &'static mut config::Config {
-        &mut Self::get().config
+    pub fn config() -> config::ConfigRef {
+        Rc::clone(&Self::get().config)
+        // &mut Self::get().config
     }
 
     pub fn input() -> &'static mut input::Input {
@@ -66,8 +76,6 @@ impl HackMap {
         &mut Self::get().tweaks
     }
 }
-
-static mut HACKMAP: HackMap = HackMap::new();
 
 pub fn init(modules: &D2Modules) {
     let initializer: &[(&str, fn(&D2Modules) -> Result<(), HookError>)] = &[
