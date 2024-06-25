@@ -40,12 +40,12 @@ extern "fastcall" fn D2Sigma_Monster_GetName(unit: PVOID) -> PCWSTR {
 
     let name = D2Sigma::Units::Monster_GetName(unit).to_string();
 
-    let dr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::DamageResist, 0);
-    let mr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MagicResist, 0);
-    let fr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::FireResist, 0);
-    let lr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::LightResist, 0);
-    let cr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::ColdResist, 0);
-    let pr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::PoisonResist, 0);
+    let dr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::DamageResist, 0) as i32;
+    let mr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MagicResist, 0) as i32;
+    let fr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::FireResist, 0) as i32;
+    let lr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::LightResist, 0) as i32;
+    let cr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::ColdResist, 0) as i32;
+    let pr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::PoisonResist, 0) as i32;
     let hp = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::HitPoints, 0) as f64;
     let max_hp = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MaxHp, 0) as f64;
 

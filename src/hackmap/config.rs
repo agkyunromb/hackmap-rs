@@ -5,7 +5,7 @@ pub(super) struct Config {
 impl Config {
     pub const fn new() -> Self {
         Self{
-            perm_show_items_toggle: false,
+            perm_show_items_toggle: true,
         }
     }
 }
