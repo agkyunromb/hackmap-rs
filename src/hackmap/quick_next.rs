@@ -206,14 +206,14 @@ impl QuickNextGame {
     }
 
     fn on_enter_lobby(&mut self) -> Result<(), ()> {
-        if self.auto_create_game == false {
-            return Ok(());
-        }
-
         let on_create_game_tab_button_clicked = self.on_create_game_tab_button_clicked.ok_or(())?;
 
         if on_create_game_tab_button_clicked(null_mut()) == FALSE {
             return Err(());
+        }
+
+        if self.auto_create_game == false {
+            return Ok(());
         }
 
         let on_create_game_button_clicked = self.on_create_game_button_clicked.ok_or(())?;

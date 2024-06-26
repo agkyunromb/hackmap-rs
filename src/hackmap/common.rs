@@ -1,3 +1,4 @@
+pub use std::collections::HashMap;
 pub use std::ptr::{addr_of, addr_of_mut};
 pub use std::rc::Rc;
 pub use std::cell::RefCell;

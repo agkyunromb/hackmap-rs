@@ -10,8 +10,8 @@ pub struct UnitsOffset {
 }
 
 pub struct UIOffset {
-    pub BossLifeBar_Call_GetMonsterName     : FuncAddress,
-    pub MonsterLifeBar_Call_GetMonsterName  : FuncAddress,
+    pub BossLifeBar_Call_Units_GetName      : FuncAddress,
+    pub MonsterLifeBar_Call_Units_GetName   : FuncAddress,
     pub CheckIsMonsterShouldDisplayLifeBar  : FuncAddress,
 }
 
@@ -66,9 +66,9 @@ pub fn init(d2sigma: usize) {
                     Monster_GetName   : vmslide + 0x100B8A20,
                 },
                 UI: UIOffset{
-                    BossLifeBar_Call_GetMonsterName       : vmslide + 0x1008FFCB,   // BossLifebar:BossName
-                    MonsterLifeBar_Call_GetMonsterName    : vmslide + 0x1008F5AC,   // game\\hud\\mon-hp-bar
-                    CheckIsMonsterShouldDisplayLifeBar    : vmslide + 0x1008F3FD,   // game\\hud\\mon-hp-bar, test    eax, 201h
+                    BossLifeBar_Call_Units_GetName      : vmslide + 0x1008FFCB,   // BossLifebar:BossName
+                    MonsterLifeBar_Call_Units_GetName   : vmslide + 0x1008F5AC,   // game\\hud\\mon-hp-bar
+                    CheckIsMonsterShouldDisplayLifeBar  : vmslide + 0x1008F3FD,   // game\\hud\\mon-hp-bar, test    eax, 201h
                 },
             });
         },
@@ -85,8 +85,8 @@ pub fn init(d2sigma: usize) {
                     Monster_GetName   : vmslide + 0x100B8D80,
                 },
                 UI: UIOffset{
-                    BossLifeBar_Call_GetMonsterName     : vmslide + 0x1009014B,
-                    MonsterLifeBar_Call_GetMonsterName  : vmslide + 0x1008F72C,
+                    BossLifeBar_Call_Units_GetName      : vmslide + 0x1009014B,
+                    MonsterLifeBar_Call_Units_GetName   : vmslide + 0x1008F72C,
                     CheckIsMonsterShouldDisplayLifeBar  : 0,
                 },
             });

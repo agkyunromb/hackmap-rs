@@ -36,7 +36,7 @@ extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PV
     if hide { TRUE } else { FALSE }
 }
 
-extern "fastcall" fn D2Sigma_Monster_GetName(unit: PVOID) -> PCWSTR {
+extern "fastcall" fn D2Sigma_Units_GetName(unit: PVOID) -> PCWSTR {
 
     let name = D2Sigma::Units::Monster_GetName(unit).to_string();
 
@@ -201,8 +201,8 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
 
         // 显示抗性
         if D2Sigma::initialized() {
-            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
-            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_GetMonsterName, D2Sigma_Monster_GetName as usize, None, None)?;
+            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
+            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
             patch_memory_value(0, D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar, 0x80, 1)?;
         }
     }

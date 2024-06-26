@@ -17,6 +17,7 @@ pub struct DataTblsOffset {
 pub struct UnitsOffset {
     pub TestCollisionWithUnit   : FuncAddress,
     pub GetRoom                 : FuncAddress,
+    pub GetNearestTestedUnit    : FuncAddress,
 }
 
 pub struct DrlgDrlgOffset {
@@ -34,11 +35,12 @@ pub struct DrlgPresetOffset {
 }
 
 pub struct DungeonOffset {
-    pub GetDrlgFromAct              : FuncAddress,
-    pub IsTownLevelId               : FuncAddress,
-    pub IsRoomInTown                : FuncAddress,
-    pub GetHoradricStaffTombLevelId : FuncAddress,
-    pub GetRoomFromAct              : FuncAddress,
+    pub GetDrlgFromAct                  : FuncAddress,
+    pub IsTownLevelId                   : FuncAddress,
+    pub IsRoomInTown                    : FuncAddress,
+    pub GetHoradricStaffTombLevelId     : FuncAddress,
+    pub GetRoomFromAct                  : FuncAddress,
+    pub GetAdjacentRoomsListFromRoom    : FuncAddress,
 }
 
 pub struct D2CommonOffset {
@@ -241,35 +243,37 @@ pub mod DrlgPreset {
 pub fn init(d2common: usize) {
     AddressTable.initialize(D2CommonOffset{
         DataTbls: DataTblsOffset{
-            CompileTxt                  : d2common + D2RVA::D2Common(0x6FDAEF40),
-            GetLevelDefRecord           : d2common + D2RVA::D2Common(0x6FDBCB20),
-            GetObjectsTxtRecord         : d2common + D2RVA::D2Common(0x6FD8E980),
-            sgptDataTables              : d2common + D2RVA::D2Common(0x6FDE9E1C),
+            CompileTxt                      : d2common + D2RVA::D2Common(0x6FDAEF40),
+            GetLevelDefRecord               : d2common + D2RVA::D2Common(0x6FDBCB20),
+            GetObjectsTxtRecord             : d2common + D2RVA::D2Common(0x6FD8E980),
+            sgptDataTables                  : d2common + D2RVA::D2Common(0x6FDE9E1C),
         },
         StatList: StatListOffset{
-            GetUnitBaseStat             : d2common + D2RVA::D2Common(0x6FD88B70),
+            GetUnitBaseStat                 : d2common + D2RVA::D2Common(0x6FD88B70),
         },
         Units: UnitsOffset{
-            TestCollisionWithUnit       : d2common + D2RVA::D2Common(0x6FD814A0),
-            GetRoom                     : d2common + D2RVA::D2Common(0x6FD7FE10),
+            TestCollisionWithUnit           : d2common + D2RVA::D2Common(0x6FD814A0),
+            GetRoom                         : d2common + D2RVA::D2Common(0x6FD7FE10),
+            GetNearestTestedUnit            : d2common + D2RVA::D2Common(0x6FD62330),
         },
         DrlgDrlg: DrlgDrlgOffset{
-            GetActNoFromLevelId         : d2common + D2RVA::D2Common(0x6FD7D2C0),
-            GetLevel                    : d2common + D2RVA::D2Common(0x6FD7DD80),
+            GetActNoFromLevelId             : d2common + D2RVA::D2Common(0x6FD7D2C0),
+            GetLevel                        : d2common + D2RVA::D2Common(0x6FD7DD80),
         },
         DrlgRoom: DrlgRoomOffset{
-            GetPresetUnits              : d2common + D2RVA::D2Common(0x6FD94460),
-            GetLevelId                  : d2common + D2RVA::D2Common(0x6FD94690),
+            GetPresetUnits                  : d2common + D2RVA::D2Common(0x6FD94460),
+            GetLevelId                      : d2common + D2RVA::D2Common(0x6FD94690),
         },
         DrlgPreset: DrlgPresetOffset{
-            GetLevelPrestIdFromRoomEx   : d2common + D2RVA::D2Common(0x6FD59C20),
+            GetLevelPrestIdFromRoomEx       : d2common + D2RVA::D2Common(0x6FD59C20),
         },
         Dungeon: DungeonOffset{
-            GetDrlgFromAct              : d2common + D2RVA::D2Common(0x6FD8B270),
-            IsTownLevelId               : d2common + D2RVA::D2Common(0x6FD8B230),
-            IsRoomInTown                : d2common + D2RVA::D2Common(0x6FD8C390),
-            GetHoradricStaffTombLevelId : d2common + D2RVA::D2Common(0x6FD8B080),
-            GetRoomFromAct              : d2common + D2RVA::D2Common(0x6FD8B550),
+            GetDrlgFromAct                  : d2common + D2RVA::D2Common(0x6FD8B270),
+            IsTownLevelId                   : d2common + D2RVA::D2Common(0x6FD8B230),
+            IsRoomInTown                    : d2common + D2RVA::D2Common(0x6FD8C390),
+            GetHoradricStaffTombLevelId     : d2common + D2RVA::D2Common(0x6FD8B080),
+            GetRoomFromAct                  : d2common + D2RVA::D2Common(0x6FD8B550),
+            GetAdjacentRoomsListFromRoom    : d2common + D2RVA::D2Common(0x6FD8BA20),
         },
     });
 }

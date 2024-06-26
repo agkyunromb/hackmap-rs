@@ -314,7 +314,7 @@ extern "stdcall" fn CelDrawClipped(data: &D2GfxData, x: i32, y: i32, crop_rect: 
 }
 
 pub(super) struct AutoMap {
-    automap_cells_for_layers: Option<std::collections::HashMap<u32, Vec<D2AutoMapCellDataEx>>>,
+    automap_cells_for_layers: Option<HashMap<u32, Vec<D2AutoMapCellDataEx>>>,
 }
 
 impl AutoMap {
@@ -363,7 +363,7 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
     //     ::windows_sys::Win32::System::Console::AllocConsole();
     // }
 
-    HackMap::automap().automap_cells_for_layers = Some(std::collections::HashMap::new());
+    HackMap::automap().automap_cells_for_layers = Some(HashMap::new());
 
     unsafe {
         STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
