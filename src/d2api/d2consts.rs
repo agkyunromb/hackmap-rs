@@ -1,3 +1,5 @@
+use bitflags::bitflags;
+
 #[repr(u8)]
 #[derive(PartialEq, Copy, Clone)]
 pub enum D2StringColorCodes {
@@ -542,4 +544,204 @@ pub enum D2Font
     FontInGameChat        = 13,
 
     Max,
+}
+
+#[repr(u32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2PlayerModes
+{
+    Death               = 0,
+    Neutral             = 1,
+    Walk                = 2,
+    Run                 = 3,
+    GetHit              = 4,
+    TNeutral            = 5,
+    TWalk               = 6,
+    Attack1             = 7,
+    Attack2             = 8,
+    Block               = 9,
+    Cast                = 10,
+    Throw               = 11,
+    Kick                = 12,
+    Special1            = 13,
+    Special2            = 14,
+    Special3            = 15,
+    Special4            = 16,
+    Dead                = 17,
+    Sequence            = 18,
+    Knockback           = 19,
+
+    Max,
+}
+
+#[repr(u32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2MonModes
+{
+    Death               = 0,                            // 0x00 Death DT
+    Neutral             = 1,                            // 0x01 Neutral NU
+    Walk                = 2,                            // 0x02 Walk WL
+    GetHit              = 3,                            // 0x03 Get Hit GH
+    Attack1             = 4,                            // 0x04 Melee Attack A1
+    Attack2             = 5,                            // 0x05 Melee Attack A2
+    Block               = 6,                            // 0x06 Block BL
+    Cast                = 7,                            // 0x07 Spell Cast SC
+    Skill1              = 8,                            // 0x08 Special S1
+    Skill2              = 9,                            // 0x09 Special S2
+    Skill3              = 10,                           // 0x0A Special S3
+    Skill4              = 11,                           // 0x0B Special S4
+    Dead                = 12,                           // 0x0C Dead DD
+    Knockback           = 13,                           // 0x0D Knockback KB
+    Sequence            = 14,                           // 0x0E Sequence SQ
+    Run                 = 15,                           // 0x0F Run RN
+
+    Max
+}
+
+#[repr(u8)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2MonUMods
+{
+    None                        = 0,
+    RndName                     = 1,
+    HpMultiply                  = 2,
+    Light                       = 3,
+    LevelAdd                    = 4,
+    ExtraStrong                 = 5,
+    ExtraFast                   = 6,
+    Cursed                      = 7,
+    MagicResistant              = 8,
+    FireChant                   = 9,
+    PoisDeath                   = 10,
+    WormDeath                   = 11,
+    BravEnDeath                 = 12,
+    IgnoreAc                    = 13,
+    SpcDamage                   = 14,
+    KillMinionsDeath            = 15,
+    ChampMods                   = 16,
+    LightChant                  = 17,
+    ColdChant                   = 18,
+    UnusedMercMod               = 19,
+    ChargedBolts                = 20,
+    TempSummon                  = 21,
+    QuestMod                    = 22,
+    PoisonField                 = 23,
+    Thief                       = 24,
+    ManaBurn                    = 25,
+    TeleHeal                    = 26,
+    SpectralHit                 = 27,
+    StoneSkin                   = 28,
+    MultiShot                   = 29,
+    AuraChant                   = 30,
+    CorpseBoomDeath             = 31,
+    FireBoomDeath               = 32,
+    FreezinDeath                = 33,
+    SelfResurrect               = 34,
+    IceShatterDeath             = 35,
+    ChampStoned                 = 36,
+    ChampStats                  = 37,
+    ChampCurseImmune            = 38,
+    ChampStats2                 = 39,
+    PainWormDeath               = 40,
+    AlwaysRunAi                 = 41,
+    NovaDeath                   = 42,
+}
+
+bitflags! {
+    #[derive(PartialEq, Copy, Clone)]
+    pub struct D2MonStatsTxtFlags :u32 {
+        const IsSpawn           = 0x00000001;
+        const IsMelee           = 0x00000002;
+        const NoRatio           = 0x00000004;
+        const OpenDoors         = 0x00000008;
+        const SetBoss           = 0x00000010;
+        const BossXfer          = 0x00000020;
+        const Boss              = 0x00000040;
+        const PrimeEvil         = 0x00000080;
+        const Npc               = 0x00000100;
+        const Interact          = 0x00000200;
+        const InTown            = 0x00000400;
+        const LUndead           = 0x00000800;
+        const HUndead           = 0x00001000;
+        const Demon             = 0x00002000;
+        const Flying            = 0x00004000;
+        const Killable          = 0x00008000;
+        const SwitchAi          = 0x00010000;
+        const NoMultiShot       = 0x00020000;
+        const NeverCount        = 0x00040000;
+        const PetIgnore         = 0x00080000;
+        const DeathDmg          = 0x00100000;
+        const GenericSpawn      = 0x00200000;
+        const Zoo               = 0x00400000;
+        const PlaceSpawn        = 0x00800000;
+        const Inventory         = 0x01000000;
+        const Enabled           = 0x02000000;
+        const NoShldBlock       = 0x04000000;
+        const NoAura            = 0x08000000;
+        const RangedType        = 0x10000000;
+    }
+
+    #[derive(PartialEq, Copy, Clone)]
+    pub struct D2UnitFlags : u32 {
+        const DoUpdate          = 0x00000001;           // tells to update the unit
+        const Targetable        = 0x00000002;           // whenever the unit can be selected or not
+        const CanBeAttacked     = 0x00000004;           // whenever the unit can be attacked
+        const IsValidTarget     = 0x00000008;           // used to check if unit is a valid target
+        const InitSeedSet       = 0x00000010;           // tells whenever the unit seed has been initialized
+        const DrawShadow        = 0x00000020;           // tells whenver to draw a shadow or not (client only)
+        const SkSrvDoFunc       = 0x00000040;           // set when skill srvdofunc is executed
+        const ObjPreOperate     = 0x00000080;           // unknown, used by objects with pre-operate disabled
+        const HasTxtMsg         = 0x00000100;           // whenever this unit has a text message attached to it
+        const IsMerc            = 0x00000200;           // is mercenary unit
+        const HasEventSound     = 0x00000400;           // does this unit have an event-sound attached to it (server)
+        const Summoner          = 0x00000800;           // set for the summoner only
+        const SendRefreshMsg    = 0x00001000;           // used by items to send a refresh message when it drops on ground
+        const IsLinkRefreshMsg  = 0x00002000;           // tells whenever this unit is linked to an update message chain
+        const SqGfxChange       = 0x00004000;           // tells whenever to load new anim for skill SQ
+        const UpgLifeNHitClass  = 0x00008000;           // updates life% and hitclass on client
+        const IsDead            = 0x00010000;           // unit is dead
+        const NoTc              = 0x00020000;           // disables treasureclass drops
+        const MonModeIsChanging = 0x00080000;           // set when monmode changes
+        const PreDraw           = 0x00100000;           // pre-draw this unit (like floor tiles, client only)
+        const IsAsync           = 0x00200000;           // is async unit (critters)
+        const IsClientUnit      = 0x00400000;           // is client unit
+        const IsInit            = 0x01000000;           // set when unit has been initialized
+        const IsResurrect       = 0x02000000;           // set for resurrected units and items on floor
+        const NoXp              = 0x04000000;           // no xp gain from killing this unit
+        const Automap           = 0x10000000;           // automap stuff
+        const Automap2          = 0x20000000;           // automap stuff
+        const PetIgnore         = 0x40000000;           // ignored by pets
+        const IsRevive          = 0x80000000;           // is revived monster
+    }
+
+    #[derive(PartialEq, Copy, Clone)]
+    pub struct D2UnitFlagsEx : u32 {
+        const HasInv            = 0x00000001;           // unit has inventory attached to it
+        const UpdateInv         = 0x00000002;           // tells to update inventory content
+        const IsVendorItem      = 0x00000004;           // set for vendor shop items
+        const IsShapeshifted    = 0x00000008;           // unit is shapeshifted
+        const ItemInit          = 0x00000010;           // set for items, related to init
+        const IsInLos           = 0x00000080;           // unit is in client's line of sight
+        const HasBeenDeleted    = 0x00000100;           // unit has been deleted but not free'd yet
+        const StoreOwnerInfo    = 0x00000400;           // unit stores info about owner
+        const IsCorpse          = 0x00001000;           // unit is a corpse (use UNITFLAG_ISDEAD instead)
+        const UnkPathRelated    = 0x00002000;           // related to path
+        const Teleported        = 0x00010000;           // unit has been teleported, needs resync
+        const StoreLastAttacker = 0x00020000;           // unit stores info about last attacker
+        const NoDraw            = 0x00040000;           // don't draw this unit
+        const IsExpansion       = 0x02000000;           // is expansion unit
+        const ServerUnit        = 0x04000000;           // is server-side unit
+    }
+
+    #[derive(PartialEq, Copy, Clone)]
+    pub struct D2MonTypeFlags : u8 {
+        const Other             = 0x00000001;
+        const SuperUnique       = 0x00000002;
+        const Champion          = 0x00000004;
+        const Unique            = 0x00000008;
+        const Minion            = 0x00000010;
+        const Possessed         = 0x00000020;
+        const Ghostly           = 0x00000040;
+        const MultiShot         = 0x00000080;
+    }
 }

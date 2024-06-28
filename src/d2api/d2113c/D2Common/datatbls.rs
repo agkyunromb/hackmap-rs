@@ -1,3 +1,4 @@
+use super::super::super::d2consts::*;
 use std::ptr::addr_of;
 
 #[repr(C, packed(1))]
@@ -133,6 +134,101 @@ pub struct D2LvlWarpTxt {
     pub dwLitVersion    : u32,              //0x24
     pub dwTiles         : u32,              //0x28
     pub szDirection     : [i8; 4],          //0x2C
+}
+
+#[repr(C, packed(4))]
+pub struct D2MonStatsTxt
+{
+    pub nId                         : i16,                  // 0x0000
+    pub nBaseId                     : i16,                  // 0x0002
+    pub nNextInClass                : i16,                  // 0x0004
+    pub wNameStr                    : u16,                  // 0x0006
+    pub wDescStr                    : u16,                  // 0x0008
+    pub unk0x0A                     : u16,                  // 0x000a
+    pub dwMonStatsFlags             : D2MonStatsTxtFlags,   // 0x000c
+    pub dwCode                      : u32,                  // 0x0010
+    pub wMonSound                   : u16,                  // 0x0014
+    pub wUMonSound                  : u16,                  // 0x0016
+    pub wMonStatsEx                 : u16,                  // 0x0018
+    pub wMonProp                    : u16,                  // 0x001a
+    pub wMonType                    : i16,                  // 0x001c
+    pub wAI                         : u16,                  // 0x001e
+    pub wSpawn                      : u16,                  // 0x0020
+    pub nSpawnX                     : u8,                   // 0x0022
+    pub nSpawnY                     : u8,                   // 0x0023
+    pub nSpawnMode                  : u8,                   // 0x0024
+    pub unk0x25                     : u8,                   // 0x0025
+    pub wMinion                     : [i16; 2],             // 0x0026
+    pub nMonEquipTxtRecordId        : i16,                  // 0x002a
+    pub nPartyMin                   : u8,                   // 0x002c
+    pub nPartyMax                   : u8,                   // 0x002d
+    pub nRarity                     : u8,                   // 0x002e
+    pub nMinGrp                     : u8,                   // 0x002f
+    pub nMaxGrp                     : u8,                   // 0x0030
+    pub nSparsePopulate             : u8,                   // 0x0031
+    pub nVelocity                   : i16,                  // 0x0032
+    pub nRun                        : i16,                  // 0x0034
+    pub nWalkAnimSpeed              : i16,                  // 0x0036
+    pub nRunAnimSpeed               : i16,                  // 0x0038
+    pub wMissA1                     : u16,                  // 0x003a
+    pub wMissA2                     : u16,                  // 0x003c
+    pub wMissS1                     : u16,                  // 0x003e
+    pub wMissS2                     : u16,                  // 0x0040
+    pub wMissS3                     : u16,                  // 0x0042
+    pub wMissS4                     : u16,                  // 0x0044
+    pub wMissC                      : u16,                  // 0x0046
+    pub wMissSQ                     : u16,                  // 0x0048
+    pub nMaxChainId                 : u8,                   // 0x004a
+    pub nChainId                    : u8,                   // 0x004b
+    pub nAlign                      : u8,                   // 0x004c
+    pub nTransLvl                   : u8,                   // 0x004d
+    pub nThreat                     : u8,                   // 0x004e
+    pub nAIdel                      : [u8; 3],              // 0x004f
+    pub nAiDist                     : [u8; 3],              // 0x0052
+    pub unk0x55                     : u8,                   // 0x0055
+    pub wAiParam                    : [[i16; 8]; 3],        // 0x0056
+    pub wTreasureClass              : [[u16; 3]; 4],        // 0x0086
+    pub nTCQuestId                  : u8,                   // 0x009e
+    pub nTCQuestCP                  : u8,                   // 0x009f
+    pub nDrain                      : [u8; 3],              // 0x00a0
+    pub nToBlock                    : [u8; 3],              // 0x00a3
+    pub nCrit                       : u8,                   // 0x00a6
+    pub unk0xA7                     : u8,                   // 0x00a7
+    pub wSkillDamage                : i16,                  // 0x00a8
+    pub nLevel                      : [u16; 3],             // 0x00aa
+    pub nMinHP                      : [u16; 3],             // 0x00b0
+    pub nMaxHP                      : [u16; 3],             // 0x00b6
+    pub nAC                         : [u16; 3],             // 0x00bc
+    pub nA1TH                       : [u16; 3],             // 0x00c2
+    pub nA2TH                       : [u16; 3],             // 0x00c8
+    pub nS1TH                       : [u16; 3],             // 0x00ce
+    pub nExp                        : [u16; 3],             // 0x00d4
+    pub nA1MinD                     : [u16; 3],             // 0x00da
+    pub nA1MaxD                     : [u16; 3],             // 0x00e0
+    pub nA2MinD                     : [u16; 3],             // 0x00e6
+    pub nA2MaxD                     : [u16; 3],             // 0x00ec
+    pub nS1MinD                     : [u16; 3],             // 0x00f2
+    pub nS1MaxD                     : [u16; 3],             // 0x00f8
+    pub nElMode                     : [u8; 3],              // 0x00fe
+    pub nElType                     : [u8; 3],              // 0x0101
+    pub nElPct                      : [[u8; 3]; 3],         // 0x0104
+    pub unk0x10D                    : u8,                   // 0x010d
+    pub nElMinD                     : [[u16; 3]; 3],        // 0x010e
+    pub nElMaxD                     : [[u16; 3]; 3],        // 0x0120
+    pub nElDur                      : [[u16; 3]; 3],        // 0x0132
+    pub nResistances                : [[u16; 6]; 3],        // 0x0144
+    pub nColdEffect                 : [i8; 3],              // 0x0168
+    pub unk0x16B                    : u8,                   // 0x016b
+    pub nSendSkills                 : [u8; 4],              // 0x016c
+    pub nSkill                      : [i16; 8],             // 0x0170
+    pub nSkillMode                  : [u8; 8],              // 0x0180
+    pub nSequence                   : [u16; 8],             // 0x0188
+    pub nSkLvl                      : [u8; 8],              // 0x0198
+    pub dwDamageRegen               : u32,                  // 0x01a0
+    pub nSplEndDeath                : u8,                   // 0x01a4
+    pub nSplGetModeChart            : u8,                   // 0x01a5
+    pub nSplEndGeneric              : u8,                   // 0x01a6
+    pub nSplClientEnd               : u8,                   // 0x01a7
 }
 
 #[repr(C, packed(1))]

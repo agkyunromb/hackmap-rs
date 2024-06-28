@@ -18,6 +18,8 @@ pub struct UnitsOffset {
     pub TestCollisionWithUnit   : FuncAddress,
     pub GetRoom                 : FuncAddress,
     pub GetNearestTestedUnit    : FuncAddress,
+    pub GetClientCoordX         : FuncAddress,
+    pub GetClientCoordY         : FuncAddress,
 }
 
 pub struct DrlgDrlgOffset {
@@ -41,6 +43,7 @@ pub struct DungeonOffset {
     pub GetHoradricStaffTombLevelId     : FuncAddress,
     pub GetRoomFromAct                  : FuncAddress,
     pub GetAdjacentRoomsListFromRoom    : FuncAddress,
+    pub GetLevelIdFromRoom              : FuncAddress,
 }
 
 pub struct D2CommonOffset {
@@ -58,8 +61,9 @@ pub static AddressTable: OnceHolder<D2CommonOffset> = OnceHolder::new();
 pub mod StatList {
     use super::super::common::*;
     use super::AddressTable;
+    use super::Units::D2Unit;
 
-    pub fn GetUnitBaseStat(unit: PVOID, statId: D2ItemStats, layer:u16) -> usize {
+    pub fn GetUnitBaseStat(unit: &D2Unit, statId: D2ItemStats, layer:u16) -> usize {
         addr_to_stdcall(GetUnitBaseStat, AddressTable.StatList.GetUnitBaseStat)(unit, statId, layer)
     }
 }
@@ -75,15 +79,16 @@ pub mod DataTbls {
     pub struct DataTable(usize);
 
     impl DataTable {
-        pub fn mon_stats_txt(&self) -> PVOID {
+        pub fn mon_stats_txt(&self) -> &[D2MonStatsTxt] {
             unsafe {
-                std::ptr::read((self.0 + 0xA78) as *const PVOID)
+                let addr = (self.0 + 0xA78) as *const usize;
+                std::slice::from_raw_parts(addr.read() as *const D2MonStatsTxt, self.mon_stats_txt_record_count())
             }
         }
 
         pub fn mon_stats_txt_record_count(&self) -> usize {
             unsafe {
-                std::ptr::read((self.0 + 0xA80) as *const usize)
+                ((self.0 + 0xA80) as *const usize).read()
             }
         }
 
@@ -151,6 +156,14 @@ pub mod Units {
     pub fn GetRoom(unit: &D2Unit) -> Option<&mut D2ActiveRoom> {
         ptr_to_ref_mut(addr_to_stdcall(_GetRoom, AddressTable.Units.GetRoom)(unit))
     }
+
+    pub fn GetClientCoordX(unit: &D2Unit) -> i32 {
+        addr_to_stdcall(GetClientCoordX, AddressTable.Units.GetClientCoordX)(unit)
+    }
+
+    pub fn GetClientCoordY(unit: &D2Unit) -> i32 {
+        addr_to_stdcall(GetClientCoordY, AddressTable.Units.GetClientCoordY)(unit)
+    }
 }
 
 pub mod DrlgDrlg {
@@ -199,12 +212,9 @@ pub mod DrlgRoom {
 
 pub mod Dungeon {
     use super::super::common::*;
+    use super::datatbls::D2LevelDefBin;
     use super::AddressTable;
     pub use super::drlg::*;
-
-    pub fn GetActNoFromLevelId(levelId: D2LevelId) -> u8 {
-        addr_to_stdcall(GetActNoFromLevelId, AddressTable.DrlgDrlg.GetActNoFromLevelId)(levelId)
-    }
 
     pub fn _GetDrlgFromAct(_act: &D2DrlgAct) -> *mut D2Drlg { null_mut() }
 
@@ -228,6 +238,30 @@ pub mod Dungeon {
     pub fn GetRoomFromAct(drlgAct: &D2DrlgAct) -> Option<&mut D2ActiveRoom> {
         addr_to_stdcall(GetRoomFromAct, AddressTable.Dungeon.GetRoomFromAct)(drlgAct)
     }
+
+    pub fn _GetAdjacentRoomsListFromRoom(_activeRoom: &D2ActiveRoom, _roomList: *mut *mut *mut D2ActiveRoom, _roomCount: *mut usize) {}
+
+    pub fn GetAdjacentRoomsListFromRoom(activeRoom: &D2ActiveRoom) -> Option<&[*mut D2ActiveRoom]> {
+        let mut rooms: *mut *mut D2ActiveRoom = null_mut();
+        let mut room_count = 0_usize;
+
+        addr_to_stdcall(_GetAdjacentRoomsListFromRoom, AddressTable.Dungeon.GetAdjacentRoomsListFromRoom)(&activeRoom, &mut rooms, &mut room_count);
+
+        if room_count == 0 {
+            return None;
+        }
+
+        unsafe {
+            let s = std::slice::from_raw_parts_mut(rooms, room_count);
+
+            Some(s)
+        }
+    }
+
+    pub fn GetLevelIdFromRoom(room: &D2ActiveRoom) -> D2LevelId {
+        addr_to_stdcall(GetLevelIdFromRoom, AddressTable.Dungeon.GetLevelIdFromRoom)(room)
+    }
+
 }
 
 pub mod DrlgPreset {
@@ -255,6 +289,8 @@ pub fn init(d2common: usize) {
             TestCollisionWithUnit           : d2common + D2RVA::D2Common(0x6FD814A0),
             GetRoom                         : d2common + D2RVA::D2Common(0x6FD7FE10),
             GetNearestTestedUnit            : d2common + D2RVA::D2Common(0x6FD62330),
+            GetClientCoordX                 : d2common + D2RVA::D2Common(0x6FD80290),
+            GetClientCoordY                 : d2common + D2RVA::D2Common(0x6FD80240),
         },
         DrlgDrlg: DrlgDrlgOffset{
             GetActNoFromLevelId             : d2common + D2RVA::D2Common(0x6FD7D2C0),
@@ -274,6 +310,7 @@ pub fn init(d2common: usize) {
             GetHoradricStaffTombLevelId     : d2common + D2RVA::D2Common(0x6FD8B080),
             GetRoomFromAct                  : d2common + D2RVA::D2Common(0x6FD8B550),
             GetAdjacentRoomsListFromRoom    : d2common + D2RVA::D2Common(0x6FD8BA20),
+            GetLevelIdFromRoom              : d2common + D2RVA::D2Common(0x6FD8C000),
         },
     });
 }

@@ -1,8 +1,10 @@
 use super::common::*;
 
 pub struct AutoMapOffset {
-    pub RevealMap   : FuncAddress,
-    pub DrawAutoMap : FuncAddress,
+    pub RevealMap           : FuncAddress,
+    pub DrawAutoMap         : FuncAddress,
+    pub DrawAutoMapUnits    : FuncAddress,
+    pub DrawUnitBlob        : FuncAddress,
 }
 
 pub struct UnitsOffset {
@@ -30,14 +32,19 @@ pub mod AutoMap {
     pub fn RevealMap() {
         addr_to_stdcall(RevealMap, AddressTable.AutoMap.RevealMap)()
     }
+
+    pub fn DrawUnitBlob(x: i32, y: i32, arg3: i32, color: u8) {
+        addr_to_fastcall(DrawUnitBlob, AddressTable.AutoMap.DrawUnitBlob)(x, y, arg3, color)
+    }
 }
 
 pub mod Units {
+    use super::super::D2Common::Units::D2Unit;
     use super::super::common::*;
     use super::AddressTable;
 
-    pub fn Monster_GetName(unit: PVOID) -> PCWSTR {
-        addr_to_fastcall(Monster_GetName, AddressTable.Units.Monster_GetName)(unit)
+    pub fn GetName(unit: &D2Unit) -> PCWSTR {
+        addr_to_fastcall(GetName, AddressTable.Units.Monster_GetName)(unit)
     }
 }
 
@@ -59,8 +66,10 @@ pub fn init(d2sigma: usize) {
 
             AddressTable.initialize(D2SigmaOffset{
                 AutoMap: AutoMapOffset{
-                    RevealMap         : vmslide + 0x10091A90,
-                    DrawAutoMap       : vmslide + 0x100511D0,
+                    RevealMap           : vmslide + 0x10091A90,
+                    DrawAutoMap         : vmslide + 0x100511D0,
+                    DrawAutoMapUnits    : vmslide + 0x10050CD0,
+                    DrawUnitBlob        : vmslide + 0x10076890,
                 },
                 Units: UnitsOffset{
                     Monster_GetName   : vmslide + 0x100B8A20,
@@ -78,8 +87,10 @@ pub fn init(d2sigma: usize) {
 
             AddressTable.initialize(D2SigmaOffset{
                 AutoMap: AutoMapOffset{
-                    RevealMap         : vmslide + 0x10091C10,
-                    DrawAutoMap       : 0,
+                    RevealMap           : vmslide + 0x10091C10,
+                    DrawAutoMap         : 0,
+                    DrawAutoMapUnits    : 0,
+                    DrawUnitBlob        : 0,
                 },
                 Units: UnitsOffset{
                     Monster_GetName   : vmslide + 0x100B8D80,

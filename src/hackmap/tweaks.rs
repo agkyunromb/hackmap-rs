@@ -1,3 +1,5 @@
+use D2Common::Units::D2Unit;
+
 use super::common::*;
 use super::HackMap;
 use super::config::ConfigRef;
@@ -36,9 +38,9 @@ extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PV
     if hide { TRUE } else { FALSE }
 }
 
-extern "fastcall" fn D2Sigma_Units_GetName(unit: PVOID) -> PCWSTR {
+extern "fastcall" fn D2Sigma_Units_GetName(unit: &D2Unit) -> PCWSTR {
 
-    let name = D2Sigma::Units::Monster_GetName(unit).to_string();
+    let name = D2Sigma::Units::GetName(unit).to_string();
 
     let dr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::DamageResist, 0) as i32;
     let mr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MagicResist, 0) as i32;
@@ -49,7 +51,7 @@ extern "fastcall" fn D2Sigma_Units_GetName(unit: PVOID) -> PCWSTR {
     let hp = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::HitPoints, 0) as f64;
     let max_hp = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MaxHp, 0) as f64;
 
-    let class_id: u32 = read_at(unit as usize + 4);
+    let class_id: u32 = unit.dwClassId;
 
     let monster_name = if unsafe { GetKeyState(VK_SHIFT as i32) < 0 } {
         format!("{name}({class_id}, 0x{class_id:X}) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
@@ -139,7 +141,7 @@ impl Tweaks {
         let mut cfg = self.cfg.borrow_mut();
 
         if vk == 'Y' as u16 {
-            cfg.perm_show_items_toggle = !cfg.perm_show_items_toggle;
+            cfg.tweaks.perm_show_items_toggle = !cfg.tweaks.perm_show_items_toggle;
         }
 
         false
@@ -155,7 +157,7 @@ impl Tweaks {
     fn handle_perm_show_items(&self, obj: PVOID) {
         let UI_HandleUIVars = get_stubs().UI_HandleUIVars.unwrap();
 
-        if self.cfg.borrow_mut().perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
+        if self.cfg.borrow_mut().tweaks.perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
             UI_HandleUIVars(obj);
             return;
         }

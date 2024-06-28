@@ -12,6 +12,9 @@ pub mod D2Multi;
 pub mod Fog;
 pub mod D2Sigma;
 
+pub mod D2WinEx;
+pub mod D2GfxEx;
+
 pub struct D2ImageBase113C;
 
 impl types::D2ImageBase for D2ImageBase113C {

@@ -69,7 +69,7 @@ impl StrToUTF16 for String {
 
 pub fn read_at<R>(addr: usize) -> R {
     unsafe {
-        std::ptr::read(addr as *const R)
+        (addr as *const R).read()
     }
 }
 

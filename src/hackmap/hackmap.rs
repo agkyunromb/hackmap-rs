@@ -27,6 +27,7 @@ pub(super) struct HackMap {
     pub automap                 : automap::AutoMap,
     pub quick_next_game         : quick_next::QuickNextGame,
     pub tweaks                  : tweaks::Tweaks,
+    pub unit_color              : unit_color::UnitColor,
 }
 
 impl HackMap {
@@ -39,7 +40,14 @@ impl HackMap {
             automap             : automap::AutoMap::new(),
             quick_next_game     : quick_next::QuickNextGame::new(),
             tweaks              : tweaks::Tweaks::new(Rc::clone(&config)),
+            unit_color          : unit_color::UnitColor::new(Rc::clone(&config)),
         }
+    }
+
+    fn init(&mut self) -> anyhow::Result<()> {
+        self.config.borrow_mut().load("hackmap.cfg.toml")?;
+
+        Ok(())
     }
 
     pub fn get() -> &'static mut Self {
@@ -75,9 +83,17 @@ impl HackMap {
     pub fn tweaks() -> &'static mut tweaks::Tweaks {
         &mut Self::get().tweaks
     }
+
+    pub fn unit_color() -> &'static mut unit_color::UnitColor {
+        &mut Self::get().unit_color
+    }
 }
 
 pub fn init(modules: &D2Modules) {
+    if let Err(err) = HackMap::get().init() {
+        println!("{}", err);
+    }
+
     let initializer: &[(&str, fn(&D2Modules) -> Result<(), HookError>)] = &[
         ("auto_map",    automap::init),
         ("input",       input::init),

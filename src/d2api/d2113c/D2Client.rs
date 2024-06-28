@@ -27,9 +27,14 @@ pub struct AutoMapOffset {
     pub gAutoMapCellBlockHead   : FuncAddress,
     pub gAutoMapCellCount       : FuncAddress,
     pub gCurrentAutoMapLayer    : FuncAddress,
+    pub gPointDivisor           : FuncAddress,
+    pub gPointOffsetX           : FuncAddress,
+    pub gPointOffsetY           : FuncAddress,
+    pub gRect                   : FuncAddress,
 }
 
 pub struct UnitsOffset {
+    pub GetMonsterOwnerID       : FuncAddress,
     pub gClientPlayer           : FuncAddress,
 }
 
@@ -191,16 +196,68 @@ pub mod AutoMap {
         ptr_to_ref_mut(layer)
     }
 
+    pub fn PointDivisor() -> &'static mut i32 {
+        unsafe { &mut *(AddressTable.AutoMap.gPointDivisor as *mut i32) }
+    }
+
+    pub fn PointOffsetX() -> &'static mut i32 {
+        unsafe { &mut *(AddressTable.AutoMap.gPointOffsetX as *mut i32) }
+
+    }
+
+    pub fn PointOffsetY() -> &'static mut i32 {
+        unsafe { &mut *(AddressTable.AutoMap.gPointOffsetY as *mut i32) }
+
+    }
+
+    pub fn Rect() -> &'static mut RECT {
+        unsafe { &mut *(AddressTable.AutoMap.gRect as *mut RECT) }
+    }
+
 }
 
 pub mod Units {
+    use std::ptr::addr_of_mut;
+
     use super::super::common::*;
     use super::AddressTable;
     use super::super::D2Common::Units::D2Unit;
 
+    pub fn GetMonsterOwnerID(unit: &D2Unit) -> u32 {
+        addr_to_fastcall(GetMonsterOwnerID, AddressTable.Units.GetMonsterOwnerID)(unit)
+    }
+
     pub fn GetClientPlayer() -> Option<&'static mut D2Unit> {
         let clinet_player: *mut D2Unit = read_at(AddressTable.Units.gClientPlayer);
         ptr_to_ref_mut(clinet_player)
+    }
+
+    pub fn IsCorpse(unit: &D2Unit) -> bool {
+        let flags = unsafe { addr_of!(unit.dwFlags).read_unaligned() };
+
+        if flags.contains(D2UnitFlags::IsDead) {
+            return true;
+        }
+
+        match unit.dwUnitType {
+            D2UnitTypes::Player => {
+                let anim_mode = unsafe { unit.Mode.dwAnimMode };
+                if anim_mode == D2PlayerModes::Death as u32 || anim_mode == D2PlayerModes::Dead as u32 {
+                    return true;
+                }
+            },
+
+            D2UnitTypes::Monster => {
+                let anim_mode = unsafe { unit.Mode.dwAnimMode };
+                if anim_mode == D2MonModes::Death as u32 || anim_mode == D2MonModes::Dead as u32 {
+                    return true;
+                }
+            }
+
+            _ => {},
+        }
+
+        false
     }
 }
 
@@ -230,8 +287,14 @@ pub fn init(d2client: usize) {
             gAutoMapCellBlockHead   : d2client + D2RVA::D2Client(0x6FBCC1B8),
             gAutoMapCellCount       : d2client + D2RVA::D2Client(0x6FBCC1BC),
             gCurrentAutoMapLayer    : d2client + D2RVA::D2Client(0x6FBCC1C4),
+
+            gPointDivisor           : d2client + D2RVA::D2Client(0x6FBA16B0),
+            gPointOffsetX           : d2client + D2RVA::D2Client(0x6FBCC1F8),
+            gPointOffsetY           : d2client + D2RVA::D2Client(0x6FBCC1FC),
+            gRect                   : d2client + D2RVA::D2Client(0x6FBCC228),
         },
         Units: UnitsOffset{
+            GetMonsterOwnerID       : d2client + D2RVA::D2Client(0x6FAD16A0),
             gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
         },
     });

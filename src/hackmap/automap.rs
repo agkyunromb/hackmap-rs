@@ -348,12 +348,7 @@ impl AutoMap {
         let drlg_act = ptr_to_ref_mut(player.pDrlgAct).unwrap();
         let color = if D2Common::Dungeon::GetHoradricStaffTombLevelId(drlg_act) == level_id { D2StringColorCodes::LightGreen } else { D2StringColorCodes::White };
 
-        let old_font = D2Win::Text::SetFont(D2Font::Font6);
-        let (width, _) = D2Win::Text::GetTextDimensions(level_name);
-
-        D2Win::Text::DrawText(level_name, x - (width / 2), y, color, TRUE);
-
-        D2Win::Text::SetFont(old_font);
+        D2WinEx::Text::draw_text(level_name, x, y, D2Font::Font6, color);
     }
 }
 
