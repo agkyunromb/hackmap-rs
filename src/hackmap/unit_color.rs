@@ -45,15 +45,17 @@ extern "stdcall" fn D2Sigma_AutoMap_DrawUnits() {
 }
 
 pub(super) struct UnitColor {
-    pub cfg: ConfigRef,
-    pub boss_monster_id: HashMap<u32, u32>,
+    pub cfg                 : ConfigRef,
+    pub boss_monster_id     : HashMap<u32, u32>,
+    pub glide3x_is_d2sigma  : *mut u8,
 }
 
 impl UnitColor {
     pub fn new(cfg: ConfigRef) -> Self{
         Self{
             cfg,
-            boss_monster_id: HashMap::new(),
+            boss_monster_id     : HashMap::new(),
+            glide3x_is_d2sigma  : null_mut(),
         }
     }
 
@@ -323,7 +325,15 @@ impl UnitColor {
     }
 
     fn draw_cell(&self, x: i32, y: i32, cell: image_loader::DC6BufferRef, color: u8) {
-        D2GfxEx::Texture::DrawCell(x, y, cell.d2_cell_file_header(), color)
+        if self.glide3x_is_d2sigma.is_null() == false {
+            unsafe { self.glide3x_is_d2sigma.write(0); }
+        }
+
+        D2GfxEx::Texture::DrawCell(x, y, cell.d2_cell_file_header(), color);
+
+        if self.glide3x_is_d2sigma.is_null() == false {
+            unsafe { self.glide3x_is_d2sigma.write(1); }
+        }
     }
 
     fn draw_cell_by_blob_file(&self, x: i32, y: i32, blob_file: Option<&String>, color: u8) {
@@ -371,8 +381,19 @@ impl UnitColor {
 
 }
 
-pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
+pub fn init(modules: &D2Modules) -> Result<(), HookError> {
     unsafe {
+        let glide3x = modules.glide3x.unwrap();
+
+        match (&*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID)).FileHeader.TimeDateStamp {
+            0x6606E04D => {
+                // drawImageHooked
+                HackMap::unit_color().glide3x_is_d2sigma = (glide3x + 0x5BFF3135 - 0x5BD50000) as *mut u8;
+            },
+
+            _ => {},
+        }
+
         inline_hook_jmp(0, D2Common::AddressTable.DataTbls.CompileTxt, DATATBLS_CompileTxt as usize, Some(&mut STUBS.DATATBLS_CompileTxt), None)?;
         // inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMapUnits, D2Sigma_AutoMap_DrawUnits as usize, None, None)?;
         inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, D2Sigma_AutoMap_Draw as usize, None, None)?;

@@ -9,6 +9,7 @@ pub struct NetOffset {
 pub struct UIOffset {
     pub SetUIVar        : FuncAddress,
     pub HandleUIVars    : FuncAddress,
+    pub CallHandleUIVars: FuncAddress,
 
     pub gUIVars         : FuncAddress,
     pub gUIOpenMode     : FuncAddress,
@@ -291,7 +292,8 @@ pub fn init(d2client: usize) {
     AddressTable.initialize(D2ClientOffset{
         UI: UIOffset {
             SetUIVar                : d2client + D2RVA::D2Client(0x6FB72790),
-            HandleUIVars            : d2client + D2RVA::D2Client(0x6FAF437B),
+            HandleUIVars            : d2client + D2RVA::D2Client(0x6FB739E0),
+            CallHandleUIVars        : d2client + D2RVA::D2Client(0x6FAF437B),
 
             gUIVars                 : d2client + D2RVA::D2Client(0x6FBAAD80),
             gUIOpenMode             : d2client + D2RVA::D2Client(0x6FBCC414),

@@ -179,7 +179,7 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         // 永久显示地面物品
         let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);
 
-        inline_hook_call(0, D2Client::AddressTable.UI.HandleUIVars, HandleUIVars as usize, Some(&mut STUBS.UI_HandleUIVars), None)?;
+        inline_hook_call(0, D2Client::AddressTable.UI.CallHandleUIVars, HandleUIVars as usize, Some(&mut STUBS.UI_HandleUIVars), None)?;
         patch_memory_value(D2Client, D2RVA::D2Client(0x6FB0948B), 0xEB, 1)?;
 
         // HDText_drawFramedText_is_alt_clicked
