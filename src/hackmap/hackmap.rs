@@ -1,6 +1,9 @@
+use windows_sys::Win32::UI::WindowsAndMessaging::{MessageBoxW, MB_OKCANCEL};
+
 use super::common::*;
 use super::{
     config,
+    image_loader,
     automap,
     unit_color,
     tweaks,
@@ -23,6 +26,7 @@ impl HackMapConfig {
 
 pub(super) struct HackMap {
     pub config                  : config::ConfigRef,
+    pub image_loader            : image_loader::ImageLoader,
     pub input                   : input::Input,
     pub automap                 : automap::AutoMap,
     pub quick_next_game         : quick_next::QuickNextGame,
@@ -36,6 +40,7 @@ impl HackMap {
 
         Self{
             config              : Rc::clone(&config),
+            image_loader        : image_loader::ImageLoader::new(Rc::clone(&config)),
             input               : input::Input::new(Rc::clone(&config)),
             automap             : automap::AutoMap::new(),
             quick_next_game     : quick_next::QuickNextGame::new(),
@@ -45,7 +50,7 @@ impl HackMap {
     }
 
     fn init(&mut self) -> anyhow::Result<()> {
-        self.config.borrow_mut().load("hackmap.cfg.toml")?;
+        self.config.borrow_mut().load("hackmap\\hackmap.cfg.toml")?;
 
         Ok(())
     }
@@ -59,13 +64,15 @@ impl HackMap {
             }
 
             HACKMAP.as_mut().unwrap()
-            // &mut *std::ptr::addr_of_mut!(HACKMAP.unwrap())
         }
     }
 
     pub fn config() -> config::ConfigRef {
         Rc::clone(&Self::get().config)
-        // &mut Self::get().config
+    }
+
+    pub fn image_loader() -> &'static mut image_loader::ImageLoader {
+        &mut Self::get().image_loader
     }
 
     pub fn input() -> &'static mut input::Input {
@@ -92,6 +99,9 @@ impl HackMap {
 pub fn init(modules: &D2Modules) {
     if let Err(err) = HackMap::get().init() {
         println!("{}", err);
+        unsafe {
+            MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
+        }
     }
 
     let initializer: &[(&str, fn(&D2Modules) -> Result<(), HookError>)] = &[

@@ -1,5 +1,6 @@
 mod common;
 mod config;
+mod image_loader;
 mod hackmap;
 mod automap;
 mod unit_color;

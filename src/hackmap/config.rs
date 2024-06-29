@@ -19,6 +19,22 @@ where
     }
 }
 
+fn deserialize_monster_color<'de, D>(deserializer: D) -> Result<HashMap<u32, u8>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let intermediate: HashMap<String, u8> = HashMap::deserialize(deserializer)?;
+    let mut result = HashMap::new();
+
+    for (key, color) in intermediate {
+        // let id = key.parse::<u32>().map_err(serde::de::Error::custom)?;
+        let id = u32::from_str_radix(&key.trim_start_matches("0x"), if key.starts_with("0x") { 16 } else { 10 }).map_err(serde::de::Error::custom)?;
+        result.insert(id, color);
+    }
+
+    Ok(result)
+}
+
 pub(super) type ConfigRef = Rc<RefCell<Config>>;
 
 #[derive(Debug, Deserialize)]
@@ -57,21 +73,24 @@ pub(super) struct UnitColorConfig {
     pub lightning_immunity_desc     : Option<String>,
     pub cold_immunity_desc          : Option<String>,
     pub poison_immunity_desc        : Option<String>,
+
+    #[serde(deserialize_with = "deserialize_monster_color")]
+    pub monster_color               : HashMap<u32, u8>,
 }
 
 #[derive(Debug, Deserialize)]
 pub(super) struct Config {
-    pub tweaks            : TweaksConfig,
-    pub unit_color_config    : UnitColorConfig,
+    pub tweaks      : TweaksConfig,
+    pub unit_color  : UnitColorConfig,
 }
 
 impl Config {
-    pub const fn new() -> Self {
+    pub fn new() -> Self {
         Self{
             tweaks: TweaksConfig{
                 perm_show_items_toggle: true,
             },
-            unit_color_config: UnitColorConfig{
+            unit_color: UnitColorConfig{
                 player_blob_file                : None,
                 monster_blob_file               : None,
                 object_blob_file                : None,
@@ -100,6 +119,8 @@ impl Config {
                 lightning_immunity_desc         : None,
                 cold_immunity_desc              : None,
                 poison_immunity_desc            : None,
+
+                monster_color                   : HashMap::new(),
             }
         }
     }

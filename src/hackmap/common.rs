@@ -9,7 +9,7 @@ pub use ml::hooker::{err::HookError, x86::*};
 pub use windows_sys::{
     core::{PCSTR, PCWSTR},
     Win32::{
-        UI::WindowsAndMessaging::WM_KEYDOWN,
+        UI::WindowsAndMessaging::{WM_KEYDOWN, MB_OK},
         UI::Input::KeyboardAndMouse::{GetKeyState, VK_OEM_PLUS, VK_SHIFT, VK_CONTROL},
 
         Foundation::{HWND, BOOL, FALSE, TRUE, NTSTATUS, UNICODE_STRING},

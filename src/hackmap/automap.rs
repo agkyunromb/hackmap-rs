@@ -2,7 +2,7 @@ use super::common::*;
 use super::HackMap;
 use windows_sys::Win32::System::Console::AllocConsole;
 use D2Common::DrlgRoom::D2LevelId;
-use D2Gfx::Texture::D2GfxData;
+use D2Gfx::D2GfxData;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
 
 struct Stubs {
@@ -368,7 +368,7 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
 
         inline_hook_call(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FAF515D), D2Client_LeaveGameCleanUp as usize, Some(&mut STUBS.D2Client_LeaveGameCleanUp), None)?;
         inline_hook_call(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB10E34), D2Client_AutoMap_DrawCells as usize, Some(&mut STUBS.D2Client_AutoMap_DrawCells), None)?;
-        inline_hook_jmp::<()>(0, D2Client::AddressTable.AutoMap.NewAutomapCell, NewAutomapCell as usize, None, None)?;
+        inline_hook_jmp::<()>(0, D2Client::AddressTable.AutoMap.NewAutoMapCell, NewAutomapCell as usize, None, None)?;
         inline_hook_call::<()>(0, D2Client::AddressTable.AutoMap.CallDrawAutoMapCell, CelDrawClipped as usize, None, None)?;
     }
 
