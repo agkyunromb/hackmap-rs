@@ -79,6 +79,7 @@ pub struct D2Modules {
     pub D2Win       : Option<usize>,
     pub D2Common    : Option<usize>,
     pub D2Gfx       : Option<usize>,
+    pub D2CMP       : Option<usize>,
     pub D2Multi     : Option<usize>,
     pub Fog         : Option<usize>,
     pub Storm       : Option<usize>,
@@ -93,6 +94,7 @@ impl Default for D2Modules {
             D2Win     : None,
             D2Common  : None,
             D2Gfx     : None,
+            D2CMP     : None,
             D2Multi   : None,
             Fog       : None,
             Storm     : None,
@@ -217,6 +219,7 @@ pub trait D2ImageBase {
     const D2Win     : usize;
     const D2Multi   : usize;
     const D2Gfx     : usize;
+    const D2CMP     : usize;
     const Fog       : usize;
     const Storm     : usize;
 }
@@ -242,6 +245,10 @@ impl<T: D2ImageBase> D2RVA_BASE<T> {
 
     pub fn D2Gfx(va: usize) -> usize {
         va - T::D2Gfx
+    }
+
+    pub fn D2CMP(va: usize) -> usize {
+        va - T::D2CMP
     }
 
     pub fn Fog(va: usize) -> usize {

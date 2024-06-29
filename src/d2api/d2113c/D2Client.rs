@@ -11,6 +11,7 @@ pub struct UIOffset {
     pub HandleUIVars    : FuncAddress,
 
     pub gUIVars         : FuncAddress,
+    pub gUIOpenMode     : FuncAddress,
 }
 
 pub struct GameOffset {
@@ -19,8 +20,9 @@ pub struct GameOffset {
 }
 
 pub struct AutoMapOffset {
-    pub NewAutomapCell          : FuncAddress,
-    pub AddAutomapCell          : FuncAddress,
+    pub NewAutoMapCell          : FuncAddress,
+    pub AddAutoMapCell          : FuncAddress,
+    pub DrawAutoMapCells        : FuncAddress,
 
     pub CallDrawAutoMapCell     : FuncAddress,
 
@@ -35,6 +37,7 @@ pub struct AutoMapOffset {
 
 pub struct UnitsOffset {
     pub GetMonsterOwnerID       : FuncAddress,
+    pub GetName                 : FuncAddress,
     pub gClientPlayer           : FuncAddress,
 }
 
@@ -113,6 +116,10 @@ pub mod UI {
         read_at(AddressTable.UI.gUIVars + var as usize * 4)
     }
 
+    pub fn GetUIOpenMode() -> u32 {
+        read_at(AddressTable.UI.gUIOpenMode)
+    }
+
     pub fn HandleUIVars(this: PVOID) {
         addr_to_stdcall(HandleUIVars, AddressTable.UI.HandleUIVars)(this)
     }
@@ -175,12 +182,16 @@ pub mod AutoMap {
         pub pNext       : *mut D2AutoMapCellData,   // 0x18
     }
 
-    pub fn NewAutomapCell() -> &'static mut D2AutoMapCellData {
-        addr_to_stdcall(NewAutomapCell, AddressTable.AutoMap.NewAutomapCell)()
+    pub fn NewAutoMapCell() -> &'static mut D2AutoMapCellData {
+        addr_to_stdcall(NewAutoMapCell, AddressTable.AutoMap.NewAutoMapCell)()
     }
 
-    pub fn AddAutomapCell(cell: &D2AutoMapCellData, objectList: *mut *mut D2AutoMapCellData) {
-        addr_to_fastcall(AddAutomapCell, AddressTable.AutoMap.AddAutomapCell)(cell, objectList)
+    pub fn AddAutoMapCell(cell: &D2AutoMapCellData, objectList: *mut *mut D2AutoMapCellData) {
+        addr_to_fastcall(AddAutoMapCell, AddressTable.AutoMap.AddAutoMapCell)(cell, objectList)
+    }
+
+    pub fn DrawAutoMapCells() {
+        addr_to_stdcall(DrawAutoMapCells, AddressTable.AutoMap.DrawAutoMapCells)()
     }
 
     pub fn AutoMapCellBlockHead() -> *mut *mut D2AutoMapCellBlock {
@@ -227,6 +238,21 @@ pub mod Units {
         addr_to_fastcall(GetMonsterOwnerID, AddressTable.Units.GetMonsterOwnerID)(unit)
     }
 
+    pub fn GetName(unit: *const D2Unit) -> PCWSTR {
+        let name: PCWSTR;
+
+        unsafe {
+            asm!(
+                "call {0}",
+                in(reg) AddressTable.Units.GetName,
+                in("eax") unit,
+                lateout("eax") name,
+            );
+        }
+
+        name
+    }
+
     pub fn GetClientPlayer() -> Option<&'static mut D2Unit> {
         let clinet_player: *mut D2Unit = read_at(AddressTable.Units.gClientPlayer);
         ptr_to_ref_mut(clinet_player)
@@ -268,6 +294,7 @@ pub fn init(d2client: usize) {
             HandleUIVars            : d2client + D2RVA::D2Client(0x6FAF437B),
 
             gUIVars                 : d2client + D2RVA::D2Client(0x6FBAAD80),
+            gUIOpenMode             : d2client + D2RVA::D2Client(0x6FBCC414),
         },
         Net: NetOffset{
             SendPacket              : d2client + D2RVA::D2Client(0x6FAC43E0),
@@ -279,8 +306,9 @@ pub fn init(d2client: usize) {
             SaveAndExitGame         : d2client + D2RVA::D2Client(0x6FB15E00),
         },
         AutoMap: AutoMapOffset{
-            NewAutomapCell          : d2client + D2RVA::D2Client(0x6FB0F6B0),
-            AddAutomapCell          : d2client + D2RVA::D2Client(0x6FB11320),
+            NewAutoMapCell          : d2client + D2RVA::D2Client(0x6FB0F6B0),
+            AddAutoMapCell          : d2client + D2RVA::D2Client(0x6FB11320),
+            DrawAutoMapCells        : d2client + D2RVA::D2Client(0x6FB10C40),
 
             CallDrawAutoMapCell     : d2client + D2RVA::D2Client(0x6FB104EA),
 
@@ -295,6 +323,7 @@ pub fn init(d2client: usize) {
         },
         Units: UnitsOffset{
             GetMonsterOwnerID       : d2client + D2RVA::D2Client(0x6FAD16A0),
+            GetName                 : d2client + D2RVA::D2Client(0x6FB55D90),
             gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
         },
     });

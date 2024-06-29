@@ -79,10 +79,10 @@ pub mod DataTbls {
     pub struct DataTable(usize);
 
     impl DataTable {
-        pub fn mon_stats_txt(&self) -> &[D2MonStatsTxt] {
+        pub fn mon_stats_txt(&self) -> &mut [D2MonStatsTxt] {
             unsafe {
                 let addr = (self.0 + 0xA78) as *const usize;
-                std::slice::from_raw_parts(addr.read() as *const D2MonStatsTxt, self.mon_stats_txt_record_count())
+                std::slice::from_raw_parts_mut(addr.read() as *mut D2MonStatsTxt, self.mon_stats_txt_record_count())
             }
         }
 

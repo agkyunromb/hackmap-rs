@@ -450,14 +450,14 @@ pub enum D2ItemStats {
 #[derive(PartialEq, Copy, Clone)]
 pub enum D2DrawMode
 {
-  Trans25           = 0,
-  Trans50           = 1,
-  Trans75           = 2,
-  Modulate          = 3,
-  Burn              = 4,
-  Normal            = 5,
-  TransHighLight    = 6,
-  HighLight         = 7,
+    Trans25           = 0,
+    Trans50           = 1,
+    Trans75           = 2,
+    Modulate          = 3,
+    Burn              = 4,
+    Normal            = 5,
+    TransHighLight    = 6,
+    HighLight         = 7,
 }
 
 #[repr(i32)]
