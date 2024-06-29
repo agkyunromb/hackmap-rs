@@ -100,6 +100,8 @@ impl UnitColor {
 
             if mon_stats_3[0] & 0x01 != 0 || mon_stats_3[1] & 0x02 != 0 {
                 self.boss_monster_id.insert(i as u32, 1);
+            } else if mon_stats_3[0] & 4 != 0 {
+                self.boss_monster_id.insert(i as u32, 1);
             }
 
             // match specified_colors[i] {
