@@ -77,6 +77,16 @@ fn init(base_address: PVOID) -> BOOL {
         }
     }
 
+    if let Err(err) = d2ex_init(&d2modules) {
+        println!("{err}");
+
+        unsafe {
+            ::windows_sys::Win32::UI::WindowsAndMessaging::MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), 0);
+        }
+
+        return FALSE;
+    }
+
     hackmap::init(&d2modules);
 
     TRUE

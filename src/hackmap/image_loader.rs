@@ -36,10 +36,18 @@ pub(super) struct ImageLoader {
 
 impl ImageLoader {
     pub fn new(cfg: ConfigRef) -> Self{
-        Self{
+        D2ClientEx::Game::on_leave_game(|| {
+            HackMap::image_loader().clear_cache();
+        });
+
+        Self {
             cfg,
             cache: HashMap::new(),
         }
+    }
+
+    pub fn clear_cache(&mut self) {
+        self.cache.clear();
     }
 
     pub fn load_image<T: AsRef<Path>>(&mut self, image_name: T) -> Option<DC6BufferRef> {

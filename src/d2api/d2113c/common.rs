@@ -10,5 +10,4 @@ pub use windows_sys::{
     Win32::System::Diagnostics::Debug::IMAGE_NT_HEADERS32,
 };
 
-
 ::windows_targets::link!("ntdll.dll" "system" fn RtlImageNtHeader(Base: PVOID) -> *const IMAGE_NT_HEADERS32);

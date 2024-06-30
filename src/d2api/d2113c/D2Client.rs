@@ -1,9 +1,9 @@
 use super::common::*;
 
 pub struct NetOffset {
-    pub SendPacket    : FuncAddress,
-
-    pub gD2GSHandlers : FuncAddress,
+    pub SendPacket          : FuncAddress,
+    pub Call_GSCmdHandler   : FuncAddress,
+    pub gD2GSHandlers       : FuncAddress,
 }
 
 pub struct UIOffset {
@@ -16,8 +16,11 @@ pub struct UIOffset {
 }
 
 pub struct GameOffset {
-    pub SaveAndExitGame : FuncAddress,
-    pub Info            : FuncAddress,
+    pub RunGameLoop             : FuncAddress,
+    pub SaveAndExitGame         : FuncAddress,
+    pub Info                    : FuncAddress,
+    pub Call_D2SoundCleanup     : FuncAddress,
+    pub Call_D2GFX_GetWindow    : FuncAddress,
 }
 
 pub struct AutoMapOffset {
@@ -260,7 +263,7 @@ pub mod Units {
     }
 
     pub fn IsCorpse(unit: &D2Unit) -> bool {
-        let flags = unsafe { addr_of!(unit.dwFlags).read_unaligned() };
+        let flags = unit.dwFlags;
 
         if flags.contains(D2UnitFlags::IsDead) {
             return true;
@@ -300,12 +303,15 @@ pub fn init(d2client: usize) {
         },
         Net: NetOffset{
             SendPacket              : d2client + D2RVA::D2Client(0x6FAC43E0),
-
+            Call_GSCmdHandler       : d2client + D2RVA::D2Client(0x6FB5CFAF),
             gD2GSHandlers           : d2client + D2RVA::D2Client(0x6FB8DE60),
         },
         Game: GameOffset{
-            Info                    : d2client + D2RVA::D2Client(0x6FBCB980),
+            RunGameLoop             : d2client + D2RVA::D2Client(0x6FAF4F40),
             SaveAndExitGame         : d2client + D2RVA::D2Client(0x6FB15E00),
+            Info                    : d2client + D2RVA::D2Client(0x6FBCB980),
+            Call_D2SoundCleanup     : d2client + D2RVA::D2Client(0x6FAF515D),
+            Call_D2GFX_GetWindow    : d2client + D2RVA::D2Client(0x6FAF423C),
         },
         AutoMap: AutoMapOffset{
             NewAutoMapCell          : d2client + D2RVA::D2Client(0x6FB0F6B0),

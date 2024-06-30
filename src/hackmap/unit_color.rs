@@ -198,11 +198,11 @@ impl UnitColor {
             return Ok(());
         }
 
-        let unit_color_cfg = &self.cfg.borrow().unit_color;
-        let data_tables = D2Common::DataTbls::sgptDataTables();
-        let monster_data = unit.get_monster_data().ok_or(())?;
-        let mon_stats_txt = monster_data.get_mon_stats_txt().ok_or(())?;
-        let mon_stats_flags = mon_stats_txt.dwMonStatsFlags;
+        let unit_color_cfg    = &self.cfg.borrow().unit_color;
+        let data_tables       = D2Common::DataTbls::sgptDataTables();
+        let monster_data      = unit.get_monster_data().ok_or(())?;
+        let mon_stats_txt     = monster_data.get_mon_stats_txt().ok_or(())?;
+        let mon_stats_flags   = mon_stats_txt.dwMonStatsFlags;
 
         if mon_stats_flags & (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact) == (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact) {
             D2WinEx::Text::draw_text(D2Client::Units::GetName(unit), x, y - 8, D2Font::Font6, D2StringColorCodes::DarkGold);
@@ -274,10 +274,10 @@ impl UnitColor {
         let mut desc = format!("ÿc1");
 
         if show_name || (type_flag & D2MonTypeFlags::SuperUnique == D2MonTypeFlags::SuperUnique) {
-            desc += &D2Client::Units::GetName(unit).to_string();
+            desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
 
         } else if type_flag == D2MonTypeFlags::Unique && mon_stats_txt.dwMonStatsFlags.contains(D2MonStatsTxtFlags::Boss) && monster_data.wBossHcIdx == 0 {
-            desc += &D2Client::Units::GetName(unit).to_string();
+            desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
         }
 
         if type_flag.contains(D2MonTypeFlags::Unique) {
@@ -331,7 +331,7 @@ impl UnitColor {
             unsafe { self.glide3x_is_d2sigma.write(0); }
         }
 
-        D2GfxEx::Texture::DrawCell(x, y, cell.d2_cell_file_header(), color);
+        D2GfxEx::Texture::draw_dell(x, y, cell.d2_cell_file_header(), color);
 
         if self.glide3x_is_d2sigma.is_null() == false {
             unsafe { self.glide3x_is_d2sigma.write(1); }
@@ -339,8 +339,6 @@ impl UnitColor {
     }
 
     fn draw_cell_by_blob_file(&self, x: i32, y: i32, blob_file: Option<&String>, color: u8) {
-        // self.draw_default_cross(x + 1, y + 1, 0xFF);
-        // return;
         match blob_file {
             None => self.draw_default_cross(x, y, color),
             Some(blob) => {

@@ -7,6 +7,9 @@ edition = "2021"
 name = 'D2Sigma'
 crate-type = ["cdylib"]
 
+[features]
+113c = []
+
 [dependencies]
 anyhow = { version = "1.0.86", features = ["backtrace"] }
 bitflags = "2.6.0"

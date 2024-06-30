@@ -32,7 +32,7 @@ pub union D2Unit_Data_14 {
     pub pMonsterData    : *mut D2MonsterData,
 }
 
-#[repr(C, packed(1))]
+#[repr(C, packed(4))]
 pub struct D2Unit {
     pub dwUnitType      : D2UnitTypes,          // 0x00
     pub dwClassId       : u32,                  // 0x04

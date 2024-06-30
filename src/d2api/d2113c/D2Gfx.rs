@@ -3,7 +3,8 @@ use super::common::*;
 pub use cell::*;
 
 pub struct WindowOffset {
-    pub GetWindow: FuncAddress,
+    pub GetWindow   : FuncAddress,
+    pub GetState    : FuncAddress,
 }
 
 pub struct TextureOffset {
@@ -29,6 +30,10 @@ pub mod Window {
 
     pub fn GetWindow() -> HWND {
         addr_to_stdcall(GetWindow, AddressTable.Window.GetWindow)()
+    }
+
+    pub fn GetState() -> i32 {
+        addr_to_stdcall(GetState, AddressTable.Window.GetState)()
     }
 }
 
@@ -59,6 +64,7 @@ pub fn init(d2gfx: usize) {
     AddressTable.initialize(D2GfxOffset{
         Window: WindowOffset{
             GetWindow       : d2gfx + D2RVA::D2Gfx(0x6FA87FB0),
+            GetState        : d2gfx + D2RVA::D2Gfx(0x6FA888B0),
         },
         Texture: TextureOffset{
             CelDrawClipped  : d2gfx + D2RVA::D2Gfx(0x6FA8AFF0),

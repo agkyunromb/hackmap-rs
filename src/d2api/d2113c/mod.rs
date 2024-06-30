@@ -1,4 +1,4 @@
-mod common;
+pub mod common;
 
 use super::types as types;
 
@@ -12,9 +12,6 @@ pub mod D2Multi;
 pub mod D2CMP;
 pub mod Fog;
 pub mod D2Sigma;
-
-pub mod D2WinEx;
-pub mod D2GfxEx;
 
 pub struct D2ImageBase113C;
 
