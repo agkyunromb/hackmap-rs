@@ -85,8 +85,8 @@ pub(super) struct Config {
 }
 
 impl Config {
-    pub fn new() -> Self {
-        Self{
+    pub fn new() -> Rc<RefCell<Self>> {
+        Rc::new(RefCell::new(Self{
             tweaks: TweaksConfig{
                 perm_show_items_toggle: true,
             },
@@ -122,7 +122,7 @@ impl Config {
 
                 monster_color                   : HashMap::new(),
             }
-        }
+        }))
     }
 
     pub fn load<P: AsRef<Path>>(&mut self, cfg_file: P) -> Result<()> {

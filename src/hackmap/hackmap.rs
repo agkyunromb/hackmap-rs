@@ -36,7 +36,7 @@ pub(super) struct HackMap {
 
 impl HackMap {
     fn new() -> Self {
-        let config = Rc::new(RefCell::new(config::Config::new()));
+        let config = config::Config::new();
 
         Self{
             config              : Rc::clone(&config),
@@ -51,16 +51,17 @@ impl HackMap {
 
     fn init(&mut self) -> anyhow::Result<()> {
         self.config.borrow_mut().load("hackmap\\hackmap.cfg.toml")?;
+        self.image_loader.init()?;
 
         Ok(())
     }
 
     pub fn get() -> &'static mut Self {
-        static mut HACKMAP: Option<HackMap> = None;
+        static mut HACKMAP: Option<Box<HackMap>> = None;
 
         unsafe {
             if HACKMAP.is_none() {
-                HACKMAP = Some(HackMap::new());
+                HACKMAP = Some(Box::new(HackMap::new()));
             }
 
             HACKMAP.as_mut().unwrap()

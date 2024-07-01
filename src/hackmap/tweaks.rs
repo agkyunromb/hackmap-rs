@@ -1,4 +1,4 @@
-use D2Common::Units::D2Unit;
+use D2Common::D2Unit;
 
 use super::common::*;
 use super::HackMap;

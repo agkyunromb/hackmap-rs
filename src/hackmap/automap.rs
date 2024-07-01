@@ -1,7 +1,7 @@
 use super::common::*;
 use super::HackMap;
 use windows_sys::Win32::System::Console::AllocConsole;
-use D2Common::DrlgRoom::D2LevelId;
+use D2Common::D2LevelId;
 use D2Gfx::D2GfxData;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
 
@@ -105,7 +105,7 @@ fn reveal_map_ex() -> Result<(), ()> {
     Ok(())
 }
 
-fn reveal_level_ex(level: &mut D2Common::DrlgDrlg::D2DrlgLevel) -> Result<(), ()> {
+fn reveal_level_ex(level: &mut D2Common::D2DrlgLevel) -> Result<(), ()> {
     let mut drlg_room = ptr_to_ref_mut(level.pFirstRoomEx).ok_or(())?;
 
     loop {
@@ -132,7 +132,7 @@ fn reveal_level_ex(level: &mut D2Common::DrlgDrlg::D2DrlgLevel) -> Result<(), ()
     }
 }
 
-fn add_custom_automap_cell(drlg_room: &mut D2Common::DrlgDrlg::D2DrlgRoom) -> Result<(), ()>  {
+fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Result<(), ()>  {
     let mut preset_unit = D2Common::DrlgRoom::GetPresetUnits(drlg_room).ok_or(())?;
 
     let level_id = D2Common::DrlgRoom::GetLevelId(drlg_room);
