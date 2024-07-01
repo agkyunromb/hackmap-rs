@@ -1,5 +1,6 @@
 mod common;
 mod config;
+mod config_deserializer;
 mod image_loader;
 mod hackmap;
 mod automap;

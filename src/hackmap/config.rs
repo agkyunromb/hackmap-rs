@@ -1,109 +1,11 @@
 use std::path::Path;
 use std::io::Read;
 use serde::Deserialize;
-use serde::de::{self, Deserializer, Unexpected};
 use super::common::*;
 use D2Common::D2Unit;
 use anyhow::Result;
 
-fn default_option<T>() -> Option<T> {
-    None
-}
-
-fn bool_from_int<'de, D>(deserializer: D) -> Result<bool, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    match u8::deserialize(deserializer)? {
-        0 => Ok(false),
-        1 => Ok(true),
-        other => Err(de::Error::invalid_value(
-            Unexpected::Unsigned(other as u64),
-            &"zero or one",
-        )),
-    }
-}
-
-fn opt_bool_from_int<'de, D>(deserializer: D) -> Result<Option<bool>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let r: Option<u8> = Option::deserialize(deserializer)?;
-
-    match r {
-        None => Ok(None),
-        Some(r) => {
-            match r {
-                0 => Ok(Some(false)),
-                1 => Ok(Some(true)),
-                other => Err(de::Error::invalid_value(
-                    Unexpected::Unsigned(other as u64),
-                    &"zero or one",
-                )),
-            }
-        }
-    }
-}
-
-fn d2_str_color_code_from_int<'de, D>(deserializer: D) -> Result<D2StringColorCodes, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    match u8::deserialize(deserializer)? {
-        0 => Ok(D2StringColorCodes::White),
-        1 => Ok(D2StringColorCodes::Red),
-        2 => Ok(D2StringColorCodes::LightGreen),
-        3 => Ok(D2StringColorCodes::Blue),
-        4 => Ok(D2StringColorCodes::DarkGold),
-        5 => Ok(D2StringColorCodes::Grey),
-        6 => Ok(D2StringColorCodes::Black),
-        7 => Ok(D2StringColorCodes::Tan),
-        8 => Ok(D2StringColorCodes::Orange),
-        9 => Ok(D2StringColorCodes::Yellow),
-        10 => Ok(D2StringColorCodes::DarkGreen),
-        11 => Ok(D2StringColorCodes::Purple),
-        12 => Ok(D2StringColorCodes::DarkGreen2),
-        _ => Ok(D2StringColorCodes::Invalid),
-    }
-}
-
-fn opt_d2_item_quality_from_str<'de, D>(deserializer: D) -> Result<Option<D2ItemQualities>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?.to_lowercase();
-
-    match s.as_str() {
-        "inferior"  => Ok(Some(D2ItemQualities::Inferior)),
-        "normal"    => Ok(Some(D2ItemQualities::Normal)),
-        "superior"  => Ok(Some(D2ItemQualities::Superior)),
-        "magic"     => Ok(Some(D2ItemQualities::Magic)),
-        "set"       => Ok(Some(D2ItemQualities::Set)),
-        "rare"      => Ok(Some(D2ItemQualities::Rare)),
-        "unique"    => Ok(Some(D2ItemQualities::Unique)),
-        "craft"     => Ok(Some(D2ItemQualities::Craft)),
-        "tempered"  => Ok(Some(D2ItemQualities::Tempered)),
-        other => Err(de::Error::invalid_value(
-            Unexpected::Str(other),
-            &"invalid item quality",
-        )),
-    }
-}
-
-fn deserialize_monster_color<'de, D>(deserializer: D) -> Result<HashMap<u32, u8>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    let intermediate: HashMap<String, u8> = HashMap::deserialize(deserializer)?;
-    let mut result = HashMap::new();
-
-    for (key, color) in intermediate {
-        let id = u32::from_str_radix(&key.trim_start_matches("0x"), if key.starts_with("0x") { 16 } else { 10 }).map_err(serde::de::Error::custom)?;
-        result.insert(id, color);
-    }
-
-    Ok(result)
-}
+use super::config_deserializer::*;
 
 pub(super) type ConfigRef = Rc<RefCell<Config>>;
 
@@ -115,7 +17,7 @@ pub(super) struct TweaksConfig {
 
 #[derive(Debug, Deserialize)]
 pub(super) struct UnitColorConfig {
-    #[serde(deserialize_with = "bool_from_int")]
+    #[serde(deserialize_with = "bool_from_int", default)]
     pub show_socket_number          : bool,
 
     pub player_blob_file            : Option<String>,
@@ -163,10 +65,10 @@ pub struct ItemColor {
 
     pub minimap_color: Option<u8>,
 
-    #[serde(deserialize_with = "opt_d2_item_quality_from_str", default = "default_option")]
+    #[serde(deserialize_with = "opt_d2_item_quality_from_str", default)]
     pub quality: Option<D2ItemQualities>,
 
-    #[serde(deserialize_with = "opt_bool_from_int", default = "default_option")]
+    #[serde(deserialize_with = "opt_bool_from_int", default)]
     pub eth: Option<bool>,
 
     pub socks: Option<usize>,
