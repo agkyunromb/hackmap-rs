@@ -3,8 +3,13 @@ mod drlg;
 mod units;
 mod datatbls;
 
+pub use units::*;
+pub use datatbls::*;
+pub use drlg::*;
+
 pub struct StatListOffset {
-    pub GetUnitBaseStat         : FuncAddress,
+    pub GetUnitBaseStat                 : FuncAddress,
+    pub GetStatListFromUnitStateAndFlag : FuncAddress,
 }
 
 pub struct DataTblsOffset {
@@ -20,6 +25,18 @@ pub struct UnitsOffset {
     pub GetNearestTestedUnit    : FuncAddress,
     pub GetClientCoordX         : FuncAddress,
     pub GetClientCoordY         : FuncAddress,
+}
+
+pub struct ItemsOffset {
+    pub GetItemType             : FuncAddress,
+    pub GetItemQuality          : FuncAddress,
+    pub CheckItemTypeId         : FuncAddress,
+}
+
+pub struct InventoryOffset {
+    pub GetFirstItem            : FuncAddress,
+    pub GetNextItem             : FuncAddress,
+    pub UnitIsItem              : FuncAddress,
 }
 
 pub struct DrlgDrlgOffset {
@@ -50,6 +67,8 @@ pub struct D2CommonOffset {
     pub DataTbls        : DataTblsOffset,
     pub StatList        : StatListOffset,
     pub Units           : UnitsOffset,
+    pub Items           : ItemsOffset,
+    pub Inventory       : InventoryOffset,
     pub DrlgDrlg        : DrlgDrlgOffset,
     pub DrlgRoom        : DrlgRoomOffset,
     pub DrlgPreset      : DrlgPresetOffset,
@@ -59,22 +78,20 @@ pub struct D2CommonOffset {
 pub static AddressTable: OnceHolder<D2CommonOffset> = OnceHolder::new();
 
 pub mod StatList {
-    use super::super::common::*;
-    use super::AddressTable;
-    use super::Units::D2Unit;
+    use super::*;
 
-    pub fn GetUnitBaseStat(unit: &D2Unit, statId: D2ItemStats, layer:u16) -> usize {
+    pub fn GetUnitBaseStat(unit: &D2Unit, statId: D2ItemStats, layer: u16) -> usize {
         addr_to_stdcall(GetUnitBaseStat, AddressTable.StatList.GetUnitBaseStat)(unit, statId, layer)
+    }
+
+    pub fn GetStatListFromUnitStateAndFlag(unit: &D2Unit, state: i32, flag: u32) -> usize {
+        addr_to_stdcall(GetStatListFromUnitStateAndFlag, AddressTable.StatList.GetStatListFromUnitStateAndFlag)(unit, state, flag)
     }
 }
 
 pub mod DataTbls {
     use std::ptr::null_mut;
-
-    use super::super::common::*;
-    use super::AddressTable;
-    use super::DrlgPreset::D2LevelId;
-    pub use super::datatbls::*;
+    use super::*;
 
     pub struct DataTable(usize);
 
@@ -143,10 +160,7 @@ pub mod DataTbls {
 }
 
 pub mod Units {
-    use super::super::common::*;
-    use super::AddressTable;
-    use super::drlg::*;
-    pub use super::units::*;
+    use super::*;
 
     pub fn TestCollisionWithUnit(unit1: PVOID, unit2: PVOID, collision_mask: i32) -> BOOL {
         addr_to_stdcall(TestCollisionWithUnit, AddressTable.Units.TestCollisionWithUnit)(unit1, unit2, collision_mask)
@@ -166,10 +180,40 @@ pub mod Units {
     }
 }
 
+pub mod Items {
+    use super::*;
+
+    pub fn GetItemType(item: &D2Unit) -> BOOL {
+        addr_to_stdcall(GetItemType, AddressTable.Items.GetItemType)(item)
+    }
+
+    pub fn GetItemQuality(item: &D2Unit) -> D2ItemQualities {
+        addr_to_stdcall(GetItemQuality, AddressTable.Items.GetItemQuality)(item)
+    }
+
+    pub fn CheckItemTypeId(item: &D2Unit, itemType: i32) -> BOOL {
+        addr_to_stdcall(CheckItemTypeId, AddressTable.Items.CheckItemTypeId)(item, itemType)
+    }
+}
+
+pub mod Inventory {
+    use super::*;
+
+    pub fn GetFirstItem(inventory: &D2Inventory) -> BOOL {
+        addr_to_stdcall(GetFirstItem, AddressTable.Inventory.GetFirstItem)(inventory)
+    }
+
+    pub fn GetNextItem(item: &D2Unit) -> &mut D2Unit {
+        addr_to_stdcall(GetNextItem, AddressTable.Inventory.GetNextItem)(item)
+    }
+
+    pub fn UnitIsItem(inventory: &D2Unit) -> BOOL {
+        addr_to_stdcall(UnitIsItem, AddressTable.Inventory.UnitIsItem)(inventory)
+    }
+}
+
 pub mod DrlgDrlg {
-    use super::super::common::*;
-    use super::AddressTable;
-    pub use super::drlg::*;
+    use super::*;
 
     pub fn GetActNoFromLevelId(levelId: D2LevelId) -> u8 {
         addr_to_stdcall(GetActNoFromLevelId, AddressTable.DrlgDrlg.GetActNoFromLevelId)(levelId)
@@ -184,9 +228,7 @@ pub mod DrlgDrlg {
 }
 
 pub mod DrlgRoom {
-    use super::super::common::*;
-    use super::AddressTable;
-    pub use super::drlg::*;
+    use super::*;
 
     pub fn _GetPresetUnits(_drlgRoom: &D2DrlgRoom) -> *mut D2PresetUnit { null_mut() }
 
@@ -284,6 +326,7 @@ pub fn init(d2common: usize) {
         },
         StatList: StatListOffset{
             GetUnitBaseStat                 : d2common + D2RVA::D2Common(0x6FD88B70),
+            GetStatListFromUnitStateAndFlag : d2common + D2RVA::D2Common(0x6FD87EC0),
         },
         Units: UnitsOffset{
             TestCollisionWithUnit           : d2common + D2RVA::D2Common(0x6FD814A0),
@@ -291,6 +334,16 @@ pub fn init(d2common: usize) {
             GetNearestTestedUnit            : d2common + D2RVA::D2Common(0x6FD62330),
             GetClientCoordX                 : d2common + D2RVA::D2Common(0x6FD80290),
             GetClientCoordY                 : d2common + D2RVA::D2Common(0x6FD80240),
+        },
+        Items: ItemsOffset{
+            GetItemType                     : d2common + D2RVA::D2Common(0x6FD730F0),
+            GetItemQuality                  : d2common + D2RVA::D2Common(0x6FD73B40),
+            CheckItemTypeId                 : d2common + D2RVA::D2Common(0x6FD74430),
+        },
+        Inventory: InventoryOffset{
+            GetFirstItem                    : d2common + D2RVA::D2Common(0x6FD6E190),
+            GetNextItem                     : d2common + D2RVA::D2Common(0x6FD6E8F0),
+            UnitIsItem                      : d2common + D2RVA::D2Common(0x6FD6E400),
         },
         DrlgDrlg: DrlgDrlgOffset{
             GetActNoFromLevelId             : d2common + D2RVA::D2Common(0x6FD7D2C0),

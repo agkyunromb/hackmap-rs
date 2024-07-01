@@ -1,4 +1,5 @@
 use super::common::*;
+use super::D2Common::D2Unit;
 
 pub struct AutoMapOffset {
     pub RevealMap           : FuncAddress,
@@ -8,7 +9,12 @@ pub struct AutoMapOffset {
 }
 
 pub struct UnitsOffset {
-    pub Monster_GetName: FuncAddress,
+    pub GetName                 : FuncAddress,
+    pub DisplayItemProperties   : FuncAddress,
+}
+
+pub struct ItemsOffset {
+    pub GetItemName             : FuncAddress,
 }
 
 pub struct UIOffset {
@@ -20,14 +26,14 @@ pub struct UIOffset {
 pub struct D2SigmaOffset {
     pub AutoMap : AutoMapOffset,
     pub Units   : UnitsOffset,
+    pub Items   : ItemsOffset,
     pub UI      : UIOffset,
 }
 
 pub static AddressTable: OnceHolder<D2SigmaOffset> = OnceHolder::new();
 
 pub mod AutoMap {
-    use super::super::common::*;
-    use super::AddressTable;
+    use super::*;
 
     pub fn RevealMap() {
         addr_to_stdcall(RevealMap, AddressTable.AutoMap.RevealMap)()
@@ -39,12 +45,22 @@ pub mod AutoMap {
 }
 
 pub mod Units {
-    use super::super::D2Common::Units::D2Unit;
-    use super::super::common::*;
-    use super::AddressTable;
+    use super::*;
 
     pub fn GetName(unit: &D2Unit) -> PCWSTR {
-        addr_to_fastcall(GetName, AddressTable.Units.Monster_GetName)(unit)
+        addr_to_fastcall(GetName, AddressTable.Units.GetName)(unit)
+    }
+
+    pub fn DisplayItemProperties(clientUnitTypeTable: PVOID, unit: &D2Unit) {
+        addr_to_fastcall(DisplayItemProperties, AddressTable.Units.DisplayItemProperties)(clientUnitTypeTable, unit)
+    }
+}
+
+pub mod Items {
+    use super::*;
+
+    pub fn GetItemName(unit: &D2Unit, buffer: PCWSTR, arg3: u32) -> PCWSTR {
+        addr_to_fastcall(GetItemName, AddressTable.Items.GetItemName)(unit, buffer, arg3)
     }
 }
 
@@ -72,7 +88,11 @@ pub fn init(d2sigma: usize) {
                     DrawUnitBlob        : vmslide + 0x10076890,
                 },
                 Units: UnitsOffset{
-                    Monster_GetName   : vmslide + 0x100B8A20,
+                    GetName                 : vmslide + 0x100B8A20,
+                    DisplayItemProperties   : vmslide + 0x10080E80,
+                },
+                Items: ItemsOffset{
+                    GetItemName             : vmslide + 0x100811B0,
                 },
                 UI: UIOffset{
                     BossLifeBar_Call_Units_GetName      : vmslide + 0x1008FFCB,   // BossLifebar:BossName
@@ -93,7 +113,11 @@ pub fn init(d2sigma: usize) {
                     DrawUnitBlob        : 0,
                 },
                 Units: UnitsOffset{
-                    Monster_GetName   : vmslide + 0x100B8D80,
+                    GetName                 : vmslide + 0x100B8D80,
+                    DisplayItemProperties   : 0,
+                },
+                Items: ItemsOffset{
+                    GetItemName             : vmslide + 0,
                 },
                 UI: UIOffset{
                     BossLifeBar_Call_Units_GetName      : vmslide + 0x1009014B,

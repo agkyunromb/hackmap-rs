@@ -1,29 +1,32 @@
 use super::common::*;
 
 pub struct ControlOffset {
-    pub CreateControl         : FuncAddress,
+    pub CreateControl           : FuncAddress,
 }
 
 pub struct EditBoxOffset {
-    pub SetTextW              : FuncAddress,
-    pub SelectAll             : FuncAddress,
+    pub SetTextW                : FuncAddress,
+    pub SelectAll               : FuncAddress,
 }
 
 pub struct MsgHandlerOffset {
-    pub RegisterMsgHandler    : FuncAddress,
+    pub RegisterMsgHandler      : FuncAddress,
 }
 
 pub struct TextOffset {
-    pub SetFont               : FuncAddress,
-    pub GetTextDimensions     : FuncAddress,
-    pub DrawText              : FuncAddress,
+    pub SetFont                 : FuncAddress,
+    pub GetTextDimensions       : FuncAddress,
+    pub DrawText                : FuncAddress,
+    pub DrawFramedText          : FuncAddress,
+    pub DrawBoxText             : FuncAddress,
+    pub MixRGB                  : FuncAddress,
 }
 
 pub struct D2WinOffset {
-    pub Control               : ControlOffset,
-    pub EditBox               : EditBoxOffset,
-    pub MsgHandler            : MsgHandlerOffset,
-    pub Text                  : TextOffset,
+    pub Control                 : ControlOffset,
+    pub EditBox                 : EditBoxOffset,
+    pub MsgHandler              : MsgHandlerOffset,
+    pub Text                    : TextOffset,
 }
 
 pub static AddressTable: OnceHolder<D2WinOffset> = OnceHolder::new();
@@ -129,6 +132,18 @@ pub mod Text {
     pub fn DrawText(text: PCWSTR, x: i32, y: i32, color: D2StringColorCodes, center: BOOL) {
         addr_to_fastcall(DrawText, AddressTable.Text.DrawText)(text, x, y, color, center)
     }
+
+    pub fn DrawFramedText(text: PCWSTR, x: i32, y: i32, color: i32, align: i32) {
+        addr_to_fastcall(DrawFramedText, AddressTable.Text.DrawFramedText)(text, x, y, color, align)
+    }
+
+    pub fn DrawBoxText(text: PCWSTR, x: i32, y: i32, boxColor: u32, drawMode: D2DrawMode, textColor: u32) {
+        addr_to_fastcall(DrawBoxText, AddressTable.Text.DrawBoxText)(text, x, y, boxColor, drawMode, textColor)
+    }
+
+    pub fn MixRGB(r: u8, g: u8, b: u8) -> u8 {
+        addr_to_fastcall(MixRGB, AddressTable.Text.MixRGB)(r, b, g)
+    }
 }
 
 pub fn init(d2win: usize) {
@@ -147,6 +162,9 @@ pub fn init(d2win: usize) {
             SetFont             : d2win + D2RVA::D2Win(0x6F8F2FE0),
             GetTextDimensions   : d2win + D2RVA::D2Win(0x6F8F2700),
             DrawText            : d2win + D2RVA::D2Win(0x6F8F2FA0),
+            DrawFramedText      : d2win + D2RVA::D2Win(0x6F8F18F0),
+            DrawBoxText         : d2win + D2RVA::D2Win(0x6F8F2E90),
+            MixRGB              : d2win + D2RVA::D2Win(0x6F8EED70),
         },
     });
 }

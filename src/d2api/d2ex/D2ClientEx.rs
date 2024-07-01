@@ -22,7 +22,7 @@ struct GameInfo {
     event_callbacks         : Vec<Box<dyn FnMut(GameEvent)>>,
     is_in_loop              : bool,
 
-    stub_d2_sound_cleanup           : Option<extern "stdcall" fn()>,
+    stub_d2_sound_cleanup   : Option<extern "stdcall" fn()>,
 }
 
 struct D2ClientEx {
@@ -34,14 +34,14 @@ impl D2ClientEx {
     const fn new() -> Self {
         Self {
             game: GameInfo{
-                event_callbacks     : vec![],
-                is_in_loop          : false,
-                stub_d2_sound_cleanup       : None,
+                event_callbacks         : vec![],
+                is_in_loop              : false,
+                stub_d2_sound_cleanup   : None,
             },
             net: NetInfo{
-                pre_recv_callbacks  : vec![],
-                post_recv_callbacks : vec![],
-                send_callbacks      : vec![],
+                pre_recv_callbacks      : vec![],
+                post_recv_callbacks     : vec![],
+                send_callbacks          : vec![],
             },
         }
     }

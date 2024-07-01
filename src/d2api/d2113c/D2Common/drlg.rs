@@ -1,6 +1,6 @@
 use super::super::super::d2consts::*;
 use super::datatbls::*;
-use super::Units::D2Unit;
+use super::units::D2Unit;
 
 pub type D2LevelId = i32;
 

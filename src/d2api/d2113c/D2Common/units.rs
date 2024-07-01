@@ -43,7 +43,9 @@ pub struct D2Unit {
     pub nAct            : u8,                   // 0x18
     pub _pad_19_1C      : [u8; 3],              // 0x19
     pub pDrlgAct        : *mut D2DrlgAct,       // 0x1C
-        _pad_20_C4      : [u8; 0xA4],           // 0x20
+        _pad_20_60      : [u8; 0x40],           // 0x20
+    pub pInventory      : *mut D2Inventory,     // 0x60
+        _pad_64_C4      : [u8; 0x60],           // 0x64
     pub dwFlags         : D2UnitFlags,          // 0xC4
         _pad_C8_E8      : [u8; 0x20],           // 0xC8
     pub pRoomNext       : *mut D2Unit,          // 0xE8
@@ -61,4 +63,9 @@ impl D2Unit {
             ptr_to_ref_mut(self.Data.pMonsterData)
         }
     }
+}
+
+#[repr(C, packed(4))]
+pub struct D2Inventory {
+
 }

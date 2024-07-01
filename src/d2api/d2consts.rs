@@ -785,6 +785,132 @@ pub enum D2GSCmd
     CONNECTION_REFUSED          = 0xB4,
 }
 
+#[repr(i32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2ItemTypes
+{
+    None1             = 0,  // 0x00
+    None2             = 1,  // 0x01
+    Shield            = 2,  // 0x02
+    Armor             = 3,  // 0x03
+    Gold              = 4,  // 0x04
+    BowQuiver         = 5,  // 0x05
+    CrossbowQuiver    = 6,  // 0x06
+    PlayerBodyPart    = 7,  // 0x07
+    Herb              = 8,  // 0x08
+    Potion            = 9,  // 0x09
+    Ring              = 10, // 0x0A
+    Elixir            = 11, // 0x0B
+    Amulet            = 12, // 0x0C
+    Charm             = 13, // 0x0D
+    None3             = 14, // 0x0E
+    Boots             = 15, // 0x0F
+    Gloves            = 16, // 0x10
+    None4             = 17, // 0x11
+    Book              = 18, // 0x12
+    Belt              = 19, // 0x13
+    Gem               = 20, // 0x14
+    Torch             = 21, // 0x15
+    Scroll            = 22, // 0x16
+    None5             = 23, // 0x17
+    Scepter           = 24, // 0x18
+    Wand              = 25, // 0x19
+    Staff             = 26, // 0x1A
+    Bow               = 27, // 0x1B
+    Axe               = 28, // 0x1C
+    Club              = 29, // 0x1D
+    Sword             = 30, // 0x1E
+    Hammer            = 31, // 0x1F
+    Knife             = 32, // 0x20
+    Spear             = 33, // 0x21
+    Polearm           = 34, // 0x22
+    Crossbow          = 35, // 0x23
+    Mace              = 36, // 0x24
+    Helm              = 37, // 0x25
+    MissilePotion     = 38, // 0x26
+    Quest             = 39, // 0x27
+    BodyPart          = 40, // 0x28
+    Key               = 41, // 0x29
+    ThrowingKnife     = 42, // 0x2A
+    ThrowingAxe       = 43, // 0x2B
+    Javelin           = 44, // 0x2C
+    Weapon            = 45, // 0x2D
+    MeleeWeapon       = 46, // 0x2E
+    MissileWeapon     = 47, // 0x2F
+    ThrownWeapon      = 48, // 0x30
+    ComboWeapon       = 49, // 0x31
+    AnyArmor          = 50, // 0x32
+    AnyShield         = 51, // 0x33
+    Miscellaneous     = 52, // 0x34
+    SocketFiller      = 53, // 0x35
+    SecondHand        = 54, // 0x36
+    StavesAndRods     = 55, // 0x37
+    Missile           = 56, // 0x38
+    Blunt             = 57, // 0x39
+    Jewel             = 58, // 0x3A
+    ClassSpecific     = 59, // 0x3B
+    AmazonItem        = 60, // 0x3C
+    BarbarianItem     = 61, // 0x3D
+    NecromancerItem   = 62, // 0x3E
+    PaladinItem       = 63, // 0x3F
+    SorceressItem     = 64, // 0x40
+    AssassinItem      = 65, // 0x41
+    DruidItem         = 66, // 0x42
+    HandToHand        = 67, // 0x43
+    Orb               = 68, // 0x44
+    VoodooHeads       = 69, // 0x45
+    AuricShields      = 70, // 0x46
+    PrimalHelm        = 71, // 0x47
+    Pelt              = 72, // 0x48
+    Cloak             = 73, // 0x49
+    Rune              = 74, // 0x4A
+    Circlet           = 75, // 0x4B
+    HealingPotion     = 76, // 0x4C
+    ManaPotion        = 77, // 0x4D
+    RejuvPotion       = 78, // 0x4E
+    StaminaPotion     = 79, // 0x4F
+    AntidotePotion    = 80, // 0x50
+    ThawingPotion     = 81, // 0x51
+    SmallCharm        = 82, // 0x52
+    MediumCharm       = 83, // 0x53
+    LargeCharm        = 84, // 0x54
+    AmazonBow         = 85, // 0x55
+    AmazonSpear       = 86, // 0x56
+    AmazonJavelin     = 87, // 0x57
+    HandToHand2       = 88, // 0x58
+    MagicBowQuiv      = 89, // 0x59
+    Unk               = 90, // 0x5A
+    ChippedGem        = 91, // 0x5B
+    FlawedGem         = 92, // 0x5C
+    StandardGem       = 93, // 0x5D
+    FlawlessGem       = 94, // 0x5E
+    PerfectGem        = 95, // 0x5F
+    Amethyst          = 96, // 0x60
+    Diamond           = 97, // 0x61
+    Emerald           = 98, // 0x62
+    Ruby              = 99, // 0x63
+    Sapphire          = 100, // 0x64
+    Topaz             = 101, // 0x65
+    Skull             = 102, // 0x66
+    Tome              = 103, // 0x67
+    ClueScroll        = 104, // 0x68
+}
+
+#[repr(i32)]
+#[derive(PartialEq, Copy, Clone)]
+pub enum D2ItemQualities
+{
+    Inferior            = 1,
+    Normal              = 2,
+    Superior            = 3,
+    Magic               = 4,
+    Set                 = 5,
+    Rare                = 6,
+    Unique              = 7,
+    Craft               = 8,
+    Tempered            = 9,
+}
+
 bitflags! {
     #[derive(PartialEq, Copy, Clone)]
     pub struct D2MonStatsTxtFlags :u32 {

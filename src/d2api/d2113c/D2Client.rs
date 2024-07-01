@@ -7,12 +7,14 @@ pub struct NetOffset {
 }
 
 pub struct UIOffset {
-    pub SetUIVar        : FuncAddress,
-    pub HandleUIVars    : FuncAddress,
-    pub CallHandleUIVars: FuncAddress,
+    pub SetUIVar                : FuncAddress,
+    pub HandleUIVars            : FuncAddress,
+    pub DisplayGlobalMessage    : FuncAddress,
 
-    pub gUIVars         : FuncAddress,
-    pub gUIOpenMode     : FuncAddress,
+    pub CallHandleUIVars        : FuncAddress,
+
+    pub gUIVars                 : FuncAddress,
+    pub gUIOpenMode             : FuncAddress,
 }
 
 pub struct GameOffset {
@@ -43,6 +45,7 @@ pub struct UnitsOffset {
     pub GetMonsterOwnerID       : FuncAddress,
     pub GetName                 : FuncAddress,
     pub gClientPlayer           : FuncAddress,
+    pub gClientUnitTypeTable    : FuncAddress,
 }
 
 pub struct D2ClientOffset {
@@ -126,6 +129,12 @@ pub mod UI {
 
     pub fn HandleUIVars(this: PVOID) {
         addr_to_stdcall(HandleUIVars, AddressTable.UI.HandleUIVars)(this)
+    }
+
+    pub fn _DisplayGlobalMessage(_text: PCWSTR, _color: D2StringColorCodes) {}
+
+    pub fn DisplayGlobalMessage(text: &str, color: D2StringColorCodes) {
+        addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayGlobalMessage)(text.to_utf16().as_ptr(), color)
     }
 }
 
@@ -236,7 +245,7 @@ pub mod Units {
 
     use super::super::common::*;
     use super::AddressTable;
-    use super::super::D2Common::Units::D2Unit;
+    use super::super::D2Common::D2Unit;
 
     pub fn GetMonsterOwnerID(unit: &D2Unit) -> u32 {
         addr_to_fastcall(GetMonsterOwnerID, AddressTable.Units.GetMonsterOwnerID)(unit)
@@ -260,6 +269,10 @@ pub mod Units {
     pub fn GetClientPlayer() -> Option<&'static mut D2Unit> {
         let clinet_player: *mut D2Unit = read_at(AddressTable.Units.gClientPlayer);
         ptr_to_ref_mut(clinet_player)
+    }
+
+    pub fn GetClientUnitTypeTable() -> PVOID {
+        read_at(AddressTable.Units.gClientUnitTypeTable + 4)
     }
 
     pub fn IsCorpse(unit: &D2Unit) -> bool {
@@ -296,6 +309,8 @@ pub fn init(d2client: usize) {
         UI: UIOffset {
             SetUIVar                : d2client + D2RVA::D2Client(0x6FB72790),
             HandleUIVars            : d2client + D2RVA::D2Client(0x6FB739E0),
+            DisplayGlobalMessage    : d2client + D2RVA::D2Client(0x6FB739E0),
+
             CallHandleUIVars        : d2client + D2RVA::D2Client(0x6FAF437B),
 
             gUIVars                 : d2client + D2RVA::D2Client(0x6FBAAD80),
@@ -333,6 +348,7 @@ pub fn init(d2client: usize) {
             GetMonsterOwnerID       : d2client + D2RVA::D2Client(0x6FAD16A0),
             GetName                 : d2client + D2RVA::D2Client(0x6FB55D90),
             gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
+            gClientUnitTypeTable    : d2client + D2RVA::D2Client(0x6FBBA608),
         },
     });
 }
