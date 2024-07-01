@@ -2,14 +2,16 @@ use super::common::*;
 use super::image_loader;
 use super::HackMap;
 use super::config::ConfigRef;
-use D2Common::Units::D2Unit;
+use D2Common::D2Unit;
 
 struct Stubs {
     DATATBLS_CompileTxt: Option<extern "stdcall" fn(PVOID, PCSTR, PVOID, &mut i32, usize) -> PVOID>,
+    D2Sigma_Items_GetItemName: Option<extern "stdcall" fn(&D2Unit, PWSTR, u32)>,
 }
 
 static mut STUBS: Stubs = Stubs{
     DATATBLS_CompileTxt: None,
+    D2Sigma_Items_GetItemName: None,
 };
 
 #[allow(static_mut_refs)]
@@ -27,7 +29,7 @@ extern "stdcall" fn DATATBLS_CompileTxt(archive: PVOID, name: PCSTR, tbl: PVOID,
     data
 }
 
-extern "stdcall" fn D2Sigma_AutoMap_Draw() {
+extern "stdcall" fn d2sigma_automap_draw() {
     if D2Client::UI::GetUIVar(D2UIvars::EscMenu) != 0 || D2Client::UI::GetUIVar(D2UIvars::Config) != 0 {
         return;
     }
@@ -40,8 +42,10 @@ extern "stdcall" fn D2Sigma_AutoMap_Draw() {
     let _ = HackMap::unit_color().draw_automap_units();
 }
 
-extern "stdcall" fn D2Sigma_AutoMap_DrawUnits() {
-    let _ = HackMap::unit_color().draw_automap_units();
+extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, arg3: u32) {
+    get_stubs().D2Sigma_Items_GetItemName.unwrap()(item, buffer, arg3);
+
+    HackMap::unit_color().d2sigma_items_get_item_name(item, buffer);
 }
 
 pub(super) struct UnitColor {
@@ -60,35 +64,6 @@ impl UnitColor {
     }
 
     fn init_automap_monster_colors(&mut self, data: PVOID, recordCount: usize, recordSize: usize) {
-        // let mut specified_colors: [u8; 0x2000] = [0xFE; 0x2000];
-
-        // const MONSTATSFLAG_INTOWN   : u32 = 0x400;
-        // const MONSTATSFLAG_NPC      : u32 = 0x100;
-        // const MONSTATSFLAG_BOSS     : u32 = 0x40;
-        // const DefaultColor          : u8 = 0x60;
-        // const DefaultBossColor      : u8 = 0x9B;
-        // const DefaultSummonColor    : u8 = 0xD0;
-        // const DefaultDangerMonster  : u8 = 0x62;
-
-        // specified_colors[0x0E3]   = 0xFF;                   // 虫子
-        // specified_colors[0x3D4]   = DefaultSummonColor;     // 冰图腾
-        // specified_colors[0x3D5]   = DefaultSummonColor;     // 火图腾
-        // specified_colors[0x3D7]   = DefaultSummonColor;     // 电图腾
-        // specified_colors[0x434]   = 0xFF;                   // JJR地面的东西
-        // specified_colors[0x441]   = 0xFF;                   // JJR地面的东西
-        // specified_colors[0x442]   = 0xFF;                   // 妹子岛地面的东西
-        // specified_colors[0x44C]   = 0xFF;                   // JJR地面的东西
-        // specified_colors[0x63C]   = 0x84;                   // 彼列真身
-        // specified_colors[0x646]   = 0xFF;                   // 彼列分身
-        // specified_colors[0xD30]   = DefaultSummonColor;     // 复活的行尸
-        // specified_colors[2036]    = 0x84;                   // 灵魂收割者
-        // specified_colors[3556]    = DefaultDangerMonster;   // 马萨伊尔的执政官 lv120
-        // specified_colors[3563]    = DefaultDangerMonster;   // 马萨伊尔的执政官 lv130
-        // specified_colors[3558]    = DefaultDangerMonster;   // 伊瑟瑞尔的先锋 lv120
-        // specified_colors[3565]    = DefaultDangerMonster;   // 伊瑟瑞尔的先锋 lv130
-        // specified_colors[3559]    = DefaultDangerMonster;   // 英普瑞斯的怒火 lv120
-        // specified_colors[3566]    = DefaultDangerMonster;   // 英普瑞斯的怒火 lv120
-
         let mut mon_stats_3 = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, recordSize * recordCount) };
 
         // let data_tables = D2Common::DataTbls::sgptDataTables();
@@ -103,22 +78,6 @@ impl UnitColor {
             } else if mon_stats_3[0] & 4 != 0 {
                 self.boss_monster_id.insert(i as u32, 1);
             }
-
-            // match specified_colors[i] {
-            //     0xFF => {},
-
-            //     0xFE => {
-            //         if mon_stats_flags.contains(D2MonStatsTxtFlags::InTown | D2MonStatsTxtFlags::Npc) {
-            //             mon_stats_3[0] |= 2;
-            //             mon_stats_3[4] = if mon_stats_flags.contains(D2MonStatsTxtFlags::Boss) { DefaultBossColor } else { DefaultColor };
-            //         }
-            //     },
-
-            //     _ => {
-            //         mon_stats_3[0] |= 2;
-            //         mon_stats_3[4] = specified_colors[i];
-            //     },
-            // }
 
             mon_stats_3 = &mut mon_stats_3[recordSize..];
         }
@@ -171,7 +130,11 @@ impl UnitColor {
             },
 
             D2UnitTypes::Missile => {},
-            D2UnitTypes::Item => {},
+            D2UnitTypes::Item => {
+                // D2Sigma::Units::DisplayItemProperties(D2Client::Units::GetClientUnitTypeTable(), unit);
+
+                let _ = self.draw_item(unit, x, y);
+            },
 
             _ => {},
         }
@@ -326,16 +289,18 @@ impl UnitColor {
         Ok(())
     }
 
-    fn draw_cell(&self, x: i32, y: i32, cell: image_loader::DC6BufferRef, color: u8) {
-        if self.glide3x_is_d2sigma.is_null() == false {
-            unsafe { self.glide3x_is_d2sigma.write(0); }
+    fn draw_item(&self, unit: &mut D2Unit, x: i32, y: i32) -> Result<(), ()> {
+        let cfg = self.cfg.borrow();
+        let item_color = cfg.unit_color.get_color_from_unit(unit).ok_or(())?;
+        let minimap_color = item_color.minimap_color.ok_or(())?;
+
+        if minimap_color == 0xFF {
+            return Ok(());
         }
 
-        D2GfxEx::Texture::draw_dell(x, y, cell.d2_cell_file_header(), color);
+        self.draw_cell_by_blob_file(x, y, cfg.unit_color.item_blob_file.as_ref(), minimap_color);
 
-        if self.glide3x_is_d2sigma.is_null() == false {
-            unsafe { self.glide3x_is_d2sigma.write(1); }
-        }
+        Ok(())
     }
 
     fn draw_cell_by_blob_file(&self, x: i32, y: i32, blob_file: Option<&String>, color: u8) {
@@ -351,6 +316,18 @@ impl UnitColor {
                     },
                 }
             },
+        }
+    }
+
+    fn draw_cell(&self, x: i32, y: i32, cell: image_loader::DC6BufferRef, color: u8) {
+        if self.glide3x_is_d2sigma.is_null() == false {
+            unsafe { self.glide3x_is_d2sigma.write(0); }
+        }
+
+        D2GfxEx::Texture::draw_dell(x, y, cell.d2_cell_file_header(), color);
+
+        if self.glide3x_is_d2sigma.is_null() == false {
+            unsafe { self.glide3x_is_d2sigma.write(1); }
         }
     }
 
@@ -379,6 +356,42 @@ impl UnitColor {
         }
     }
 
+    fn d2sigma_items_get_item_name(&self, item: &D2Unit, buffer: PWSTR) {
+        let mut name = buffer.to_string();
+
+        let socks_num = D2Common::StatList::GetUnitBaseStat(item, D2ItemStats::Item_NumSockets, 0);
+
+        if socks_num != 0 {
+            name += &format!("({socks_num}s)");
+        }
+
+        let ctrl_pressed = unsafe { GetKeyState(VK_SHIFT as i32) < 0 };
+
+        if ctrl_pressed {
+            let quality = D2Common::Items::GetItemQuality(item);
+            let unit_id = item.dwUnitId;
+            let class_id = item.dwClassId;
+
+            name = format!("UID:0x{unit_id:X} Q:{quality:?} CID:{class_id}<0x{class_id:X}>\n{name}");
+        }
+
+        if let Some(item_color) = self.cfg.borrow().unit_color.get_color_from_unit(item) {
+            if item_color.text_color != D2StringColorCodes::Invalid {
+                while name.starts_with("ÿc") {
+                    name = name.trim_start_matches("ÿc")[1..].to_string();
+                }
+
+                name.insert_str(0, &format!("ÿc{}", item_color.text_color as u8));
+            }
+        }
+
+        let name = name.to_utf16();
+
+        unsafe {
+            name.as_ptr().copy_to_nonoverlapping(buffer, name.len());
+        }
+    }
+
 }
 
 pub fn init(modules: &D2Modules) -> Result<(), HookError> {
@@ -395,8 +408,8 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         }
 
         inline_hook_jmp(0, D2Common::AddressTable.DataTbls.CompileTxt, DATATBLS_CompileTxt as usize, Some(&mut STUBS.DATATBLS_CompileTxt), None)?;
-        // inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMapUnits, D2Sigma_AutoMap_DrawUnits as usize, None, None)?;
-        inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, D2Sigma_AutoMap_Draw as usize, None, None)?;
+        inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, d2sigma_automap_draw as usize, None, None)?;
+        inline_hook_jmp(0, D2Sigma::AddressTable.Items.GetItemName, d2sigma_items_get_item_name as usize, Some(&mut STUBS.D2Sigma_Items_GetItemName), None)?;
     }
 
     Ok(())

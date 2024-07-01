@@ -1,7 +1,7 @@
 use bitflags::bitflags;
 
 #[repr(u8)]
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 pub enum D2StringColorCodes {
     White       = 0,
     Red         = 1,
@@ -897,7 +897,7 @@ pub enum D2ItemTypes
 }
 
 #[repr(i32)]
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 pub enum D2ItemQualities
 {
     Inferior            = 1,
@@ -913,7 +913,7 @@ pub enum D2ItemQualities
 
 bitflags! {
     #[derive(PartialEq, Copy, Clone)]
-    pub struct D2MonStatsTxtFlags :u32 {
+    pub struct D2MonStatsTxtFlags : u32 {
         const IsSpawn           = 0x00000001;
         const IsMelee           = 0x00000002;
         const NoRatio           = 0x00000004;
@@ -1007,5 +1007,38 @@ bitflags! {
         const Possessed         = 0x00000020;
         const Ghostly           = 0x00000040;
         const MultiShot         = 0x00000080;
+    }
+
+    #[derive(PartialEq, Copy, Clone)]
+    pub struct D2ItemFlags : u32
+    {
+        const NewItem           = 0x00000001;
+        const Target            = 0x00000002;
+        const Targeting         = 0x00000004;
+        const Deleted           = 0x00000008;
+        const Identified        = 0x00000010;
+        const Quantity          = 0x00000020;
+        const SwitchIn          = 0x00000040;
+        const SwitchOut         = 0x00000080;
+        const Broken            = 0x00000100;
+        const Repaired          = 0x00000200;
+        const Unk1              = 0x00000400;
+        const Socketed          = 0x00000800;
+        const NoSell            = 0x00001000;
+        const InStore           = 0x00002000;
+        const NoEquip           = 0x00004000;
+        const Named             = 0x00008000;
+        const IsEar             = 0x00010000;
+        const StartItem         = 0x00020000;
+        const Unk2              = 0x00040000;
+        const Init              = 0x00080000;
+        const Unk3              = 0x00100000;
+        const CompactSave       = 0x00200000;
+        const Ethereal          = 0x00400000;
+        const JustSaved         = 0x00800000;
+        const Personalized      = 0x01000000;
+        const LowQuality        = 0x02000000;
+        const Runeword          = 0x04000000;
+        const Item              = 0x08000000;
     }
 }

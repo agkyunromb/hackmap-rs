@@ -51,6 +51,12 @@ impl UTF16ToString for *const u16 {
     }
 }
 
+impl UTF16ToString for *mut u16 {
+    fn to_string(self) -> String {
+        (self as *const u16).to_string()
+    }
+}
+
 pub trait StrToUTF16 {
     fn to_utf16(&self) -> Vec<u16>;
 }

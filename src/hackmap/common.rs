@@ -7,7 +7,7 @@ pub use std::{iter::Once, marker::PhantomData, os::raw::c_void, ptr::{null, null
 pub use ml::hooker::{err::HookError, x86::*};
 
 pub use windows_sys::{
-    core::{PCSTR, PCWSTR},
+    core::{PCSTR, PCWSTR, PWSTR},
     Win32::{
         UI::WindowsAndMessaging::{WM_KEYDOWN, MB_OK},
         UI::Input::KeyboardAndMouse::{GetKeyState, VK_OEM_PLUS, VK_SHIFT, VK_CONTROL},

@@ -31,6 +31,7 @@ pub struct ItemsOffset {
     pub GetItemType             : FuncAddress,
     pub GetItemQuality          : FuncAddress,
     pub CheckItemTypeId         : FuncAddress,
+    pub CheckItemFlag           : FuncAddress,
 }
 
 pub struct InventoryOffset {
@@ -194,6 +195,12 @@ pub mod Items {
     pub fn CheckItemTypeId(item: &D2Unit, itemType: i32) -> BOOL {
         addr_to_stdcall(CheckItemTypeId, AddressTable.Items.CheckItemTypeId)(item, itemType)
     }
+
+    pub fn _CheckItemFlag(_item: &D2Unit, _flags: D2ItemFlags, _line: usize, _file: usize) -> BOOL { FALSE }
+
+    pub fn CheckItemFlag(item: &D2Unit, flags: D2ItemFlags) -> BOOL {
+        addr_to_stdcall(_CheckItemFlag, AddressTable.Items.CheckItemFlag)(item, flags, 0, 0)
+    }
 }
 
 pub mod Inventory {
@@ -339,6 +346,7 @@ pub fn init(d2common: usize) {
             GetItemType                     : d2common + D2RVA::D2Common(0x6FD730F0),
             GetItemQuality                  : d2common + D2RVA::D2Common(0x6FD73B40),
             CheckItemTypeId                 : d2common + D2RVA::D2Common(0x6FD74430),
+            CheckItemFlag                   : d2common + D2RVA::D2Common(0x6FD73940),
         },
         Inventory: InventoryOffset{
             GetFirstItem                    : d2common + D2RVA::D2Common(0x6FD6E190),
