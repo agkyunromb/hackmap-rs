@@ -50,6 +50,10 @@ extern "stdcall" fn d2sigma_automap_draw() {
 extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, arg3: u32) {
     get_stubs().D2Sigma_Items_GetItemName.unwrap()(item, buffer, arg3);
 
+    if D2SigmaEx::Items::is_getting_item_properties() {
+        return;
+    }
+
     HackMap::unit_color().d2sigma_items_get_item_name(item, buffer);
 }
 
@@ -415,7 +419,9 @@ impl UnitColor {
             name += &format!("({socks_num}s)");
         }
 
-        if self.cfg.borrow().unit_color.item_extra_info {
+        let cfg = self.cfg.borrow();
+
+        if cfg.unit_color.item_extra_info {
             let quality = D2Common::Items::GetItemQuality(item);
             let unit_id = item.dwUnitId;
             let class_id = item.dwClassId;
@@ -423,8 +429,8 @@ impl UnitColor {
             name = format!("UID:0x{unit_id:X} Q:{quality:?} CID:{class_id}<0x{class_id:X}>\n{name}");
         }
 
-        if let Some(item_color) = self.cfg.borrow().unit_color.get_color_from_unit(item) {
-            if let Some(text_color) = item_color.text_color {
+        let _: Option<()> = cfg.unit_color.get_color_from_unit(item).and_then(|item_color| {
+            item_color.text_color.and_then(|text_color| {
                 if text_color != D2StringColorCodes::Invalid {
                     while name.starts_with("ÿc") {
                         name = name.trim_start_matches("ÿc")[1..].to_string();
@@ -432,8 +438,22 @@ impl UnitColor {
 
                     name.insert_str(0, &format!("ÿc{}", text_color as u8));
                 }
-            }
-        }
+
+                None
+            })
+        });
+
+        // if let Some(item_color) = cfg.unit_color.get_color_from_unit(item) {
+        //     if let Some(text_color) = item_color.text_color {
+        //         if text_color != D2StringColorCodes::Invalid {
+        //             while name.starts_with("ÿc") {
+        //                 name = name.trim_start_matches("ÿc")[1..].to_string();
+        //             }
+
+        //             name.insert_str(0, &format!("ÿc{}", text_color as u8));
+        //         }
+        //     }
+        // }
 
         let name = name.to_utf16();
 

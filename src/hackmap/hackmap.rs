@@ -121,16 +121,19 @@ pub fn init(modules: &D2Modules) {
 
     HackMap::input().on_key_down(|vk| {
         let cfg = HackMap::config();
-        let cfg = cfg.borrow();
+        let mut cfg = cfg.borrow_mut();
 
         if vk == cfg.hotkey.reload {
             D2Client::UI::DisplayGlobalMessage("reload cfg", D2StringColorCodes::Red);
 
-            if let Err(err) = HackMap::config().borrow_mut().load("hackmap\\hackmap.cfg.toml") {
-                println!("{}", err);
-                unsafe {
-                    MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
-                }
+            if let Err(err) = cfg.load("hackmap\\hackmap.cfg.toml") {
+                // println!("{}", err);
+
+                std::thread::spawn(move || {
+                    unsafe {
+                        MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
+                    }
+                });
             }
         }
 

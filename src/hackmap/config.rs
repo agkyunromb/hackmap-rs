@@ -75,6 +75,9 @@ pub struct ItemColor {
     #[serde(rename = "id")]
     pub class_id: Option<u32>,
 
+    #[serde(rename = "prop")]
+    pub property: Option<String>,
+
     #[serde(deserialize_with = "opt_d2_str_color_code_from_int", default)]
     pub text_color: Option<D2StringColorCodes>,
 
@@ -87,6 +90,9 @@ pub struct ItemColor {
     pub eth: Option<bool>,
 
     pub socks: Option<usize>,
+
+    #[serde(deserialize_with = "opt_bool_from_int", default)]
+    pub notify: Option<bool>,
 }
 
 impl UnitColorConfig {
@@ -117,6 +123,12 @@ impl UnitColorConfig {
 
             if let Some(eth) = entry.eth {
                 if eth != is_eth {
+                    continue;
+                }
+            }
+
+            if let Some(prop) = entry.property.as_ref() {
+                if prop.is_empty() == false && D2SigmaEx::Items::get_item_properties(item).contains(prop) == false {
                     continue;
                 }
             }

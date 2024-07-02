@@ -19,7 +19,7 @@ struct FormatItemPropertiesContext {
 }
 
 struct D2SigmaEx {
-    is_get_item_properties  : bool,
+    is_getting_item_properties  : bool,
     item_properties         : String,
     DrawFramedText          : Option<extern "fastcall" fn(PCWSTR, i32, i32, i32, i32)>,
 }
@@ -27,7 +27,7 @@ struct D2SigmaEx {
 impl D2SigmaEx {
     const fn new() -> Self {
         Self {
-            is_get_item_properties  : false,
+            is_getting_item_properties  : false,
             item_properties         : String::new(),
             DrawFramedText          : None,
         }
@@ -43,11 +43,11 @@ impl D2SigmaEx {
     }
 
     fn get_item_properties(&mut self, unit: &D2Common::D2Unit) -> String {
-        self.is_get_item_properties = true;
+        self.is_getting_item_properties = true;
 
         D2Sigma::Units::DisplayItemProperties(D2Client::Units::GetClientUnitTypeTable(), unit);
 
-        self.is_get_item_properties = false;
+        self.is_getting_item_properties = false;
 
         std::mem::take(&mut self.item_properties)
     }
@@ -73,7 +73,7 @@ impl D2SigmaEx {
     extern "fastcall" fn draw_framed_text(text: PCWSTR, x: i32, y: i32, color: i32, align: i32) {
         let sigma = D2SigmaEx::get();
 
-        if sigma.is_get_item_properties {
+        if sigma.is_getting_item_properties {
             sigma.on_get_item_properties(&text.to_string());
             return;
         }
@@ -95,6 +95,10 @@ pub mod Items {
 
     pub fn get_item_properties(unit: &D2Unit) -> String {
         D2SigmaEx::get().get_item_properties(unit)
+    }
+
+    pub fn is_getting_item_properties() -> bool {
+        D2SigmaEx::get().is_getting_item_properties
     }
 }
 
