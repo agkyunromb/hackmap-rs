@@ -80,6 +80,14 @@ std::arch::global_asm!(
     r#"
 .global _is_player_running_1
 _is_player_running_1:
+
+    test    ecx, ecx
+    jz      _is_player_running_1_NOT_RUNNING
+
+    or      eax, 8
+    ret
+
+_is_player_running_1_NOT_RUNNING:
     push    edx
     push    eax
     call    {is_player_in_town}
@@ -98,6 +106,13 @@ std::arch::global_asm!(
     r#"
 .global _is_player_running_2
 _is_player_running_2:
+    test    edx, edx
+    jz      _is_player_running_2_NOT_RUNNING
+
+    or      eax, 8
+    ret
+
+_is_player_running_2_NOT_RUNNING:
     push    ecx
     push    eax
     call    {is_player_in_town}
