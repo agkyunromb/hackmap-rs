@@ -483,20 +483,6 @@ pub enum D2UnitTypes
     Max       = 6,
 }
 
-#[repr(i32)]
-#[derive(PartialEq, Copy, Clone)]
-pub enum D2ObjectSubClasses
-{
-    Shrine        = 0x01,
-    Obelisk       = 0x02,
-    TownPortal    = 0x04,
-    Chest         = 0x08,
-    Portal        = 0x10,
-    Well          = 0x20,
-    WayPoint      = 0x40,
-    Door          = 0x80,
-}
-
 #[repr(u32)]
 #[derive(PartialEq, Copy, Clone)]
 pub enum D2AutoMapCells
@@ -1040,5 +1026,17 @@ bitflags! {
         const LowQuality        = 0x02000000;
         const Runeword          = 0x04000000;
         const Item              = 0x08000000;
+    }
+
+    #[derive(PartialEq, Copy, Clone)]
+    pub struct D2ObjectSubClasses : u8 {
+        const Shrine        = 0x01;
+        const Obelisk       = 0x02;
+        const TownPortal    = 0x04;
+        const Chest         = 0x08;
+        const Portal        = 0x10;
+        const Well          = 0x20;
+        const WayPoint      = 0x40;
+        const Door          = 0x80;
     }
 }

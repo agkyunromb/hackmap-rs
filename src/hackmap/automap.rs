@@ -145,7 +145,7 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Result<(), (
         loop {
             let mut x                                   = 0;
             let mut y                                   = 0;
-            let preset_unit_index                       = preset_unit.nIndex;
+            let preset_unit_index                       = preset_unit.nIndex as u32;
             let mut cell_type: Option<ExtraCellType>    = None;
 
             match preset_unit.nUnitType {
@@ -193,7 +193,7 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Result<(), (
                     let mut room_tiles = ptr_to_ref_mut(drlg_room.pRoomTiles);
 
                     while let Some(tiles) = room_tiles {
-                        if ptr_to_ref_mut(tiles.pLvlWarpTxtRecord).unwrap().dwLevelId == preset_unit_index as u32 {
+                        if ptr_to_ref_mut(tiles.pLvlWarpTxtRecord).unwrap().dwLevelId == preset_unit_index {
                             x = 8;
                             y = -0x15;
 

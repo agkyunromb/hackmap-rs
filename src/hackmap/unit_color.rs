@@ -128,6 +128,9 @@ impl UnitColor {
             D2UnitTypes::Monster => {
                 let _ = self.draw_monster(unit, x, y);
             },
+            D2UnitTypes::Object => {
+                let _ = self.draw_object(unit, x, y);
+            },
 
             D2UnitTypes::Missile => {},
             D2UnitTypes::Item => {
@@ -284,6 +287,16 @@ impl UnitColor {
 
         if desc.is_empty() == false {
             D2WinEx::Text::draw_text(desc.to_utf16().as_ptr(), x, y - 10, D2Font::Font16, D2StringColorCodes::White);
+        }
+
+        Ok(())
+    }
+
+    fn draw_object(&self, unit: &mut D2Unit, x: i32, y: i32) -> Result<(), ()> {
+        let object_txt = D2Common::DataTbls::GetObjectsTxtRecord(unit.dwClassId).ok_or(())?;
+
+        if object_txt.nSubClass.contains(D2ObjectSubClasses::TownPortal) {
+            self.draw_default_cross(x, y, 0x6D);
         }
 
         Ok(())

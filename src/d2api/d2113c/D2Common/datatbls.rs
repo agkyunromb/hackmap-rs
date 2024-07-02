@@ -82,7 +82,7 @@ pub struct D2ObjectsTxt {
     pub nRed            : u8,             // 0x0164
     pub nGreen          : u8,             // 0x0165
     pub nBlue           : u8,             // 0x0166
-    pub nSubClass       : u8,             // 0x0167
+    pub nSubClass       : D2ObjectSubClasses,   // 0x0167
     pub dwNameOffset    : u32,            // 0x0168
         pad0x16C        : u8,             // 0x016c
     pub nMonsterOK      : u8,             // 0x016d

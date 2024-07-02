@@ -128,6 +128,10 @@ pub mod DataTbls {
         pub fn levels_txt_record_count(&self) -> D2LevelId {
             read_at(self.0 + 0xC5C)
         }
+
+        pub fn objects_txt_record_count(&self) -> usize {
+            read_at(self.0 + 0xCC0)
+        }
     }
 
     pub fn sgptDataTables() -> DataTable {
@@ -148,9 +152,13 @@ pub mod DataTbls {
         }
     }
 
-    pub fn _GetObjectsTxtRecord(_objectId: i32) -> *mut D2ObjectsTxt { null_mut() }
+    pub fn _GetObjectsTxtRecord(_objectId: u32) -> *mut D2ObjectsTxt { null_mut() }
 
-    pub fn GetObjectsTxtRecord(objectId: i32) -> Option<&'static mut D2ObjectsTxt> {
+    pub fn GetObjectsTxtRecord(objectId: u32) -> Option<&'static mut D2ObjectsTxt> {
+        if objectId as usize >= sgptDataTables().objects_txt_record_count() {
+            return None;
+        }
+
         let object_txt = addr_to_stdcall(_GetObjectsTxtRecord, AddressTable.DataTbls.GetObjectsTxtRecord)(objectId);
         ptr_to_ref_mut(object_txt)
     }
