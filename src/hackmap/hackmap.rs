@@ -118,4 +118,19 @@ pub fn init(modules: &D2Modules) {
         Fog::Trace(format!("init {}", m.0).as_str());
         m.1(&modules).expect(m.0);
     }
+
+    HackMap::input().on_key_down(|vk| {
+        if vk == VK_OEM_MINUS {
+            D2Client::UI::DisplayGlobalMessage("reload cfg", D2StringColorCodes::Red);
+
+            if let Err(err) = HackMap::config().borrow_mut().load("hackmap\\hackmap.cfg.toml") {
+                println!("{}", err);
+                unsafe {
+                    MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
+                }
+            }
+        }
+
+        false
+    })
 }

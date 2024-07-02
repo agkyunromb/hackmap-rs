@@ -2,22 +2,26 @@ use serde::Deserialize;
 use serde::de::{self, Deserializer, Unexpected};
 use super::common::*;
 
+pub fn default_option<T>() -> Option<T> {
+    None
+}
+
 impl<'de> Deserialize<'de> for D2ItemQualities {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
     {
-        let s = String::deserialize(deserializer)?;
+        let s = String::deserialize(deserializer)?.to_lowercase();
         match s.as_str() {
-            "Inferior" => Ok(D2ItemQualities::Inferior),
-            "Normal" => Ok(D2ItemQualities::Normal),
-            "Superior" => Ok(D2ItemQualities::Superior),
-            "Magic" => Ok(D2ItemQualities::Magic),
-            "Set" => Ok(D2ItemQualities::Set),
-            "Rare" => Ok(D2ItemQualities::Rare),
-            "Unique" => Ok(D2ItemQualities::Unique),
-            "Craft" => Ok(D2ItemQualities::Craft),
-            "Tempered" => Ok(D2ItemQualities::Tempered),
+            "inferior"  => Ok(D2ItemQualities::Inferior),
+            "normal"    => Ok(D2ItemQualities::Normal),
+            "superior"  => Ok(D2ItemQualities::Superior),
+            "magic"     => Ok(D2ItemQualities::Magic),
+            "set"       => Ok(D2ItemQualities::Set),
+            "rare"      => Ok(D2ItemQualities::Rare),
+            "unique"    => Ok(D2ItemQualities::Unique),
+            "craft"     => Ok(D2ItemQualities::Craft),
+            "tempered"  => Ok(D2ItemQualities::Tempered),
             _ => Err(serde::de::Error::custom("Unknown D2ItemQualities value")),
         }
     }

@@ -65,7 +65,7 @@ extern "fastcall" fn D2Sigma_Units_GetName(unit: &D2Unit) -> PCWSTR {
     hm.current_monster_name.as_ptr()
 }
 
-fn is_player_in_town() -> bool {
+extern "C" fn is_player_in_town() -> bool {
     let player = match D2Client::Units::GetClientPlayer() {
         Some(p) => p,
         None => return false,
@@ -76,52 +76,45 @@ fn is_player_in_town() -> bool {
     D2Common::Dungeon::IsRoomInTown(active_room) != FALSE
 }
 
-extern "fastcall" fn D2Client_IsPlayerRunning(is_running: BOOL, arg2: u32) -> u32 {
-    let mut flags: u32;
+std::arch::global_asm!(
+    r#"
+.global _is_player_running_1
+_is_player_running_1:
+    push    edx
+    push    eax
+    call    {is_player_in_town}
+    mov     edx, [esp]
+    or      edx, 8
+    test    eax, eax
+    pop     eax
+    cmovne  eax, edx
+    pop     edx
+    ret
+"#,
+    is_player_in_town = sym is_player_in_town,
+);
 
-    unsafe {
-        std::arch::asm!(
-            "",
-            out("eax") flags,
-        );
-    }
+std::arch::global_asm!(
+    r#"
+.global _is_player_running_2
+_is_player_running_2:
+    push    ecx
+    push    eax
+    call    {is_player_in_town}
+    mov     ecx, [esp]
+    or      ecx, 8
+    test    eax, eax
+    pop     eax
+    cmovne  eax, ecx
+    pop     ecx
+    ret
+"#,
+    is_player_in_town = sym is_player_in_town,
+);
 
-    if is_running != FALSE || is_player_in_town() {
-        flags |= 8
-    }
-
-    unsafe {
-        std::arch::asm!(
-            "",
-            in("edx") arg2,
-        )
-    }
-
-    flags
-}
-
-extern "fastcall" fn D2Client_IsPlayerRunning2(arg1: usize, is_running: BOOL) -> u32 {
-    let mut flags: u32;
-
-    unsafe {
-        std::arch::asm!(
-            "",
-            out("eax") flags,
-        );
-    }
-
-    if is_running != FALSE || is_player_in_town() {
-        flags |= 8
-    }
-
-    unsafe {
-        std::arch::asm!(
-            "",
-            in("ecx") arg1,
-        )
-    }
-
-    flags
+extern "C" {
+    fn is_player_running_1();
+    fn is_player_running_2();
 }
 
 pub(super) struct Tweaks {
@@ -198,8 +191,10 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
 
         // 在城里默认跑步
-        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), D2Client_IsPlayerRunning as usize, None, None)?;
-        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), D2Client_IsPlayerRunning2 as usize, None, None)?;
+        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), is_player_running_1 as usize, None, None)?;
+        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), is_player_running_2 as usize, None, None)?;
+
+        is_player_running_2();
 
         // 显示抗性
         if D2Sigma::initialized() {

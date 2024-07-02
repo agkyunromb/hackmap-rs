@@ -309,7 +309,7 @@ pub fn init(d2client: usize) {
         UI: UIOffset {
             SetUIVar                : d2client + D2RVA::D2Client(0x6FB72790),
             HandleUIVars            : d2client + D2RVA::D2Client(0x6FB739E0),
-            DisplayGlobalMessage    : d2client + D2RVA::D2Client(0x6FB739E0),
+            DisplayGlobalMessage    : d2client + D2RVA::D2Client(0x6FB2D850),
 
             CallHandleUIVars        : d2client + D2RVA::D2Client(0x6FAF437B),
 
