@@ -47,7 +47,7 @@ pub struct D2Unit {
     pub pInventory      : *mut D2Inventory,     // 0x60
         _pad_64_C4      : [u8; 0x60],           // 0x64
     pub dwFlags         : D2UnitFlags,          // 0xC4
-    pub dwFlagEx        : u32,                  // 0xC8
+    pub dwFlagEx        : D2UnitFlagsEx,        // 0xC8
         _pad_CC_E8      : [u8; 0x1C],           // 0xCC
     pub pRoomNext       : *mut D2Unit,          // 0xE8
 }

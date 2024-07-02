@@ -44,6 +44,7 @@ pub struct AutoMapOffset {
 pub struct UnitsOffset {
     pub GetMonsterOwnerID       : FuncAddress,
     pub GetName                 : FuncAddress,
+    pub ShouldShowUnit          : FuncAddress,
     pub gClientPlayer           : FuncAddress,
     pub gClientUnitTypeTable    : FuncAddress,
 }
@@ -347,6 +348,7 @@ pub fn init(d2client: usize) {
         Units: UnitsOffset{
             GetMonsterOwnerID       : d2client + D2RVA::D2Client(0x6FAD16A0),
             GetName                 : d2client + D2RVA::D2Client(0x6FB55D90),
+            ShouldShowUnit          : d2client + D2RVA::D2Client(0x6FB16620),
             gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
             gClientUnitTypeTable    : d2client + D2RVA::D2Client(0x6FBBA608),
         },

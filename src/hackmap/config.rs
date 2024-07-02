@@ -10,15 +10,26 @@ use super::config_deserializer::*;
 pub(super) type ConfigRef = Rc<RefCell<Config>>;
 
 #[derive(Debug, Deserialize)]
+pub(super) struct HotKeyConfig {
+    pub reload                  : VirtualKeyCode,
+    pub hide_items              : VirtualKeyCode,
+    pub perm_show_items  : VirtualKeyCode,
+    pub quick_next_game         : VirtualKeyCode,
+}
+
+#[derive(Debug, Deserialize)]
 pub(super) struct TweaksConfig {
     #[serde(deserialize_with = "bool_from_int")]
-    pub perm_show_items_toggle: bool,
+    pub perm_show_items: bool,
 }
 
 #[derive(Debug, Deserialize)]
 pub(super) struct UnitColorConfig {
     #[serde(deserialize_with = "bool_from_int", default)]
     pub show_socket_number          : bool,
+
+    #[serde(deserialize_with = "bool_from_int", default)]
+    pub hide_items                  : bool,
 
     pub player_blob_file            : Option<String>,
     pub monster_blob_file           : Option<String>,
@@ -58,10 +69,10 @@ pub(super) struct UnitColorConfig {
 #[derive(Debug, Deserialize)]
 pub struct ItemColor {
     #[serde(rename = "id")]
-    pub class_id: u32,
+    pub class_id: Option<u32>,
 
-    #[serde(deserialize_with = "d2_str_color_code_from_int")]
-    pub text_color: D2StringColorCodes,
+    #[serde(deserialize_with = "opt_d2_str_color_code_from_int", default)]
+    pub text_color: Option<D2StringColorCodes>,
 
     pub minimap_color: Option<u8>,
 
@@ -82,8 +93,10 @@ impl UnitColorConfig {
         let is_eth = D2Common::Items::CheckItemFlag(item, D2ItemFlags::Ethereal) != FALSE;
 
         for entry in self.item_colors.iter().rev() {
-            if entry.class_id != class_id {
-                continue;
+            if let Some(cid) = entry.class_id {
+                if cid != class_id {
+                    continue;
+                }
             }
 
             if let Some(q) = entry.quality {
@@ -113,6 +126,7 @@ impl UnitColorConfig {
 
 #[derive(Debug, Deserialize)]
 pub(super) struct Config {
+    pub hotkey      : HotKeyConfig,
     pub tweaks      : TweaksConfig,
     pub unit_color  : UnitColorConfig,
 }
@@ -120,11 +134,20 @@ pub(super) struct Config {
 impl Config {
     pub fn new() -> Rc<RefCell<Self>> {
         Rc::new(RefCell::new(Self{
-            tweaks: TweaksConfig{
-                perm_show_items_toggle: true,
+            hotkey: HotKeyConfig{
+                reload                  : Default::default(),
+                hide_items              : Default::default(),
+                perm_show_items  : Default::default(),
+                quick_next_game         : Default::default(),
             },
+
+            tweaks: TweaksConfig{
+                perm_show_items: true,
+            },
+
             unit_color: UnitColorConfig{
                 show_socket_number              : true,
+                hide_items                      : true,
 
                 player_blob_file                : None,
                 monster_blob_file               : None,

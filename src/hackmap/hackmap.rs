@@ -120,7 +120,10 @@ pub fn init(modules: &D2Modules) {
     }
 
     HackMap::input().on_key_down(|vk| {
-        if vk == VK_OEM_MINUS {
+        let cfg = HackMap::config();
+        let cfg = cfg.borrow();
+
+        if vk == cfg.hotkey.reload {
             D2Client::UI::DisplayGlobalMessage("reload cfg", D2StringColorCodes::Red);
 
             if let Err(err) = HackMap::config().borrow_mut().load("hackmap\\hackmap.cfg.toml") {

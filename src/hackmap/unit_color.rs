@@ -4,14 +4,19 @@ use super::HackMap;
 use super::config::ConfigRef;
 use D2Common::D2Unit;
 
+const MINIMAP_COLOR_DEFAULT: u8 = 0xFF;
+const MINIMAP_COLOR_HIDE: u8 = 0xFE;
+
 struct Stubs {
+    ShouldShowUnit: Option<extern "stdcall" fn() -> BOOL>,
     DATATBLS_CompileTxt: Option<extern "stdcall" fn(PVOID, PCSTR, PVOID, &mut i32, usize) -> PVOID>,
     D2Sigma_Items_GetItemName: Option<extern "stdcall" fn(&D2Unit, PWSTR, u32)>,
 }
 
 static mut STUBS: Stubs = Stubs{
-    DATATBLS_CompileTxt: None,
-    D2Sigma_Items_GetItemName: None,
+    ShouldShowUnit              : None,
+    DATATBLS_CompileTxt         : None,
+    D2Sigma_Items_GetItemName   : None,
 };
 
 #[allow(static_mut_refs)]
@@ -46,6 +51,38 @@ extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, ar
     get_stubs().D2Sigma_Items_GetItemName.unwrap()(item, buffer, arg3);
 
     HackMap::unit_color().d2sigma_items_get_item_name(item, buffer);
+}
+
+extern "fastcall" fn should_show_unit(unit: &mut D2Unit) -> bool {
+    HackMap::unit_color().should_show_unit(unit)
+}
+
+fn get_stub_should_show_unit() -> usize {
+    get_stubs().ShouldShowUnit.unwrap() as usize
+}
+
+global_asm!(
+    r#"
+.global _naked_should_show_unit
+_naked_should_show_unit:
+
+    mov     ecx, esi
+    call    {should_show_unit}
+    test    al, al
+    jz      _naked_should_show_unit_hide_unit
+
+    call    {get_stub_should_show_unit}
+    call    eax
+
+_naked_should_show_unit_hide_unit:
+    ret
+"#,
+    should_show_unit            = sym should_show_unit,
+    get_stub_should_show_unit   = sym get_stub_should_show_unit,
+);
+
+extern "C" {
+    fn naked_should_show_unit() -> BOOL;
 }
 
 pub(super) struct UnitColor {
@@ -307,7 +344,7 @@ impl UnitColor {
         let item_color = cfg.unit_color.get_color_from_unit(unit).ok_or(())?;
         let minimap_color = item_color.minimap_color.ok_or(())?;
 
-        if minimap_color == 0xFF {
+        if minimap_color == MINIMAP_COLOR_DEFAULT {
             return Ok(());
         }
 
@@ -389,12 +426,14 @@ impl UnitColor {
         }
 
         if let Some(item_color) = self.cfg.borrow().unit_color.get_color_from_unit(item) {
-            if item_color.text_color != D2StringColorCodes::Invalid {
-                while name.starts_with("ÿc") {
-                    name = name.trim_start_matches("ÿc")[1..].to_string();
-                }
+            if let Some(text_color) = item_color.text_color {
+                if text_color != D2StringColorCodes::Invalid {
+                    while name.starts_with("ÿc") {
+                        name = name.trim_start_matches("ÿc")[1..].to_string();
+                    }
 
-                name.insert_str(0, &format!("ÿc{}", item_color.text_color as u8));
+                    name.insert_str(0, &format!("ÿc{}", text_color as u8));
+                }
             }
         }
 
@@ -403,6 +442,35 @@ impl UnitColor {
         unsafe {
             name.as_ptr().copy_to_nonoverlapping(buffer, name.len());
         }
+    }
+
+    fn should_show_unit(&self, unit: &mut D2Unit) -> bool {
+        let cfg = self.cfg.borrow();
+
+        if cfg.unit_color.hide_items == false {
+            return true;
+        }
+
+        if D2Common::Inventory::UnitIsItem(unit) == FALSE {
+            return true;
+        }
+
+        let color = match cfg.unit_color.get_color_from_unit(unit) {
+            None => return true,
+            Some(color) => color,
+        };
+
+        let minimap_color = match color.minimap_color {
+            None => return true,
+            Some(color) => color,
+        };
+
+        if minimap_color == MINIMAP_COLOR_HIDE {
+            unit.dwFlagEx.remove(D2UnitFlagsEx::IsInLos);
+            return false;
+        }
+
+        true
     }
 
 }
@@ -420,10 +488,22 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
             _ => {},
         }
 
+        inline_hook_jmp(0, D2Client::AddressTable.Units.ShouldShowUnit, naked_should_show_unit as usize, Some(&mut STUBS.ShouldShowUnit), None)?;
         inline_hook_jmp(0, D2Common::AddressTable.DataTbls.CompileTxt, DATATBLS_CompileTxt as usize, Some(&mut STUBS.DATATBLS_CompileTxt), None)?;
         inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, d2sigma_automap_draw as usize, None, None)?;
         inline_hook_jmp(0, D2Sigma::AddressTable.Items.GetItemName, d2sigma_items_get_item_name as usize, Some(&mut STUBS.D2Sigma_Items_GetItemName), None)?;
     }
+
+    HackMap::input().on_key_down(|vk| {
+        let cfg = HackMap::config();
+        let mut cfg = cfg.borrow_mut();
+
+        if vk == cfg.hotkey.hide_items {
+            cfg.unit_color.hide_items = !cfg.unit_color.hide_items;
+        }
+
+        false
+    });
 
     Ok(())
 }

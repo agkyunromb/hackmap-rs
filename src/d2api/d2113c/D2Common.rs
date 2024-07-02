@@ -222,8 +222,8 @@ pub mod Inventory {
         addr_to_stdcall(GetNextItem, AddressTable.Inventory.GetNextItem)(item)
     }
 
-    pub fn UnitIsItem(inventory: &D2Unit) -> BOOL {
-        addr_to_stdcall(UnitIsItem, AddressTable.Inventory.UnitIsItem)(inventory)
+    pub fn UnitIsItem(unit: &D2Unit) -> BOOL {
+        addr_to_stdcall(UnitIsItem, AddressTable.Inventory.UnitIsItem)(unit)
     }
 }
 

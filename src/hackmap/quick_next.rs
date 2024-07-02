@@ -233,7 +233,10 @@ impl QuickNextGame {
 
 pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
     HackMap::input().on_key_down(|vk| {
-        if vk == VK_OEM_PLUS {
+        let cfg = HackMap::config();
+        let cfg = cfg.borrow();
+
+        if vk == cfg.hotkey.quick_next_game {
             HackMap::quick_next().generate_next_game_info(if unsafe { GetKeyState(VK_CONTROL as i32) } < 0 { 0 } else { 1 });
             let hwnd = D2Gfx::Window::GetWindow();
             get_stubs().SaveAndExitGame.unwrap()(0, &hwnd);

@@ -76,18 +76,18 @@ extern "C" fn is_player_in_town() -> bool {
     D2Common::Dungeon::IsRoomInTown(active_room) != FALSE
 }
 
-std::arch::global_asm!(
+global_asm!(
     r#"
-.global _is_player_running_1
-_is_player_running_1:
+.global _naked_is_player_running_1
+_naked_is_player_running_1:
 
     test    ecx, ecx
-    jz      _is_player_running_1_NOT_RUNNING
+    jz      _naked_is_player_running_1_NOT_RUNNING
 
     or      eax, 8
     ret
 
-_is_player_running_1_NOT_RUNNING:
+_naked_is_player_running_1_NOT_RUNNING:
     push    edx
     push    eax
     call    {is_player_in_town}
@@ -102,17 +102,17 @@ _is_player_running_1_NOT_RUNNING:
     is_player_in_town = sym is_player_in_town,
 );
 
-std::arch::global_asm!(
+global_asm!(
     r#"
-.global _is_player_running_2
-_is_player_running_2:
+.global _naked_is_player_running_2
+_naked_is_player_running_2:
     test    edx, edx
-    jz      _is_player_running_2_NOT_RUNNING
+    jz      _naked_is_player_running_2_NOT_RUNNING
 
     or      eax, 8
     ret
 
-_is_player_running_2_NOT_RUNNING:
+_naked_is_player_running_2_NOT_RUNNING:
     push    ecx
     push    eax
     call    {is_player_in_town}
@@ -128,8 +128,8 @@ _is_player_running_2_NOT_RUNNING:
 );
 
 extern "C" {
-    fn is_player_running_1();
-    fn is_player_running_2();
+    fn naked_is_player_running_1();
+    fn naked_is_player_running_2();
 }
 
 pub(super) struct Tweaks {
@@ -148,8 +148,8 @@ impl Tweaks {
     fn on_key_down(&self, vk: u16) -> bool {
         let mut cfg = self.cfg.borrow_mut();
 
-        if vk == 'Y' as u16 {
-            cfg.tweaks.perm_show_items_toggle = !cfg.tweaks.perm_show_items_toggle;
+        if vk == cfg.hotkey.perm_show_items {
+            cfg.tweaks.perm_show_items = !cfg.tweaks.perm_show_items;
         }
 
         false
@@ -165,7 +165,7 @@ impl Tweaks {
     fn handle_perm_show_items(&self, obj: PVOID) {
         let UI_HandleUIVars = get_stubs().UI_HandleUIVars.unwrap();
 
-        if self.cfg.borrow_mut().tweaks.perm_show_items_toggle == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
+        if self.cfg.borrow_mut().tweaks.perm_show_items == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
             UI_HandleUIVars(obj);
             return;
         }
@@ -206,10 +206,8 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
 
         // 在城里默认跑步
-        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), is_player_running_1 as usize, None, None)?;
-        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), is_player_running_2 as usize, None, None)?;
-
-        is_player_running_2();
+        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), naked_is_player_running_1 as usize, None, None)?;
+        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), naked_is_player_running_2 as usize, None, None)?;
 
         // 显示抗性
         if D2Sigma::initialized() {
