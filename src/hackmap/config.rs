@@ -11,10 +11,11 @@ pub(super) type ConfigRef = Rc<RefCell<Config>>;
 
 #[derive(Debug, Deserialize)]
 pub(super) struct HotKeyConfig {
-    pub reload                  : VirtualKeyCode,
-    pub hide_items              : VirtualKeyCode,
-    pub perm_show_items  : VirtualKeyCode,
-    pub quick_next_game         : VirtualKeyCode,
+    pub reload              : VirtualKeyCode,
+    pub hide_items          : VirtualKeyCode,
+    pub perm_show_items     : VirtualKeyCode,
+    pub quick_next_game     : VirtualKeyCode,
+    pub item_extra_info     : VirtualKeyCode,
 }
 
 #[derive(Debug, Deserialize)]
@@ -30,6 +31,9 @@ pub(super) struct UnitColorConfig {
 
     #[serde(deserialize_with = "bool_from_int", default)]
     pub hide_items                  : bool,
+
+    #[serde(deserialize_with = "bool_from_int", default)]
+    pub item_extra_info             : bool,
 
     pub player_blob_file            : Option<String>,
     pub monster_blob_file           : Option<String>,
@@ -135,10 +139,11 @@ impl Config {
     pub fn new() -> Rc<RefCell<Self>> {
         Rc::new(RefCell::new(Self{
             hotkey: HotKeyConfig{
-                reload                  : Default::default(),
-                hide_items              : Default::default(),
-                perm_show_items  : Default::default(),
-                quick_next_game         : Default::default(),
+                reload              : Default::default(),
+                hide_items          : Default::default(),
+                perm_show_items     : Default::default(),
+                quick_next_game     : Default::default(),
+                item_extra_info     : Default::default(),
             },
 
             tweaks: TweaksConfig{
@@ -148,6 +153,7 @@ impl Config {
             unit_color: UnitColorConfig{
                 show_socket_number              : true,
                 hide_items                      : true,
+                item_extra_info                 : false,
 
                 player_blob_file                : None,
                 monster_blob_file               : None,

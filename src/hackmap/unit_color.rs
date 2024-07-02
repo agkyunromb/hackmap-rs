@@ -415,9 +415,7 @@ impl UnitColor {
             name += &format!("({socks_num}s)");
         }
 
-        let ctrl_pressed = unsafe { GetKeyState(VK_SHIFT as i32) < 0 };
-
-        if ctrl_pressed {
+        if self.cfg.borrow().unit_color.item_extra_info {
             let quality = D2Common::Items::GetItemQuality(item);
             let unit_id = item.dwUnitId;
             let class_id = item.dwClassId;
@@ -498,8 +496,10 @@ pub fn init(modules: &D2Modules) -> Result<(), HookError> {
         let cfg = HackMap::config();
         let mut cfg = cfg.borrow_mut();
 
-        if vk == cfg.hotkey.hide_items {
-            cfg.unit_color.hide_items = !cfg.unit_color.hide_items;
+        match vk {
+            _ if vk == cfg.hotkey.hide_items        => cfg.unit_color.hide_items        = !cfg.unit_color.hide_items,
+            _ if vk == cfg.hotkey.item_extra_info   => cfg.unit_color.item_extra_info   = !cfg.unit_color.item_extra_info,
+            _ => {},
         }
 
         false
