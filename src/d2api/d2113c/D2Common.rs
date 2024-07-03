@@ -2,10 +2,12 @@ use super::common::*;
 mod drlg;
 mod units;
 mod datatbls;
+mod packet;
 
 pub use units::*;
 pub use datatbls::*;
 pub use drlg::*;
+pub use packet::*;
 
 pub struct StatListOffset {
     pub GetUnitBaseStat                 : FuncAddress,

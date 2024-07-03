@@ -185,6 +185,10 @@ where
     }
 }
 
+pub fn ptr_to_ref<T>(ptr: *const T) -> Option<&'static T> {
+    if ptr.is_null() { None } else { unsafe { Some(&*ptr) } }
+}
+
 pub fn ptr_to_ref_mut<T>(ptr: *mut T) -> Option<&'static mut T> {
     if ptr.is_null() { None } else { unsafe { Some(&mut *ptr) } }
 }

@@ -1,4 +1,5 @@
 use super::common::*;
+use super::config_deserializer::VirtualKeyCode;
 use super::HackMap;
 use super::config::ConfigRef;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
@@ -19,7 +20,7 @@ fn get_stubs() -> &'static Stubs {
 }
 
 extern "stdcall" fn InGame_OnKeyDown(msg: &mut StormMsgHandlerParams) {
-    HackMap::input().in_game_on_key_down(msg);
+    HackMap::input().in_game_key_down(msg);
     get_stubs().InGame_OnKeyDown.unwrap()(msg)
 }
 
@@ -39,7 +40,8 @@ pub(super) type OnKeyDownCallback = fn(vk: u16) -> bool;
 
 pub(super) struct Input {
     cfg                     : ConfigRef,
-    on_keydown_callbacks    : Vec<OnKeyDownCallback>,
+    on_keydown_callbacks    : Vec<Box<dyn FnMut(u16) -> bool>>,
+    toggles                 : Vec<(&'static str, Box<dyn FnMut(u16) -> (bool, bool)>)>,
 }
 
 impl Input {
@@ -47,14 +49,19 @@ impl Input {
         Self{
             cfg,
             on_keydown_callbacks: vec![],
+            toggles: vec![],
         }
     }
 
-    pub fn on_key_down(&mut self, f: OnKeyDownCallback) {
-        self.on_keydown_callbacks.push(f);
+    pub fn reg_toggle<F: FnMut(u16) -> (bool, bool) + 'static>(&mut self, name: &'static str, cb: F) {
+        self.toggles.push((name, Box::new(cb)));
     }
 
-    fn in_game_on_key_down(&mut self, msg: &mut StormMsgHandlerParams) {
+    pub fn on_key_down(&mut self, f: OnKeyDownCallback) {
+        self.on_keydown_callbacks.push(Box::new(f));
+    }
+
+    fn in_game_key_down(&mut self, msg: &mut StormMsgHandlerParams) {
         if msg.returned != FALSE || msg.message != WM_KEYDOWN || msg.key_pressed() {
             return;
         }
@@ -67,18 +74,33 @@ impl Input {
 
         let vk = msg.virtual_key();
 
-        for cb in self.on_keydown_callbacks.iter() {
+        for (name, cb) in self.toggles.iter_mut() {
+            let (handled, toggle_enabled) = cb(vk);
+            if handled == false {
+                continue;
+            }
+
+            let toggle_state = if toggle_enabled { "ON" } else { "OFF" };
+            let toggle_color = if toggle_enabled { D2StringColorCodes::LightGreen } else { D2StringColorCodes::Red };
+
+            D2Client::UI::DisplayQuickMessage(
+                &format!("{name} -> {}{toggle_state}", toggle_color.to_str_code()),
+                D2StringColorCodes::Orange,
+            );
+        }
+
+        for cb in self.on_keydown_callbacks.iter_mut() {
             if cb(vk) {
                 break;
             }
         }
     }
-}
 
-pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
-    unsafe {
-        inline_hook_jmp(0, D2Win::AddressTable.MsgHandler.RegisterMsgHandler, RegisterMsgHandler as usize, Some(&mut STUBS.RegisterMsgHandler), None)?;
+    pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {
+        unsafe {
+            inline_hook_jmp(0, D2Win::AddressTable.MsgHandler.RegisterMsgHandler, RegisterMsgHandler as usize, Some(&mut STUBS.RegisterMsgHandler), None)?;
+        }
+
+        Ok(())
     }
-
-    Ok(())
 }

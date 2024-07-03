@@ -9,5 +9,6 @@ mod tweaks;
 mod input;
 mod quick_next;
 mod helper_bot;
+mod item_state_monitor;
 
 pub use hackmap::*;

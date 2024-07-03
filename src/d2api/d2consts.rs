@@ -19,6 +19,27 @@ pub enum D2StringColorCodes {
     Invalid     = 255,
 }
 
+impl D2StringColorCodes {
+    pub fn to_str_code(&self) -> &str {
+        match self {
+            Self::White       => "ÿc0",
+            Self::Red         => "ÿc1",
+            Self::LightGreen  => "ÿc2",
+            Self::Blue        => "ÿc3",
+            Self::DarkGold    => "ÿc4",
+            Self::Grey        => "ÿc5",
+            Self::Black       => "ÿc6",
+            Self::Tan         => "ÿc7",
+            Self::Orange      => "ÿc8",
+            Self::Yellow      => "ÿc9",
+            Self::DarkGreen   => "ÿc10",
+            Self::Purple      => "ÿc11",
+            Self::DarkGreen2  => "ÿc12",
+            Self::Invalid     => "",
+        }
+    }
+}
+
 #[repr(i32)]
 #[derive(PartialEq, Copy, Clone)]
 pub enum D2UIvars {

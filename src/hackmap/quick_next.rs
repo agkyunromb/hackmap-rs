@@ -229,27 +229,27 @@ impl QuickNextGame {
         Ok(())
     }
 
-}
+    pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {
+        HackMap::input().on_key_down(|vk| {
+            let cfg = HackMap::config();
+            let cfg = cfg.borrow();
 
-pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
-    HackMap::input().on_key_down(|vk| {
-        let cfg = HackMap::config();
-        let cfg = cfg.borrow();
+            if vk == cfg.hotkey.quick_next_game {
+                HackMap::quick_next().generate_next_game_info(if unsafe { GetKeyState(VK_CONTROL as i32) } < 0 { 0 } else { 1 });
+                let hwnd = D2Gfx::Window::GetWindow();
+                get_stubs().SaveAndExitGame.unwrap()(0, &hwnd);
+            }
 
-        if vk == cfg.hotkey.quick_next_game {
-            HackMap::quick_next().generate_next_game_info(if unsafe { GetKeyState(VK_CONTROL as i32) } < 0 { 0 } else { 1 });
-            let hwnd = D2Gfx::Window::GetWindow();
-            get_stubs().SaveAndExitGame.unwrap()(0, &hwnd);
+            false
+        });
+
+        unsafe {
+            inline_hook_jmp(0, D2Client::AddressTable.Game.SaveAndExitGame, SaveAndExitGame as usize, Some(&mut STUBS.SaveAndExitGame), None)?;
+            inline_hook_jmp(0, D2Win::AddressTable.Control.CreateControl, CreateControl as usize, Some(&mut STUBS.CreateControl), None)?;
+            inline_hook_jmp(0, D2Multi::AddressTable.BNet.EnterBNLobby, EnterBNLobby as usize, Some(&mut STUBS.EnterBNLobby), None)?;
         }
 
-        false
-    });
-
-    unsafe {
-        inline_hook_jmp(0, D2Client::AddressTable.Game.SaveAndExitGame, SaveAndExitGame as usize, Some(&mut STUBS.SaveAndExitGame), None)?;
-        inline_hook_jmp(0, D2Win::AddressTable.Control.CreateControl, CreateControl as usize, Some(&mut STUBS.CreateControl), None)?;
-        inline_hook_jmp(0, D2Multi::AddressTable.BNet.EnterBNLobby, EnterBNLobby as usize, Some(&mut STUBS.EnterBNLobby), None)?;
+        Ok(())
     }
 
-    Ok(())
 }

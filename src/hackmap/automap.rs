@@ -357,25 +357,25 @@ impl AutoMap {
 
         D2WinEx::Text::draw_text(level_name, x, y, D2Font::Font6, color);
     }
-}
 
-pub fn init(modules: &D2Modules) -> Result<(), HookError> {
-    // unsafe {
-    //     std::env::set_var("RUST_BACKTRACE", "1");
-    //     ::windows_sys::Win32::System::Console::AllocConsole();
-    // }
+    pub fn init(&mut self, modules: &D2Modules) -> Result<(), HookError> {
+        // unsafe {
+        //     std::env::set_var("RUST_BACKTRACE", "1");
+        //     ::windows_sys::Win32::System::Console::AllocConsole();
+        // }
 
-    D2ClientEx::Game::on_leave_game(|| {
-        HackMap::automap().automap_cells_for_layers().clear();
-    });
+        D2ClientEx::Game::on_leave_game(|| {
+            HackMap::automap().automap_cells_for_layers().clear();
+        });
 
-    unsafe {
-        STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
+        unsafe {
+            STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
 
-        inline_hook_call(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB10E34), D2Client_AutoMap_DrawCells as usize, Some(&mut STUBS.D2Client_AutoMap_DrawCells), None)?;
-        inline_hook_jmp::<()>(0, D2Client::AddressTable.AutoMap.NewAutoMapCell, NewAutoMapCell as usize, None, None)?;
-        inline_hook_call::<()>(0, D2Client::AddressTable.AutoMap.CallDrawAutoMapCell, CelDrawClipped as usize, None, None)?;
+            inline_hook_call(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB10E34), D2Client_AutoMap_DrawCells as usize, Some(&mut STUBS.D2Client_AutoMap_DrawCells), None)?;
+            inline_hook_jmp::<()>(0, D2Client::AddressTable.AutoMap.NewAutoMapCell, NewAutoMapCell as usize, None, None)?;
+            inline_hook_call::<()>(0, D2Client::AddressTable.AutoMap.CallDrawAutoMapCell, CelDrawClipped as usize, None, None)?;
+        }
+
+        Ok(())
     }
-
-    Ok(())
 }

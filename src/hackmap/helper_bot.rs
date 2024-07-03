@@ -1,5 +1,6 @@
 use super::common::*;
 use super::HackMap;
+use super::config::ConfigRef;
 use windows_sys::Win32::UI::Input::KeyboardAndMouse::GetKeyState;
 use windows_sys::Win32::UI::Input::KeyboardAndMouse::VK_CONTROL;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
@@ -68,12 +69,24 @@ extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
     get_stubs().Handle_D2GS_CHAT_26.unwrap()(payload);
 }
 
-pub fn init(_modules: &D2Modules) -> Result<(), HookError> {
-    // let D2Sigma = modules.D2Sigma.unwrap();
+pub(super) struct HelperBot {
+    pub cfg: super::config::ConfigRef,
+}
 
-    unsafe {
-        STUBS.Handle_D2GS_CHAT_26 = Some(D2Client::Net::SwapD2GSHandler(0x26, Handle_D2GS_CHAT_26));
+impl HelperBot {
+    pub fn new(cfg: ConfigRef) -> Self{
+        Self{
+            cfg,
+        }
     }
 
-    Ok(())
+    pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {
+        // let D2Sigma = modules.D2Sigma.unwrap();
+
+        unsafe {
+            STUBS.Handle_D2GS_CHAT_26 = Some(D2Client::Net::SwapD2GSHandler(0x26, Handle_D2GS_CHAT_26));
+        }
+
+        Ok(())
+    }
 }

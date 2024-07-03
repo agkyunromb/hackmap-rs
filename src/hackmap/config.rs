@@ -78,6 +78,8 @@ pub struct ItemColor {
     #[serde(rename = "prop")]
     pub property: Option<String>,
 
+    pub regex: Option<RegexWrapper>,
+
     #[serde(deserialize_with = "opt_d2_str_color_code_from_int", default)]
     pub text_color: Option<D2StringColorCodes>,
 
@@ -127,8 +129,14 @@ impl UnitColorConfig {
                 }
             }
 
-            if let Some(prop) = entry.property.as_ref() {
-                if prop.is_empty() == false && D2SigmaEx::Items::get_item_properties(item).contains(prop) == false {
+            if let Some(re) = entry.regex.as_ref() {
+                let prop = D2SigmaEx::Items::get_item_properties(item, false);
+                if re.is_match(&prop) == false {
+                    continue;
+                }
+
+            } else if let Some(prop) = entry.property.as_ref() {
+                if prop.is_empty() == false && D2SigmaEx::Items::get_item_properties(item, false).contains(prop) == false {
                     continue;
                 }
             }

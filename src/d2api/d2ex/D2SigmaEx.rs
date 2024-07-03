@@ -20,16 +20,18 @@ struct FormatItemPropertiesContext {
 
 struct D2SigmaEx {
     is_getting_item_properties  : bool,
-    item_properties         : String,
-    DrawFramedText          : Option<extern "fastcall" fn(PCWSTR, i32, i32, i32, i32)>,
+    strip_color_code            : bool,
+    item_properties             : String,
+    DrawFramedText              : Option<extern "fastcall" fn(PCWSTR, i32, i32, i32, i32)>,
 }
 
 impl D2SigmaEx {
     const fn new() -> Self {
         Self {
             is_getting_item_properties  : false,
-            item_properties         : String::new(),
-            DrawFramedText          : None,
+            strip_color_code            : false,
+            item_properties             : String::new(),
+            DrawFramedText              : None,
         }
     }
 
@@ -42,17 +44,24 @@ impl D2SigmaEx {
         }
     }
 
-    fn get_item_properties(&mut self, unit: &D2Common::D2Unit) -> String {
+    fn get_item_properties(&mut self, unit: &D2Common::D2Unit, strip_color_code: bool) -> String {
         self.is_getting_item_properties = true;
+        self.strip_color_code = strip_color_code;
 
         D2Sigma::Units::DisplayItemProperties(D2Client::Units::GetClientUnitTypeTable(), unit);
 
         self.is_getting_item_properties = false;
+        self.strip_color_code = false;
 
         std::mem::take(&mut self.item_properties)
     }
 
     fn on_get_item_properties(&mut self, text: &str) {
+        if self.strip_color_code == false {
+            self.item_properties = text.into();
+            return;
+        }
+
         let chars: Vec<char> = text.chars().collect();
         let mut new_text = String::new();
         let mut i = 0;
@@ -93,8 +102,8 @@ pub mod Items {
         String::from_utf16_lossy(buffer.as_slice())
     }
 
-    pub fn get_item_properties(unit: &D2Unit) -> String {
-        D2SigmaEx::get().get_item_properties(unit)
+    pub fn get_item_properties(unit: &D2Unit, strip_color_code: bool) -> String {
+        D2SigmaEx::get().get_item_properties(unit, strip_color_code)
     }
 
     pub fn is_getting_item_properties() -> bool {

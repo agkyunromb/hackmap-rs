@@ -2,10 +2,11 @@ use super::common::*;
 use super::image_loader;
 use super::HackMap;
 use super::config::ConfigRef;
+use super::item_state_monitor::*;
 use D2Common::D2Unit;
 
 const MINIMAP_COLOR_DEFAULT: u8 = 0xFF;
-const MINIMAP_COLOR_HIDE: u8 = 0xFE;
+const MINIMAP_COLOR_HIDE: u8    = 0xFE;
 
 struct Stubs {
     ShouldShowUnit: Option<extern "stdcall" fn() -> BOOL>,
@@ -348,7 +349,7 @@ impl UnitColor {
         let item_color = cfg.unit_color.get_color_from_unit(unit).ok_or(())?;
         let minimap_color = item_color.minimap_color.ok_or(())?;
 
-        if minimap_color == MINIMAP_COLOR_DEFAULT {
+        if minimap_color == MINIMAP_COLOR_DEFAULT || minimap_color == MINIMAP_COLOR_HIDE {
             return Ok(());
         }
 
@@ -491,39 +492,104 @@ impl UnitColor {
         true
     }
 
-}
+    fn on_post_recv(&mut self, cmd: D2GSCmd, payload: *mut u8) {
+        let mut state = ItemStateMonitor::new();
 
-pub fn init(modules: &D2Modules) -> Result<(), HookError> {
-    unsafe {
-        let glide3x = modules.glide3x.unwrap();
+        state.on_scmd(cmd, payload);
 
-        match (&*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID)).FileHeader.TimeDateStamp {
-            0x6606E04D => {
-                // drawImageHooked
-                HackMap::unit_color().glide3x_is_d2sigma = (glide3x + 0x5BFF3135 - 0x5BD50000) as *mut u8;
-            },
-
-            _ => {},
+        if state.add_to_ground == false {
+            return;
         }
 
-        inline_hook_jmp(0, D2Client::AddressTable.Units.ShouldShowUnit, naked_should_show_unit as usize, Some(&mut STUBS.ShouldShowUnit), None)?;
-        inline_hook_jmp(0, D2Common::AddressTable.DataTbls.CompileTxt, DATATBLS_CompileTxt as usize, Some(&mut STUBS.DATATBLS_CompileTxt), None)?;
-        inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, d2sigma_automap_draw as usize, None, None)?;
-        inline_hook_jmp(0, D2Sigma::AddressTable.Items.GetItemName, d2sigma_items_get_item_name as usize, Some(&mut STUBS.D2Sigma_Items_GetItemName), None)?;
+        let item = match D2Client::Units::GetClientUnit(state.unit_id, D2UnitTypes::Item) {
+            None => return,
+            Some(i) => i,
+        };
+
+        let cfg = self.cfg.borrow();
+
+        let item_color = match cfg.unit_color.get_color_from_unit(item) {
+            None => return,
+            Some(c) => c,
+        };
+
+        if item_color.notify.unwrap_or(false) == false {
+            return;
+        }
+
+        let name = D2SigmaEx::Items::get_item_name(item);
+        let prop = D2SigmaEx::Items::get_item_properties(item, false);
+        let item_color = format!("ÿc{}", D2Sigma::Items::GetItemNameColor(item) as u8);
+
+        let name: Vec<&str> = name.split('\n').collect();
+        let name_line_count = name.len();
+
+        {
+            // let name = &name[1..];
+            let name = name.join(" - ");
+            D2Client::UI::DisplayGlobalMessage(&format!("{item_color} - {name}"), D2StringColorCodes::Invalid);
+        }
+
+        {
+            let mut prop_lines: Vec<&str> = prop.split("\n").collect();
+            let prop_lines = &mut prop_lines;
+
+            for line in prop_lines.iter().rev().skip(name_line_count) {
+                D2Client::UI::DisplayGlobalMessage(&format!("    {item_color}{}", line), D2StringColorCodes::Invalid);
+            }
+        }
     }
 
-    HackMap::input().on_key_down(|vk| {
-        let cfg = HackMap::config();
-        let mut cfg = cfg.borrow_mut();
+    pub fn init(&mut self, modules: &D2Modules) -> Result<(), HookError> {
+        unsafe {
+            let glide3x = modules.glide3x.unwrap();
 
-        match vk {
-            _ if vk == cfg.hotkey.hide_items        => cfg.unit_color.hide_items        = !cfg.unit_color.hide_items,
-            _ if vk == cfg.hotkey.item_extra_info   => cfg.unit_color.item_extra_info   = !cfg.unit_color.item_extra_info,
-            _ => {},
+            match (&*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID)).FileHeader.TimeDateStamp {
+                0x6606E04D => {
+                    // drawImageHooked
+                    HackMap::unit_color().glide3x_is_d2sigma = (glide3x + 0x5BFF3135 - 0x5BD50000) as *mut u8;
+                },
+
+                _ => {},
+            }
+
+            inline_hook_jmp(0, D2Client::AddressTable.Units.ShouldShowUnit, naked_should_show_unit as usize, Some(&mut STUBS.ShouldShowUnit), None)?;
+            inline_hook_jmp(0, D2Common::AddressTable.DataTbls.CompileTxt, DATATBLS_CompileTxt as usize, Some(&mut STUBS.DATATBLS_CompileTxt), None)?;
+            inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, d2sigma_automap_draw as usize, None, None)?;
+            inline_hook_jmp(0, D2Sigma::AddressTable.Items.GetItemName, d2sigma_items_get_item_name as usize, Some(&mut STUBS.D2Sigma_Items_GetItemName), None)?;
         }
 
-        false
-    });
+        let input = HackMap::input();
 
-    Ok(())
+        input.reg_toggle("hide_items", |vk| {
+            let cfg = HackMap::config();
+            let mut cfg = cfg.borrow_mut();
+
+            if vk == cfg.hotkey.hide_items {
+                cfg.unit_color.hide_items = !cfg.unit_color.hide_items;
+                return (true, cfg.unit_color.hide_items);
+            }
+
+            (false, false)
+        });
+
+        input.reg_toggle("item_extra_info", |vk| {
+            let cfg = HackMap::config();
+            let mut cfg = cfg.borrow_mut();
+
+            if vk == cfg.hotkey.item_extra_info {
+                cfg.unit_color.item_extra_info = !cfg.unit_color.item_extra_info;
+                return (true, cfg.unit_color.item_extra_info)
+            }
+
+            (false, false)
+        });
+
+        D2ClientEx::Net::on_post_recv(|cmd, payload| {
+            HackMap::unit_color().on_post_recv(cmd, payload);
+        });
+
+        Ok(())
+    }
+
 }

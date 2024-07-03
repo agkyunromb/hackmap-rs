@@ -15,6 +15,7 @@ pub struct UnitsOffset {
 
 pub struct ItemsOffset {
     pub GetItemName             : FuncAddress,
+    pub GetItemNameColor        : FuncAddress,
 }
 
 pub struct UIOffset {
@@ -60,7 +61,11 @@ pub mod Items {
     use super::*;
 
     pub fn GetItemName(unit: &D2Unit, buffer: PCWSTR, arg3: u32) -> PCWSTR {
-        addr_to_fastcall(GetItemName, AddressTable.Items.GetItemName)(unit, buffer, arg3)
+        addr_to_stdcall(GetItemName, AddressTable.Items.GetItemName)(unit, buffer, arg3)
+    }
+
+    pub fn GetItemNameColor(unit: &D2Unit) -> D2StringColorCodes {
+        addr_to_fastcall(GetItemNameColor, AddressTable.Items.GetItemNameColor)(unit)
     }
 }
 
@@ -93,6 +98,7 @@ pub fn init(d2sigma: usize) {
                 },
                 Items: ItemsOffset{
                     GetItemName             : vmslide + 0x100811B0,
+                    GetItemNameColor        : vmslide + 0x10081C80,
                 },
                 UI: UIOffset{
                     BossLifeBar_Call_Units_GetName      : vmslide + 0x1008FFCB,   // BossLifebar:BossName
@@ -118,6 +124,7 @@ pub fn init(d2sigma: usize) {
                 },
                 Items: ItemsOffset{
                     GetItemName             : vmslide + 0,
+                    GetItemNameColor        : vmslide + 0,
                 },
                 UI: UIOffset{
                     BossLifeBar_Call_Units_GetName      : vmslide + 0x1009014B,

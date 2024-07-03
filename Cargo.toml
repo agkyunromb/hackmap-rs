@@ -15,6 +15,7 @@ anyhow = { version = "1.0.86", features = ["backtrace"] }
 bitflags = "2.6.0"
 lazy_static = "1.4.0"
 ml = { version = "0.1.0", path = "../../../Rust/ml", features = ["hooker"] }
+regex = "1.10.5"
 serde = { version = "1.0.203", features = ["derive"] }
 toml = "0.8.14"
 windows-targets = "0.52.5"

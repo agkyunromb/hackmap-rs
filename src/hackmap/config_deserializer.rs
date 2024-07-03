@@ -2,6 +2,7 @@ use serde::Deserialize;
 use serde::de::{self, Deserializer, Unexpected};
 use super::common::*;
 use lazy_static::lazy_static;
+use regex::Regex;
 
 lazy_static! {
     static ref VK_MAP: HashMap<&'static str, u16> = [
@@ -181,6 +182,28 @@ lazy_static! {
         ("VK_PA1",                      0xFD),        // PA1 key
         ("VK_OEM_CLEAR",                0xFE),        // Clear key
     ].iter().cloned().collect();
+}
+
+#[derive(Debug)]
+pub(super) struct RegexWrapper(Regex);
+
+impl std::ops::Deref for RegexWrapper {
+    type Target = Regex;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<'de> Deserialize<'de> for RegexWrapper {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: String = String::deserialize(deserializer)?;
+        Regex::new(&s)
+            .map(RegexWrapper)
+            .map_err(serde::de::Error::custom)
+    }
 }
 
 #[derive(Debug, Copy, Clone)]

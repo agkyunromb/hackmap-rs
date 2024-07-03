@@ -39,7 +39,6 @@ extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PV
 }
 
 extern "fastcall" fn D2Sigma_Units_GetName(unit: &D2Unit) -> PCWSTR {
-
     let name = D2Sigma::Units::GetName(unit).to_string();
 
     let dr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::DamageResist, 0) as i32;
@@ -133,7 +132,7 @@ extern "C" {
 }
 
 pub(super) struct Tweaks {
-    pub cfg: super::config::ConfigRef,
+    pub cfg: ConfigRef,
     pub current_monster_name: Vec<u16>,
 }
 
@@ -174,48 +173,51 @@ impl Tweaks {
         UI_HandleUIVars(obj);
         D2Client::UI::SetUIVar(D2UIvars::HoldAlt, 1, 0);
     }
-}
 
-pub fn init(modules: &D2Modules) -> Result<(), HookError> {
-    HackMap::input().on_key_down(|vk| -> bool {
-        HackMap::tweaks().on_key_down(vk)
-    });
+    pub fn init(&mut self, modules: &D2Modules) -> Result<(), HookError> {
+        HackMap::input().on_key_down(|vk| -> bool {
+            HackMap::tweaks().on_key_down(vk)
+        });
 
-    let D2Client = modules.D2Client.unwrap();
+        let D2Client = modules.D2Client.unwrap();
 
-    unsafe {
-        // 永久显示地面物品
-        let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);
+        unsafe {
+            // 永久显示地面物品
+            let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);
 
-        inline_hook_call(0, D2Client::AddressTable.UI.CallHandleUIVars, HandleUIVars as usize, Some(&mut STUBS.UI_HandleUIVars), None)?;
-        patch_memory_value(D2Client, D2RVA::D2Client(0x6FB0948B), 0xEB, 1)?;
+            inline_hook_call(0, D2Client::AddressTable.UI.CallHandleUIVars, HandleUIVars as usize, Some(&mut STUBS.UI_HandleUIVars), None)?;
+            patch_memory_value(D2Client, D2RVA::D2Client(0x6FB0948B), 0xEB, 1)?;
 
-        // HDText_drawFramedText_is_alt_clicked
-        match glide3x.FileHeader.TimeDateStamp {
-            0x6606E04D => {
-                patch_memory_value(modules.glide3x.unwrap(), 0x55F2E, 0x80, 1)?;
-            },
+            // global message 上限
+            patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D9B2), 30, 1)?;
 
-            _ => {},
+            // HDText_drawFramedText_is_alt_clicked
+            match glide3x.FileHeader.TimeDateStamp {
+                0x6606E04D => {
+                    patch_memory_value(modules.glide3x.unwrap(), 0x55F2E, 0x80, 1)?;
+                },
+
+                _ => {},
+            }
+
+            // 去除阴影
+            inline_hook_jmp::<()>(D2Client, D2RVA::D2Client(0x6FB59A20), MISC_CalculateShadowRGBA as usize, None, None)?;
+
+            // 透视
+            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
+
+            // 在城里默认跑步
+            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), naked_is_player_running_1 as usize, None, None)?;
+            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), naked_is_player_running_2 as usize, None, None)?;
+
+            // 显示抗性
+            if D2Sigma::initialized() {
+                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
+                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
+                patch_memory_value(0, D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar, 0x80, 1)?;
+            }
         }
 
-        // 去除阴影
-        inline_hook_jmp::<()>(D2Client, D2RVA::D2Client(0x6FB59A20), MISC_CalculateShadowRGBA as usize, None, None)?;
-
-        // 透视
-        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
-
-        // 在城里默认跑步
-        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), naked_is_player_running_1 as usize, None, None)?;
-        inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), naked_is_player_running_2 as usize, None, None)?;
-
-        // 显示抗性
-        if D2Sigma::initialized() {
-            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
-            inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
-            patch_memory_value(0, D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar, 0x80, 1)?;
-        }
+        Ok(())
     }
-
-    Ok(())
 }

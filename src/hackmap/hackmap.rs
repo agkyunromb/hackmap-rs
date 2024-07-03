@@ -32,6 +32,7 @@ pub(super) struct HackMap {
     pub quick_next_game         : quick_next::QuickNextGame,
     pub tweaks                  : tweaks::Tweaks,
     pub unit_color              : unit_color::UnitColor,
+    pub helper_bot              : helper_bot::HelperBot,
 }
 
 impl HackMap {
@@ -46,12 +47,40 @@ impl HackMap {
             quick_next_game     : quick_next::QuickNextGame::new(),
             tweaks              : tweaks::Tweaks::new(Rc::clone(&config)),
             unit_color          : unit_color::UnitColor::new(Rc::clone(&config)),
+            helper_bot          : helper_bot::HelperBot::new(Rc::clone(&config)),
         }
     }
 
-    fn init(&mut self) -> anyhow::Result<()> {
+    fn init(&mut self, modules: &D2Modules) -> anyhow::Result<()> {
         self.config.borrow_mut().load("hackmap\\hackmap.cfg.toml")?;
         self.image_loader.init()?;
+        self.input.init(modules)?;
+        self.automap.init(modules)?;
+        self.quick_next_game.init(modules)?;
+        self.tweaks.init(modules)?;
+        self.unit_color.init(modules)?;
+        self.helper_bot.init(modules)?;
+
+        self.input.on_key_down(|vk| {
+            let cfg = HackMap::config();
+            let mut cfg = cfg.borrow_mut();
+
+            if vk == cfg.hotkey.reload {
+                D2Client::UI::DisplayGlobalMessage("reload cfg", D2StringColorCodes::Red);
+
+                if let Err(err) = cfg.load("hackmap\\hackmap.cfg.toml") {
+                    // println!("{}", err);
+
+                    std::thread::spawn(move || {
+                        unsafe {
+                            MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
+                        }
+                    });
+                }
+            }
+
+            false
+        });
 
         Ok(())
     }
@@ -98,45 +127,10 @@ impl HackMap {
 }
 
 pub fn init(modules: &D2Modules) {
-    if let Err(err) = HackMap::get().init() {
+    if let Err(err) = HackMap::get().init(modules) {
         println!("{}", err);
         unsafe {
             MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
         }
     }
-
-    let initializer: &[(&str, fn(&D2Modules) -> Result<(), HookError>)] = &[
-        ("auto_map",    automap::init),
-        ("input",       input::init),
-        ("unit_color",  unit_color::init),
-        ("tweaks",      tweaks::init),
-        ("quick_next",  quick_next::init),
-        ("helper_bot",  helper_bot::init),
-    ];
-
-    for m in initializer {
-        Fog::Trace(format!("init {}", m.0).as_str());
-        m.1(&modules).expect(m.0);
-    }
-
-    HackMap::input().on_key_down(|vk| {
-        let cfg = HackMap::config();
-        let mut cfg = cfg.borrow_mut();
-
-        if vk == cfg.hotkey.reload {
-            D2Client::UI::DisplayGlobalMessage("reload cfg", D2StringColorCodes::Red);
-
-            if let Err(err) = cfg.load("hackmap\\hackmap.cfg.toml") {
-                // println!("{}", err);
-
-                std::thread::spawn(move || {
-                    unsafe {
-                        MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
-                    }
-                });
-            }
-        }
-
-        false
-    })
 }

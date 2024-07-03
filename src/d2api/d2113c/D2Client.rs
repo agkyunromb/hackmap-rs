@@ -10,6 +10,7 @@ pub struct UIOffset {
     pub SetUIVar                : FuncAddress,
     pub HandleUIVars            : FuncAddress,
     pub DisplayGlobalMessage    : FuncAddress,
+    pub DisplayQuickMessage     : FuncAddress,
 
     pub CallHandleUIVars        : FuncAddress,
 
@@ -45,6 +46,7 @@ pub struct UnitsOffset {
     pub GetMonsterOwnerID       : FuncAddress,
     pub GetName                 : FuncAddress,
     pub ShouldShowUnit          : FuncAddress,
+    pub GetClientUnit           : FuncAddress,
     pub gClientPlayer           : FuncAddress,
     pub gClientUnitTypeTable    : FuncAddress,
 }
@@ -136,6 +138,10 @@ pub mod UI {
 
     pub fn DisplayGlobalMessage(text: &str, color: D2StringColorCodes) {
         addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayGlobalMessage)(text.to_utf16().as_ptr(), color)
+    }
+
+    pub fn DisplayQuickMessage(text: &str, color: D2StringColorCodes) {
+        addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayQuickMessage)(text.to_utf16().as_ptr(), color)
     }
 }
 
@@ -267,6 +273,12 @@ pub mod Units {
         name
     }
 
+    pub fn _GetClientUnit(_unitId: u32, _unitType: D2UnitTypes) -> *mut D2Unit { null_mut() }
+
+    pub fn GetClientUnit(unitId: u32, unitType: D2UnitTypes) -> Option<&'static mut D2Unit> {
+        ptr_to_ref_mut(addr_to_fastcall(_GetClientUnit, AddressTable.Units.GetClientUnit)(unitId, unitType))
+    }
+
     pub fn GetClientPlayer() -> Option<&'static mut D2Unit> {
         let clinet_player: *mut D2Unit = read_at(AddressTable.Units.gClientPlayer);
         ptr_to_ref_mut(clinet_player)
@@ -311,6 +323,7 @@ pub fn init(d2client: usize) {
             SetUIVar                : d2client + D2RVA::D2Client(0x6FB72790),
             HandleUIVars            : d2client + D2RVA::D2Client(0x6FB739E0),
             DisplayGlobalMessage    : d2client + D2RVA::D2Client(0x6FB2D850),
+            DisplayQuickMessage     : d2client + D2RVA::D2Client(0x6FB2D610),
 
             CallHandleUIVars        : d2client + D2RVA::D2Client(0x6FAF437B),
 
@@ -349,6 +362,7 @@ pub fn init(d2client: usize) {
             GetMonsterOwnerID       : d2client + D2RVA::D2Client(0x6FAD16A0),
             GetName                 : d2client + D2RVA::D2Client(0x6FB55D90),
             ShouldShowUnit          : d2client + D2RVA::D2Client(0x6FB16620),
+            GetClientUnit           : d2client + D2RVA::D2Client(0x6FB55B40),
             gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
             gClientUnitTypeTable    : d2client + D2RVA::D2Client(0x6FBBA608),
         },
