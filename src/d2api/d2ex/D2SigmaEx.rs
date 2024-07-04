@@ -7,7 +7,7 @@ use D2Common::D2Unit;
 use crate::d2api::d2ex::common::*;
 use crate::d2api::d2consts::*;
 
-#[repr(C, packed(1))]
+#[repr(C, packed(4))]
 struct FormatItemPropertiesContext {
     pub buf1                    : [u8; 0x100],          // 0x0000
     pub text                    : [u16; 0x4000],        // 0x0100
@@ -23,7 +23,7 @@ struct D2SigmaEx {
     strip_color_code            : bool,
     item_properties             : String,
     AddCtrlPressedHintText      : Option<extern "fastcall" fn(usize)>,
-    DrawItemProperties          : Option<extern "fastcall" fn(PCWSTR, D2Font)>,
+    DrawItemProperties          : Option<extern "fastcall" fn(&mut FormatItemPropertiesContext, D2Font)>,
 }
 
 impl D2SigmaEx {
@@ -88,11 +88,11 @@ impl D2SigmaEx {
         self.item_properties = new_text;
     }
 
-    extern "fastcall" fn draw_item_properties(text: PCWSTR, font: D2Font) {
+    extern "fastcall" fn draw_item_properties(text: &mut FormatItemPropertiesContext, font: D2Font) {
         let sigma = D2SigmaEx::get();
 
         if sigma.is_getting_item_properties {
-            sigma.on_get_item_properties(&text.to_string());
+            sigma.on_get_item_properties(&String::from_utf16_lossy(&text.text));
             return;
         }
 
