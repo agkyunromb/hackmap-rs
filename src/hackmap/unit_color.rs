@@ -517,6 +517,10 @@ impl UnitColor {
             Some(i) => i,
         };
 
+        self.handle_dropped_item(item);
+    }
+
+    fn handle_dropped_item(&mut self, item: &D2Unit) {
         let cfg = self.cfg.borrow();
 
         let item_color = match cfg.unit_color.get_color_from_unit(item) {

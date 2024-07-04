@@ -90,6 +90,9 @@ pub struct ItemColor {
     #[serde(rename = "id")]
     pub class_id: Option<u32>,
 
+    #[serde(deserialize_with = "opt_bool_from_int", default)]
+    pub match_name: Option<bool>,
+
     #[serde(rename = "prop")]
     pub property: Option<String>,
 
@@ -120,9 +123,12 @@ impl UnitColorConfig {
         let socks_num = D2Common::StatList::GetUnitBaseStat(item, D2ItemStats::Item_NumSockets, 0);
         let is_eth = D2Common::Items::CheckItemFlag(item, D2ItemFlags::Ethereal) != FALSE;
 
-        let mut item_prop: Option<String> = None;
+        let item_prop = D2SigmaEx::Items::get_item_properties(item, false);
+        let item_name = D2SigmaEx::Items::get_item_name(item);
 
         for entry in self.item_colors.iter().rev() {
+            let match_name = entry.match_name.unwrap_or(false);
+
             if let Some(cid) = entry.class_id {
                 if cid != class_id {
                     continue;
@@ -148,23 +154,13 @@ impl UnitColorConfig {
             }
 
             if let Some(re) = entry.regex.as_ref() {
-                if item_prop.is_none() {
-                    item_prop = Some(D2SigmaEx::Items::get_item_properties(item, false));
-                }
-
-                let prop = item_prop.as_ref().unwrap();
-
+                let prop = if match_name { &item_name } else { &item_prop };
                 if re.is_match(&prop) == false {
                     continue;
                 }
 
             } else if let Some(prop) = entry.property.as_ref() {
-                if item_prop.is_none() {
-                    item_prop = Some(D2SigmaEx::Items::get_item_properties(item, false));
-                }
-
-                let t = item_prop.as_ref().unwrap();
-
+                let t = if match_name { &item_name } else { &item_prop };
                 if prop.is_empty() == false && t.contains(prop) == false {
                     continue;
                 }

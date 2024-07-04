@@ -1,22 +1,90 @@
 use super::common::*;
-use super::D2Common::D2Unit;
+use super::D2Common::{D2ItemsTxt, D2Unit};
+
+#[repr(C, packed(4))]
+pub struct GetItemPropertiesContext {
+    pub buf1                    : [u8; 0x100],          // 0x0000
+    pub text                    : [u16; 0x4000],        // 0x0100
+    pub text2                   : [u16; 0x2000],        // 0x8100
+    pub text3                   : [[u16; 0x400]; 3],    // 0xC100
+    pub client_unit_type_table  : PVOID,                // 0xD900
+    pub unit                    : *mut D2Unit,          // 0xD904
+    pub owner                   : *mut D2Unit,          // 0xD908
+    pub unit_item_txt           : *mut D2Unit,          // 0xD90C
+    pub owner_item_txt          : *mut D2ItemsTxt,      // 0xD910
+    pub stat_list               : PVOID,                // 0xD914
+    pub set_items_txt           : PVOID,                // 0xD918
+    pub sets_txt                : PVOID,                // 0xD91C
+}
+
+impl GetItemPropertiesContext {
+    pub fn new() -> Self {
+        Self {
+            buf1                      : [0; 0x100],
+            text                      : [0; 0x4000],
+            text2                     : [0; 0x2000],
+            text3                     : [[0; 0x400]; 3],
+            client_unit_type_table    : null_mut(),
+            unit                      : null_mut(),
+            owner                     : null_mut(),
+            unit_item_txt             : null_mut(),
+            owner_item_txt            : null_mut(),
+            stat_list                 : null_mut(),
+            set_items_txt             : null_mut(),
+            sets_txt                  : null_mut(),
+        }
+    }
+}
 
 pub struct AutoMapOffset {
-    pub RevealMap           : FuncAddress,
-    pub DrawAutoMap         : FuncAddress,
-    pub DrawAutoMapUnits    : FuncAddress,
-    pub DrawUnitBlob        : FuncAddress,
+    pub RevealMap                       : FuncAddress,
+    pub DrawAutoMap                     : FuncAddress,
+    pub DrawAutoMapUnits                : FuncAddress,
+    pub DrawUnitBlob                    : FuncAddress,
 }
 
 pub struct UnitsOffset {
-    pub GetName                 : FuncAddress,
-    pub DisplayItemProperties   : FuncAddress,
+    pub GetName                         : FuncAddress,
+    pub DisplayItemProperties           : FuncAddress,
 }
 
 pub struct ItemsOffset {
-    pub GetItemName             : FuncAddress,
-    pub GetItemNameColor        : FuncAddress,
-    pub AddCtrlPressedHintText  : FuncAddress,
+    pub GetItemName                     : FuncAddress,
+    pub GetItemNameColor                : FuncAddress,
+}
+
+pub struct ItemTextOffset {
+    pub GetItemPropertiesInit           : FuncAddress,
+    pub GetItemProperties1              : FuncAddress,
+    pub GetItemProperties2              : FuncAddress,
+    pub GetItemProperties3              : FuncAddress,
+    pub GetItemProperties4              : FuncAddress,
+    pub GetItemProperties5              : FuncAddress,
+    pub GetItemProperties6              : FuncAddress,
+    pub GetItemProperties7              : FuncAddress,
+    pub GetItemProperties8              : FuncAddress,
+    pub GetItemProperties9              : FuncAddress,
+    pub GetItemProperties10             : FuncAddress,
+    pub GetItemProperties11             : FuncAddress,
+    pub GetItemProperties12             : FuncAddress,
+    pub GetItemProperties13             : FuncAddress,
+    pub GetItemProperties14             : FuncAddress,
+    pub GetItemProperties15             : FuncAddress,
+    pub GetItemProperties16             : FuncAddress,
+    pub GetItemProperties17             : FuncAddress,
+    pub GetItemProperties18             : FuncAddress,
+    pub GetItemProperties19             : FuncAddress,
+    pub GetItemProperties20             : FuncAddress,
+    pub GetItemProperties21             : FuncAddress,
+    pub GetItemProperties22             : FuncAddress,
+    pub GetItemProperties23             : FuncAddress,
+    pub GetItemProperties24             : FuncAddress,
+    pub GetItemProperties25             : FuncAddress,
+    pub GetItemProperties26             : FuncAddress,
+    pub GetItemProperties27             : FuncAddress,
+    pub GetName                         : FuncAddress,
+    pub GetItemProperties29             : FuncAddress,
+    pub AddCtrlPressedHintText          : FuncAddress,
 }
 
 pub struct UIOffset {
@@ -27,10 +95,11 @@ pub struct UIOffset {
 }
 
 pub struct D2SigmaOffset {
-    pub AutoMap : AutoMapOffset,
-    pub Units   : UnitsOffset,
-    pub Items   : ItemsOffset,
-    pub UI      : UIOffset,
+    pub AutoMap     : AutoMapOffset,
+    pub Units       : UnitsOffset,
+    pub Items       : ItemsOffset,
+    pub ItemText    : ItemTextOffset,
+    pub UI          : UIOffset,
 }
 
 pub static AddressTable: OnceHolder<D2SigmaOffset> = OnceHolder::new();
@@ -71,6 +140,133 @@ pub mod Items {
     }
 }
 
+pub mod ItemText {
+    use super::*;
+
+    pub fn _GetItemPropertiesInit(_ctx: &mut GetItemPropertiesContext, _: usize, _player: &D2Unit, _item: &D2Unit, _owner: *const D2Unit) {}
+
+    pub fn GetItemPropertiesInit(ctx: &mut GetItemPropertiesContext, player: &D2Unit, item: &D2Unit, owner: *const D2Unit) {
+        addr_to_fastcall(_GetItemPropertiesInit, AddressTable.ItemText.GetItemPropertiesInit)(ctx, 0, player, item, owner)
+    }
+
+    pub fn GetItemProperties1(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties1, AddressTable.ItemText.GetItemProperties1)(ctx)
+    }
+
+    pub fn GetItemProperties2(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties2, AddressTable.ItemText.GetItemProperties2)(ctx)
+    }
+
+    pub fn GetItemProperties3(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties3, AddressTable.ItemText.GetItemProperties3)(ctx)
+    }
+
+    pub fn GetItemProperties4(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties4, AddressTable.ItemText.GetItemProperties4)(ctx)
+    }
+
+    pub fn GetItemProperties5(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties5, AddressTable.ItemText.GetItemProperties5)(ctx)
+    }
+
+    pub fn GetItemProperties6(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties6, AddressTable.ItemText.GetItemProperties6)(ctx)
+    }
+
+    pub fn GetItemProperties7(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties7, AddressTable.ItemText.GetItemProperties7)(ctx)
+    }
+
+    pub fn GetItemProperties8(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties8, AddressTable.ItemText.GetItemProperties8)(ctx)
+    }
+
+    pub fn GetItemProperties9(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties9, AddressTable.ItemText.GetItemProperties9)(ctx)
+    }
+
+    pub fn GetItemProperties10(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties10, AddressTable.ItemText.GetItemProperties10)(ctx)
+    }
+
+    pub fn GetItemProperties11(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties11, AddressTable.ItemText.GetItemProperties11)(ctx)
+    }
+
+    pub fn GetItemProperties12(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties12, AddressTable.ItemText.GetItemProperties12)(ctx)
+    }
+
+    pub fn GetItemProperties13(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties13, AddressTable.ItemText.GetItemProperties13)(ctx)
+    }
+
+    pub fn GetItemProperties14(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties14, AddressTable.ItemText.GetItemProperties14)(ctx)
+    }
+
+    pub fn GetItemProperties15(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties15, AddressTable.ItemText.GetItemProperties15)(ctx)
+    }
+
+    pub fn GetItemProperties16(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties16, AddressTable.ItemText.GetItemProperties16)(ctx)
+    }
+
+    pub fn GetItemProperties17(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties17, AddressTable.ItemText.GetItemProperties17)(ctx)
+    }
+
+    pub fn GetItemProperties18(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties18, AddressTable.ItemText.GetItemProperties18)(ctx)
+    }
+
+    pub fn GetItemProperties19(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties19, AddressTable.ItemText.GetItemProperties19)(ctx)
+    }
+
+    pub fn GetItemProperties20(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties20, AddressTable.ItemText.GetItemProperties20)(ctx)
+    }
+
+    pub fn GetItemProperties21(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties21, AddressTable.ItemText.GetItemProperties21)(ctx)
+    }
+
+    pub fn GetItemProperties22(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties22, AddressTable.ItemText.GetItemProperties22)(ctx)
+    }
+
+    pub fn GetItemProperties23(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties23, AddressTable.ItemText.GetItemProperties23)(ctx)
+    }
+
+    pub fn GetItemProperties24(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties24, AddressTable.ItemText.GetItemProperties24)(ctx)
+    }
+
+    pub fn GetItemProperties25(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties25, AddressTable.ItemText.GetItemProperties25)(ctx)
+    }
+
+    pub fn GetItemProperties26(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties26, AddressTable.ItemText.GetItemProperties26)(ctx)
+    }
+
+    pub fn GetItemProperties27(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties27, AddressTable.ItemText.GetItemProperties27)(ctx)
+    }
+
+    pub fn GetName(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetName, AddressTable.ItemText.GetName)(ctx)
+    }
+
+    pub fn GetItemProperties29(ctx: &mut GetItemPropertiesContext) {
+        addr_to_fastcall(GetItemProperties29, AddressTable.ItemText.GetItemProperties29)(ctx)
+    }
+
+}
+
 pub fn initialized() ->bool {
     // return false;
     AddressTable.initialized()
@@ -101,6 +297,38 @@ pub fn init(d2sigma: usize) {
                 Items: ItemsOffset{
                     GetItemName             : vmslide + 0x100811B0,
                     GetItemNameColor        : vmslide + 0x10081C80,
+                },
+                ItemText: ItemTextOffset{
+                    GetItemPropertiesInit   : vmslide + 0x10080930,
+                    GetItemProperties1      : vmslide + 0x1008C080,
+                    GetItemProperties2      : vmslide + 0x1008A7B0,
+                    GetItemProperties3      : vmslide + 0x1008A4E0,
+                    GetItemProperties4      : vmslide + 0x1008AB80,
+                    GetItemProperties5      : vmslide + 0x10088250,
+                    GetItemProperties6      : vmslide + 0x10088C50,
+                    GetItemProperties7      : vmslide + 0x10088D80,
+                    GetItemProperties8      : vmslide + 0x1008BF10,
+                    GetItemProperties9      : vmslide + 0x10088180,
+                    GetItemProperties10     : vmslide + 0x1008B9F0,
+                    GetItemProperties11     : vmslide + 0x10087E40,
+                    GetItemProperties12     : vmslide + 0x10089420,
+                    GetItemProperties13     : vmslide + 0x1008C150,
+                    GetItemProperties14     : vmslide + 0x1008AD20,
+                    GetItemProperties15     : vmslide + 0x1008C600,
+                    GetItemProperties16     : vmslide + 0x10088950,
+                    GetItemProperties17     : vmslide + 0x10088040,
+                    GetItemProperties18     : vmslide + 0x10089A90,
+                    GetItemProperties19     : vmslide + 0x1008A030,
+                    GetItemProperties20     : vmslide + 0x10089D60,
+                    GetItemProperties21     : vmslide + 0x10089790,
+                    GetItemProperties22     : vmslide + 0x10089290,
+                    GetItemProperties23     : vmslide + 0x10081F80,
+                    GetItemProperties24     : vmslide + 0x100821B0,
+                    GetItemProperties25     : vmslide + 0x1008C860,
+                    GetItemProperties26     : vmslide + 0x100890E0,
+                    GetItemProperties27     : vmslide + 0x1008A300,
+                    GetName                 : vmslide + 0x10088BD0,
+                    GetItemProperties29     : vmslide + 0x1008C3C0,
                     AddCtrlPressedHintText  : vmslide + 0x10089590,
                 },
                 UI: UIOffset{
@@ -127,12 +355,44 @@ pub fn init(d2sigma: usize) {
                     DisplayItemProperties   : 0,
                 },
                 Items: ItemsOffset{
-                    GetItemName             : vmslide + 0,
-                    GetItemNameColor        : vmslide + 0,
-                    AddCtrlPressedHintText  : vmslide + 0,
+                    GetItemName             : 0,
+                    GetItemNameColor        : 0,
+                },
+                ItemText: ItemTextOffset{
+                    GetItemPropertiesInit   : 0,
+                    GetItemProperties1      : 0,
+                    GetItemProperties2      : 0,
+                    GetItemProperties3      : 0,
+                    GetItemProperties4      : 0,
+                    GetItemProperties5      : 0,
+                    GetItemProperties6      : 0,
+                    GetItemProperties7      : 0,
+                    GetItemProperties8      : 0,
+                    GetItemProperties9      : 0,
+                    GetItemProperties10     : 0,
+                    GetItemProperties11     : 0,
+                    GetItemProperties12     : 0,
+                    GetItemProperties13     : 0,
+                    GetItemProperties14     : 0,
+                    GetItemProperties15     : 0,
+                    GetItemProperties16     : 0,
+                    GetItemProperties17     : 0,
+                    GetItemProperties18     : 0,
+                    GetItemProperties19     : 0,
+                    GetItemProperties20     : 0,
+                    GetItemProperties21     : 0,
+                    GetItemProperties22     : 0,
+                    GetItemProperties23     : 0,
+                    GetItemProperties24     : 0,
+                    GetItemProperties25     : 0,
+                    GetItemProperties26     : 0,
+                    GetItemProperties27     : 0,
+                    GetName                 : 0,
+                    GetItemProperties29     : 0,
+                    AddCtrlPressedHintText  : 0,
                 },
                 UI: UIOffset{
-                    DrawItemProperties                  : vmslide + 0,
+                    DrawItemProperties                  : 0,
                     BossLifeBar_Call_Units_GetName      : vmslide + 0x1009014B,
                     MonsterLifeBar_Call_Units_GetName   : vmslide + 0x1008F72C,
                     CheckIsMonsterShouldDisplayLifeBar  : 0,
