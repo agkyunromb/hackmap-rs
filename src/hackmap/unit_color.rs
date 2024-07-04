@@ -265,6 +265,10 @@ impl UnitColor {
             blob_file = unit_color_cfg.boss_blob_file.as_ref();
             show_name = true;
 
+        } else if mon_stats_flags.contains(D2MonStatsTxtFlags::Boss) {
+            color = unit_color_cfg.champion_monster_color;
+            blob_file = unit_color_cfg.monster_blob_file.as_ref();
+
         } else {
             color = unit_color_cfg.normal_monster_color;
             blob_file = unit_color_cfg.monster_blob_file.as_ref();
