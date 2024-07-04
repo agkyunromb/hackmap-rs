@@ -16,9 +16,11 @@ pub struct UnitsOffset {
 pub struct ItemsOffset {
     pub GetItemName             : FuncAddress,
     pub GetItemNameColor        : FuncAddress,
+    pub AddCtrlPressedHintText  : FuncAddress,
 }
 
 pub struct UIOffset {
+    pub DrawItemProperties                  : FuncAddress,
     pub BossLifeBar_Call_Units_GetName      : FuncAddress,
     pub MonsterLifeBar_Call_Units_GetName   : FuncAddress,
     pub CheckIsMonsterShouldDisplayLifeBar  : FuncAddress,
@@ -99,8 +101,10 @@ pub fn init(d2sigma: usize) {
                 Items: ItemsOffset{
                     GetItemName             : vmslide + 0x100811B0,
                     GetItemNameColor        : vmslide + 0x10081C80,
+                    AddCtrlPressedHintText  : vmslide + 0x10089590,
                 },
                 UI: UIOffset{
+                    DrawItemProperties                  : vmslide + 0x10082140,   // GetKeyState(VK_CONTROL)
                     BossLifeBar_Call_Units_GetName      : vmslide + 0x1008FFCB,   // BossLifebar:BossName
                     MonsterLifeBar_Call_Units_GetName   : vmslide + 0x1008F5AC,   // game\\hud\\mon-hp-bar
                     CheckIsMonsterShouldDisplayLifeBar  : vmslide + 0x1008F3FD,   // game\\hud\\mon-hp-bar, test    eax, 201h
@@ -125,8 +129,10 @@ pub fn init(d2sigma: usize) {
                 Items: ItemsOffset{
                     GetItemName             : vmslide + 0,
                     GetItemNameColor        : vmslide + 0,
+                    AddCtrlPressedHintText  : vmslide + 0,
                 },
                 UI: UIOffset{
+                    DrawItemProperties                  : vmslide + 0,
                     BossLifeBar_Call_Units_GetName      : vmslide + 0x1009014B,
                     MonsterLifeBar_Call_Units_GetName   : vmslide + 0x1008F72C,
                     CheckIsMonsterShouldDisplayLifeBar  : 0,

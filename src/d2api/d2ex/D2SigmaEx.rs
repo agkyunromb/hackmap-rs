@@ -22,7 +22,8 @@ struct D2SigmaEx {
     is_getting_item_properties  : bool,
     strip_color_code            : bool,
     item_properties             : String,
-    DrawFramedText              : Option<extern "fastcall" fn(PCWSTR, i32, i32, i32, i32)>,
+    AddCtrlPressedHintText      : Option<extern "fastcall" fn(usize)>,
+    DrawItemProperties          : Option<extern "fastcall" fn(PCWSTR, D2Font)>,
 }
 
 impl D2SigmaEx {
@@ -31,7 +32,8 @@ impl D2SigmaEx {
             is_getting_item_properties  : false,
             strip_color_code            : false,
             item_properties             : String::new(),
-            DrawFramedText              : None,
+            AddCtrlPressedHintText      : None,
+            DrawItemProperties          : None,
         }
     }
 
@@ -86,7 +88,7 @@ impl D2SigmaEx {
         self.item_properties = new_text;
     }
 
-    extern "fastcall" fn draw_framed_text(text: PCWSTR, x: i32, y: i32, color: i32, align: i32) {
+    extern "fastcall" fn draw_item_properties(text: PCWSTR, font: D2Font) {
         let sigma = D2SigmaEx::get();
 
         if sigma.is_getting_item_properties {
@@ -94,8 +96,17 @@ impl D2SigmaEx {
             return;
         }
 
-        sigma.DrawFramedText.unwrap()(text, x, y, color, align)
+        sigma.DrawItemProperties.unwrap()(text, font)
     }
+
+    extern "fastcall" fn add_ctrl_pressed_hint_text(this: usize) {
+        let sigma = D2SigmaEx::get();
+
+        if sigma.is_getting_item_properties == false {
+            sigma.AddCtrlPressedHintText.unwrap()(this)
+        }
+    }
+
 }
 
 pub mod Items {
@@ -121,7 +132,8 @@ pub mod Items {
 pub(super) fn init(_modules: &D2Modules) -> Result<(), HookError> {
     let sigma = D2SigmaEx::get();
 
-    inline_hook_jmp(0, D2Win::AddressTable.Text.DrawFramedText, D2SigmaEx::draw_framed_text as usize, Some(&mut sigma.DrawFramedText), None)?;
+    inline_hook_jmp(0, D2Sigma::AddressTable.UI.DrawItemProperties, D2SigmaEx::draw_item_properties as usize, Some(&mut sigma.DrawItemProperties), None)?;
+    inline_hook_jmp(0, D2Sigma::AddressTable.Items.AddCtrlPressedHintText, D2SigmaEx::add_ctrl_pressed_hint_text as usize, Some(&mut sigma.AddCtrlPressedHintText), None)?;
 
     Ok(())
 }

@@ -56,8 +56,10 @@ extern "fastcall" fn D2Sigma_Units_GetName(unit: &D2Unit) -> PCWSTR {
     let max_hp = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::MaxHp, 0) as f64;
 
     let class_id: u32 = unit.dwClassId;
+    let cfg = HackMap::config();
+    let cfg = cfg.borrow();
 
-    let monster_name = if unsafe { GetKeyState(VK_SHIFT as i32) < 0 } {
+    let monster_name = if cfg.tweaks.show_monster_id {
         format!("{name}({class_id}, 0x{class_id:X}) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
     } else {
         let percent = (hp * 100.0 / max_hp) as usize;
@@ -235,6 +237,18 @@ impl Tweaks {
             inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF2AE1), continue_attacking_after_target_dead as usize, None, None)?;
             inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF2AE6), continue_attacking_after_target_dead as usize, None, None)?;
         }
+
+        HackMap::input().reg_toggle("show_monster_id", |vk| {
+            let cfg = HackMap::config();
+            let mut cfg = cfg.borrow_mut();
+
+            if vk == cfg.hotkey.show_monster_id {
+                cfg.tweaks.show_monster_id = !cfg.tweaks.show_monster_id;
+                return (true, cfg.tweaks.show_monster_id)
+            }
+
+            (false, false)
+        });
 
         Ok(())
     }

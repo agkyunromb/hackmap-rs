@@ -24,12 +24,16 @@ pub(super) struct HotKeyConfig {
     pub perm_show_items     : VirtualKeyCode,
     pub quick_next_game     : VirtualKeyCode,
     pub item_extra_info     : VirtualKeyCode,
+    pub show_monster_id     : VirtualKeyCode,
 }
 
 #[derive(Debug, Deserialize)]
 pub(super) struct TweaksConfig {
     #[serde(deserialize_with = "bool_from_int")]
     pub perm_show_items: bool,
+
+    #[serde(deserialize_with = "bool_from_int")]
+    pub show_monster_id: bool,
 
     #[serde(deserialize_with = "bool_from_int")]
     pub continue_attacking_after_target_dead: bool,
@@ -116,6 +120,8 @@ impl UnitColorConfig {
         let socks_num = D2Common::StatList::GetUnitBaseStat(item, D2ItemStats::Item_NumSockets, 0);
         let is_eth = D2Common::Items::CheckItemFlag(item, D2ItemFlags::Ethereal) != FALSE;
 
+        let mut item_prop: Option<String> = None;
+
         for entry in self.item_colors.iter().rev() {
             if let Some(cid) = entry.class_id {
                 if cid != class_id {
@@ -142,13 +148,23 @@ impl UnitColorConfig {
             }
 
             if let Some(re) = entry.regex.as_ref() {
-                let prop = D2SigmaEx::Items::get_item_properties(item, false);
+                if item_prop.is_none() {
+                    item_prop = Some(D2SigmaEx::Items::get_item_properties(item, false));
+                }
+
+                let prop = item_prop.as_ref().unwrap();
+
                 if re.is_match(&prop) == false {
                     continue;
                 }
 
             } else if let Some(prop) = entry.property.as_ref() {
-                let t = D2SigmaEx::Items::get_item_properties(item, false);
+                if item_prop.is_none() {
+                    item_prop = Some(D2SigmaEx::Items::get_item_properties(item, false));
+                }
+
+                let t = item_prop.as_ref().unwrap();
+
                 if prop.is_empty() == false && t.contains(prop) == false {
                     continue;
                 }
@@ -177,10 +193,12 @@ impl Config {
                 perm_show_items     : Default::default(),
                 quick_next_game     : Default::default(),
                 item_extra_info     : Default::default(),
+                show_monster_id     : Default::default(),
             },
 
             tweaks: TweaksConfig{
                 perm_show_items: true,
+                show_monster_id: false,
                 continue_attacking_after_target_dead: true,
             },
 

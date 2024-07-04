@@ -241,7 +241,7 @@ impl UnitColor {
         let type_flag = monster_data.nTypeFlag;
         let mut color: u8;
         let mut show_name = false;
-        let blob_file: Option<&String>;
+        let mut blob_file: Option<&String>;
 
         if type_flag.contains(D2MonTypeFlags::SuperUnique) {
             color = unit_color_cfg.super_unique_color;
@@ -271,11 +271,21 @@ impl UnitColor {
         }
 
         if let Some(c) = unit_color_cfg.monster_color.get(&class_Id) {
-            if *c == 0xFF {
-                return Ok(());
-            }
+            match *c {
+                MINIMAP_COLOR_DEFAULT => {
+                    return Ok(());
+                },
 
-            color = *c;
+                MINIMAP_COLOR_HIDE => {
+                    color = unit_color_cfg.super_unique_color;
+                    blob_file = unit_color_cfg.boss_blob_file.as_ref();
+                    show_name = true;
+                }
+
+                _ => {
+                    color = *c;
+                },
+            }
         }
 
         self.draw_cell_by_blob_file(x, y, blob_file, color);
@@ -438,7 +448,7 @@ impl UnitColor {
                         name = name.trim_start_matches("ÿc")[1..].to_string();
                     }
 
-                    name.insert_str(0, &format!("ÿc{}", text_color as u8));
+                    name.insert_str(0, text_color.to_str_code());
                 }
 
                 None
@@ -540,7 +550,7 @@ impl UnitColor {
             Some(p) => p,
         };
 
-        let name = if quality >= D2ItemQualities::Magic && (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount {
+        let name = if notify == DropNotify::Name && quality >= D2ItemQualities::Magic && (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount {
             name[1..].join(" - ")
         } else {
             name.join(" - ")
