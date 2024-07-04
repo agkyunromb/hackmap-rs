@@ -9,6 +9,14 @@ use super::config_deserializer::*;
 
 pub(super) type ConfigRef = Rc<RefCell<Config>>;
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+#[repr(i32)]
+pub(super) enum DropNotify {
+    None        = 0,
+    Name        = 1,
+    Property    = 2,
+}
+
 #[derive(Debug, Deserialize)]
 pub(super) struct HotKeyConfig {
     pub reload              : VirtualKeyCode,
@@ -83,6 +91,7 @@ pub struct ItemColor {
     #[serde(deserialize_with = "opt_d2_str_color_code_from_int", default)]
     pub text_color: Option<D2StringColorCodes>,
 
+    #[serde(deserialize_with = "opt_palette_from_int", default)]
     pub minimap_color: Option<u8>,
 
     #[serde(deserialize_with = "opt_d2_item_quality_from_str", default)]
@@ -93,8 +102,8 @@ pub struct ItemColor {
 
     pub socks: Option<usize>,
 
-    #[serde(deserialize_with = "opt_bool_from_int", default)]
-    pub notify: Option<bool>,
+    pub notify      : Option<DropNotify>,
+    pub notify_text : Option<String>,
 }
 
 impl UnitColorConfig {
@@ -136,7 +145,8 @@ impl UnitColorConfig {
                 }
 
             } else if let Some(prop) = entry.property.as_ref() {
-                if prop.is_empty() == false && D2SigmaEx::Items::get_item_properties(item, false).contains(prop) == false {
+                let t = D2SigmaEx::Items::get_item_properties(item, false);
+                if prop.is_empty() == false && t.contains(prop) == false {
                     continue;
                 }
             }

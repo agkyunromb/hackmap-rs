@@ -904,7 +904,7 @@ pub enum D2ItemTypes
 }
 
 #[repr(i32)]
-#[derive(PartialEq, Copy, Clone, Debug)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
 pub enum D2ItemQualities
 {
     Inferior            = 1,

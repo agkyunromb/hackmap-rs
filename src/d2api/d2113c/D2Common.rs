@@ -18,6 +18,7 @@ pub struct DataTblsOffset {
     pub CompileTxt              : FuncAddress,
     pub GetLevelDefRecord       : FuncAddress,
     pub GetObjectsTxtRecord     : FuncAddress,
+    pub GetItemDataTables       : FuncAddress,
     pub sgptDataTables          : FuncAddress,
 }
 
@@ -163,6 +164,12 @@ pub mod DataTbls {
 
         let object_txt = addr_to_stdcall(_GetObjectsTxtRecord, AddressTable.DataTbls.GetObjectsTxtRecord)(objectId);
         ptr_to_ref_mut(object_txt)
+    }
+
+    pub fn _GetItemDataTables() -> *mut D2ItemDataTbl { null_mut() }
+
+    pub fn GetItemDataTables() -> Option<&'static mut D2ItemDataTbl> {
+        ptr_to_ref_mut(addr_to_stdcall(_GetItemDataTables, AddressTable.DataTbls.GetItemDataTables)())
     }
 
     pub fn CompileTxt(archive: PVOID, name: *const u8, tbl: PVOID, recordCount: &mut i32, recordSize: usize) -> PVOID {
@@ -339,6 +346,7 @@ pub fn init(d2common: usize) {
             CompileTxt                      : d2common + D2RVA::D2Common(0x6FDAEF40),
             GetLevelDefRecord               : d2common + D2RVA::D2Common(0x6FDBCB20),
             GetObjectsTxtRecord             : d2common + D2RVA::D2Common(0x6FD8E980),
+            GetItemDataTables               : d2common + D2RVA::D2Common(0x6FDC1A40),
             sgptDataTables                  : d2common + D2RVA::D2Common(0x6FDE9E1C),
         },
         StatList: StatListOffset{

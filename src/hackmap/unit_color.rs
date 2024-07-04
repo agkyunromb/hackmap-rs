@@ -1,4 +1,5 @@
 use super::common::*;
+use super::config::DropNotify;
 use super::image_loader;
 use super::HackMap;
 use super::config::ConfigRef;
@@ -497,7 +498,7 @@ impl UnitColor {
 
         state.on_scmd(cmd, payload);
 
-        if state.add_to_ground == false {
+        if state.add_to_ground == false && state.cursor_to_ground == false {
             return;
         }
 
@@ -513,30 +514,50 @@ impl UnitColor {
             Some(c) => c,
         };
 
-        if item_color.notify.unwrap_or(false) == false {
+        let notify = match item_color.notify {
+            None => return,
+            Some(n) => n,
+        };
+
+        if notify == DropNotify::None {
             return;
         }
 
+        let name_color = format!("ÿc{}", D2Sigma::Items::GetItemNameColor(item) as u8);
+
+        if let Some(notify_text) = item_color.notify_text.as_ref() {
+            D2Client::UI::DisplayGlobalMessage(&format!("{name_color} - {notify_text}"), D2StringColorCodes::Invalid);
+            return;
+        }
+
+        let quality = D2Common::Items::GetItemQuality(item);
         let name = D2SigmaEx::Items::get_item_name(item);
-        let prop = D2SigmaEx::Items::get_item_properties(item, false);
-        let item_color = format!("ÿc{}", D2Sigma::Items::GetItemNameColor(item) as u8);
 
         let name: Vec<&str> = name.split('\n').collect();
         let name_line_count = name.len();
+        let item_data_tables = match D2Common::DataTbls::GetItemDataTables() {
+            None => return,
+            Some(p) => p,
+        };
 
-        {
-            // let name = &name[1..];
-            let name = name.join(" - ");
-            D2Client::UI::DisplayGlobalMessage(&format!("{item_color} - {name}"), D2StringColorCodes::Invalid);
+        let name = if quality >= D2ItemQualities::Magic && (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount {
+            name[1..].join(" - ")
+        } else {
+            name.join(" - ")
+        };
+
+        D2Client::UI::DisplayGlobalMessage(&format!("{name_color} - {name}"), D2StringColorCodes::Invalid);
+
+        if notify == DropNotify::Name {
+            return;
         }
 
-        {
-            let mut prop_lines: Vec<&str> = prop.split("\n").collect();
-            let prop_lines = &mut prop_lines;
+        let prop = D2SigmaEx::Items::get_item_properties(item, false);
+        let mut prop_lines: Vec<&str> = prop.split("\n").collect();
+        let prop_lines = &mut prop_lines;
 
-            for line in prop_lines.iter().rev().skip(name_line_count) {
-                D2Client::UI::DisplayGlobalMessage(&format!("    {item_color}{}", line), D2StringColorCodes::Invalid);
-            }
+        for line in prop_lines.iter().skip(name_line_count) {
+            D2Client::UI::DisplayGlobalMessage(&format!("    {name_color}{}", line), D2StringColorCodes::Invalid);
         }
     }
 

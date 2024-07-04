@@ -290,3 +290,20 @@ impl D2LevelsTxt {
         addr_of!(self.wszLevelName) as *const u16
     }
 }
+
+#[repr(C, packed(1))]
+pub struct D2ItemsTxt {
+
+}
+
+#[repr(C, packed(1))]
+pub struct D2ItemDataTbl {
+    pub nItemsTxtRecordCount        : usize,                // 0x00
+    pub pItemsTxt                   : *mut D2ItemsTxt,      // 0x04
+    pub pWeapons                    : *mut D2ItemsTxt,      // 0x08
+    pub nWeaponsTxtRecordCount      : usize,                // 0x0C
+    pub pArmor                      : *mut D2ItemsTxt,      // 0x10
+    pub nArmorTxtRecordCount        : usize,                // 0x14
+    pub pMisc                       : *mut D2ItemsTxt,      // 0x18
+    pub nMiscTxtRecordCount         : usize,                // 0x1C
+}

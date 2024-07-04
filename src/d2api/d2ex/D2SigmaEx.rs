@@ -48,7 +48,9 @@ impl D2SigmaEx {
         self.is_getting_item_properties = true;
         self.strip_color_code = strip_color_code;
 
-        D2Sigma::Units::DisplayItemProperties(D2Client::Units::GetClientUnitTypeTable(), unit);
+        if let Some(player) = D2Client::Units::GetClientPlayer() {
+            D2Sigma::Units::DisplayItemProperties(player, unit);
+        }
 
         self.is_getting_item_properties = false;
         self.strip_color_code = false;
@@ -57,8 +59,13 @@ impl D2SigmaEx {
     }
 
     fn on_get_item_properties(&mut self, text: &str) {
+        let mut text: Vec<&str> = text.split("\n").collect();
+        text = text.into_iter().rev().collect();
+
+        let text = text.join("\n");
+
         if self.strip_color_code == false {
-            self.item_properties = text.into();
+            self.item_properties = text;
             return;
         }
 

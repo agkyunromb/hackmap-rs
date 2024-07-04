@@ -52,7 +52,7 @@ pub mod Units {
         addr_to_fastcall(GetName, AddressTable.Units.GetName)(unit)
     }
 
-    pub fn DisplayItemProperties(clientUnitTypeTable: PVOID, unit: &D2Unit) {
+    pub fn DisplayItemProperties(clientUnitTypeTable: &D2Unit, unit: &D2Unit) {
         addr_to_fastcall(DisplayItemProperties, AddressTable.Units.DisplayItemProperties)(clientUnitTypeTable, unit)
     }
 }
