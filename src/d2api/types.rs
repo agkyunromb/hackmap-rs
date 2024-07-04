@@ -79,6 +79,12 @@ pub fn read_at<R>(addr: usize) -> R {
     }
 }
 
+pub fn write_at<R>(addr: usize, v: R) {
+    unsafe {
+        (addr as *mut R).write(v)
+    }
+}
+
 pub struct D2Modules {
     pub D2Sigma     : Option<usize>,
     pub D2Client    : Option<usize>,

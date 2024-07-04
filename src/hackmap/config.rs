@@ -30,6 +30,9 @@ pub(super) struct HotKeyConfig {
 pub(super) struct TweaksConfig {
     #[serde(deserialize_with = "bool_from_int")]
     pub perm_show_items: bool,
+
+    #[serde(deserialize_with = "bool_from_int")]
+    pub continue_attacking_after_target_dead: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -178,6 +181,7 @@ impl Config {
 
             tweaks: TweaksConfig{
                 perm_show_items: true,
+                continue_attacking_after_target_dead: true,
             },
 
             unit_color: UnitColorConfig{

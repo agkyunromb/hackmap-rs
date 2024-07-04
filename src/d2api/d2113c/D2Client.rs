@@ -16,6 +16,8 @@ pub struct UIOffset {
 
     pub gUIVars                 : FuncAddress,
     pub gUIOpenMode             : FuncAddress,
+    pub gAttackWithLeftButton   : FuncAddress,
+    pub gAttackWithRightButton  : FuncAddress,
 }
 
 pub struct GameOffset {
@@ -128,6 +130,14 @@ pub mod UI {
 
     pub fn GetUIOpenMode() -> u32 {
         read_at(AddressTable.UI.gUIOpenMode)
+    }
+
+    pub fn SetAttackWithLeftButton(v: u32) {
+        write_at(AddressTable.UI.gAttackWithLeftButton, v);
+    }
+
+    pub fn SetAttackWithRightButton(v: u32) {
+        write_at(AddressTable.UI.gAttackWithRightButton, v);
     }
 
     pub fn HandleUIVars(this: PVOID) {
@@ -329,6 +339,8 @@ pub fn init(d2client: usize) {
 
             gUIVars                 : d2client + D2RVA::D2Client(0x6FBAAD80),
             gUIOpenMode             : d2client + D2RVA::D2Client(0x6FBCC414),
+            gAttackWithLeftButton   : d2client + D2RVA::D2Client(0x6FBCC3DC),
+            gAttackWithRightButton  : d2client + D2RVA::D2Client(0x6FBCC3E0),
         },
         Net: NetOffset{
             SendPacket              : d2client + D2RVA::D2Client(0x6FAC43E0),

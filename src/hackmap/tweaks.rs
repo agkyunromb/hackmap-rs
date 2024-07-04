@@ -6,10 +6,14 @@ use super::config::ConfigRef;
 
 struct Stubs {
     UI_HandleUIVars: Option<extern "stdcall" fn(PVOID)>,
+    continue_attacking_after_target_dead_left: Option<extern "stdcall" fn()>,
+    continue_attacking_after_target_dead_right: Option<extern "stdcall" fn()>,
 }
 
 static mut STUBS: Stubs = Stubs{
-    UI_HandleUIVars: None,
+    UI_HandleUIVars                             : None,
+    continue_attacking_after_target_dead_left   : None,
+    continue_attacking_after_target_dead_right  : None,
 };
 
 #[allow(static_mut_refs)]
@@ -28,14 +32,15 @@ extern "stdcall" fn MISC_CalculateShadowRGBA(r: &mut u8, g: &mut u8, b: &mut u8,
     *b = 0xFF;
 }
 
-extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(unit1: PVOID, unit2: PVOID, collision_mask: i32) -> BOOL {
-    let (success, hide) = HackMap::tweaks().should_hide_unit(unit2);
+extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(_unit1: PVOID, _unit2: PVOID, _collision_mask: i32) -> BOOL {
+    return FALSE;
+    // let (success, hide) = HackMap::tweaks().should_hide_unit(unit2);
 
-    if success == false {
-        return D2Common::Units::TestCollisionWithUnit(unit1, unit2, collision_mask);
-    }
+    // if success == false {
+    //     return D2Common::Units::TestCollisionWithUnit(unit1, unit2, collision_mask);
+    // }
 
-    if hide { TRUE } else { FALSE }
+    // if hide { TRUE } else { FALSE }
 }
 
 extern "fastcall" fn D2Sigma_Units_GetName(unit: &D2Unit) -> PCWSTR {
@@ -131,6 +136,15 @@ extern "C" {
     fn naked_is_player_running_2();
 }
 
+fn continue_attacking_after_target_dead() {
+    if HackMap::config().borrow().tweaks.continue_attacking_after_target_dead {
+        return;
+    }
+
+    D2Client::UI::SetAttackWithLeftButton(0);
+    D2Client::UI::SetAttackWithRightButton(0);
+}
+
 pub(super) struct Tweaks {
     pub cfg: ConfigRef,
     pub current_monster_name: Vec<u16>,
@@ -216,6 +230,10 @@ impl Tweaks {
                 inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
                 patch_memory_value(0, D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar, 0x80, 1)?;
             }
+
+            // 目标死亡后不松开鼠标
+            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF2AE1), continue_attacking_after_target_dead as usize, None, None)?;
+            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF2AE6), continue_attacking_after_target_dead as usize, None, None)?;
         }
 
         Ok(())
