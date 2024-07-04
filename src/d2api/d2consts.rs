@@ -21,6 +21,8 @@ pub enum D2StringColorCodes {
 
 impl D2StringColorCodes {
     pub fn to_str_code(&self) -> &str {
+        // *self as u8 + 0x30
+
         match self {
             Self::White       => "ÿc0",
             Self::Red         => "ÿc1",
@@ -32,9 +34,9 @@ impl D2StringColorCodes {
             Self::Tan         => "ÿc7",
             Self::Orange      => "ÿc8",
             Self::Yellow      => "ÿc9",
-            Self::DarkGreen   => "ÿc10",
-            Self::Purple      => "ÿc11",
-            Self::DarkGreen2  => "ÿc12",
+            Self::DarkGreen   => "ÿc:",
+            Self::Purple      => "ÿc;",
+            Self::DarkGreen2  => "ÿc<",
             Self::Invalid     => "",
         }
     }
