@@ -92,7 +92,7 @@ impl D2SigmaEx {
         let sigma = D2SigmaEx::get();
 
         if sigma.is_getting_item_properties {
-            sigma.on_get_item_properties(&String::from_utf16_lossy(&text.text));
+            sigma.on_get_item_properties(&(text.text.as_ptr() as PCWSTR).to_string());
             return;
         }
 
