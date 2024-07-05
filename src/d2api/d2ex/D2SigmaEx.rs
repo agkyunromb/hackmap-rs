@@ -20,20 +20,12 @@ struct FormatItemPropertiesContext {
 
 struct D2SigmaEx {
     is_getting_item_properties  : bool,
-    // strip_color_code            : bool,
-    item_properties             : String,
-    AddCtrlPressedHintText      : Option<extern "fastcall" fn(usize)>,
-    DrawItemProperties          : Option<extern "fastcall" fn(&mut FormatItemPropertiesContext, D2Font)>,
 }
 
 impl D2SigmaEx {
     const fn new() -> Self {
         Self {
             is_getting_item_properties  : false,
-            // strip_color_code            : false,
-            item_properties             : String::new(),
-            AddCtrlPressedHintText      : None,
-            DrawItemProperties          : None,
         }
     }
 
@@ -58,42 +50,46 @@ impl D2SigmaEx {
 
         D2Sigma::ItemText::GetItemPropertiesInit(&mut ctx, player, unit, null_mut());
 
-        D2Sigma::ItemText::GetItemProperties29(&mut ctx);
-        D2Sigma::ItemText::GetName(&mut ctx);
-
         if get_name_only == false {
-            D2Sigma::ItemText::GetItemProperties27(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties26(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties25(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties24(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties23(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties22(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties21(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties20(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties19(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties18(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties17(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties16(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties15(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties14(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties13(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties12(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties11(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties10(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties9(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties8(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties7(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties6(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties5(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties4(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties1(&mut ctx);
             D2Sigma::ItemText::GetItemProperties3(&mut ctx);
             D2Sigma::ItemText::GetItemProperties2(&mut ctx);
-            D2Sigma::ItemText::GetItemProperties1(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties4(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties5(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties6(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties7(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties8(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties9(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties10(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties12(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties11(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties13(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties14(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties15(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties16(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties17(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties18(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties19(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties20(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties21(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties22(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties23(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties24(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties25(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties26(&mut ctx);
+            D2Sigma::ItemText::GetItemProperties27(&mut ctx);
         }
+
+        D2Sigma::ItemText::GetName(&mut ctx);
+        D2Sigma::ItemText::GetItemProperties29(&mut ctx);
 
         self.is_getting_item_properties = false;
 
-        let text = (ctx.text.as_ptr() as PCWSTR).to_string();
+        let text = ctx.text.as_ptr().to_string();
+        let mut text: Vec<_> = text.split("\n").collect();
+        text.reverse();
+
+        let text = text.join("\n");
 
         if strip_color_code == false {
             return text;
@@ -114,66 +110,7 @@ impl D2SigmaEx {
         }
 
         return new_text;
-
-        // self.is_getting_item_properties = true;
-        // self.strip_color_code = strip_color_code;
-
-        // if let Some(player) = D2Client::Units::GetClientPlayer() {
-        //     D2Sigma::Units::DisplayItemProperties(player, unit);
-        // }
-
-        // self.is_getting_item_properties = false;
-        // self.strip_color_code = false;
-
-        // std::mem::take(&mut self.item_properties)
     }
-
-    // fn on_get_item_properties(&mut self, text: &str) {
-    //     let mut text: Vec<&str> = text.split("\n").collect();
-    //     text = text.into_iter().rev().collect();
-
-    //     let text = text.join("\n");
-
-    //     if self.strip_color_code == false {
-    //         self.item_properties = text;
-    //         return;
-    //     }
-
-    //     let chars: Vec<char> = text.chars().collect();
-    //     let mut new_text = String::new();
-    //     let mut i = 0;
-
-    //     while i < chars.len() {
-    //         let ch = chars[i];
-    //         if ch == 'ÿ' && i + 1 < chars.len() && chars[i + 1] == 'c' {
-    //             i += 3;
-    //         } else {
-    //             new_text.push(ch);
-    //             i += 1;
-    //         }
-    //     }
-
-    //     self.item_properties = new_text;
-    // }
-
-    // extern "fastcall" fn draw_item_properties(text: &mut FormatItemPropertiesContext, font: D2Font) {
-    //     let sigma = D2SigmaEx::get();
-
-    //     if sigma.is_getting_item_properties {
-    //         sigma.on_get_item_properties(&(text.text.as_ptr() as PCWSTR).to_string());
-    //         return;
-    //     }
-
-    //     sigma.DrawItemProperties.unwrap()(text, font)
-    // }
-
-    // extern "fastcall" fn add_ctrl_pressed_hint_text(this: usize) {
-    //     let sigma = D2SigmaEx::get();
-
-    //     if sigma.is_getting_item_properties == false {
-    //         sigma.AddCtrlPressedHintText.unwrap()(this)
-    //     }
-    // }
 
 }
 
@@ -182,12 +119,6 @@ pub mod Items {
 
     pub fn get_item_name(unit: &D2Unit) -> String {
         D2SigmaEx::get().get_item_properties(unit, true, false)
-
-        // let buffer: [u16; 0x1000] = [0; 0x1000];
-
-        // D2Sigma::Items::GetItemName(unit, buffer.as_ptr(), 0);
-
-        // String::from_utf16_lossy(buffer.as_slice())
     }
 
     pub fn get_item_properties(unit: &D2Unit, strip_color_code: bool) -> String {

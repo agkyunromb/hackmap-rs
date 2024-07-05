@@ -139,12 +139,11 @@ extern "C" {
 }
 
 fn continue_attacking_after_target_dead() {
-    if HackMap::config().borrow().tweaks.continue_attacking_after_target_dead {
-        return;
-    }
-
     D2Client::UI::SetAttackWithLeftButton(0);
-    D2Client::UI::SetAttackWithRightButton(0);
+
+    if HackMap::config().borrow().tweaks.continue_attacking_after_target_dead == false {
+        D2Client::UI::SetAttackWithRightButton(0);
+    }
 }
 
 pub(super) struct Tweaks {

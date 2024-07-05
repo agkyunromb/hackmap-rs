@@ -541,7 +541,7 @@ impl UnitColor {
             return;
         }
 
-        let name_color = format!("ÿc{}", D2Sigma::Items::GetItemNameColor(item) as u8);
+        let name_color = D2Sigma::Items::GetItemNameColor(item).to_str_code();
 
         if let Some(notify_text) = item_color.notify_text.as_ref() {
             D2Client::UI::DisplayGlobalMessage(&format!("{name_color} - {notify_text}"), D2StringColorCodes::Invalid);
@@ -551,14 +551,16 @@ impl UnitColor {
         let quality = D2Common::Items::GetItemQuality(item);
         let name = D2SigmaEx::Items::get_item_name(item);
 
-        let name: Vec<&str> = name.split('\n').collect();
+        let mut name: Vec<&str> = name.split('\n').collect();
         let name_line_count = name.len();
         let item_data_tables = match D2Common::DataTbls::GetItemDataTables() {
             None => return,
             Some(p) => p,
         };
 
-        let name = if notify == DropNotify::Name && quality >= D2ItemQualities::Magic && (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount {
+        name.reverse();
+
+        let name = if notify == DropNotify::Name || (quality == D2ItemQualities::Unique && (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount) {
             name[1..].join(" - ")
         } else {
             name.join(" - ")
@@ -571,11 +573,10 @@ impl UnitColor {
         }
 
         let prop = D2SigmaEx::Items::get_item_properties(item, false);
-        let mut prop_lines: Vec<&str> = prop.split("\n").collect();
-        let prop_lines = &mut prop_lines;
+        let prop_lines: Vec<&str> = prop.split("\n").collect();
 
         for line in prop_lines.iter().skip(name_line_count) {
-            D2Client::UI::DisplayGlobalMessage(&format!("    {name_color}{}", line), D2StringColorCodes::Invalid);
+            D2Client::UI::DisplayGlobalMessage(&format!("    {}", line), D2StringColorCodes::Invalid);
         }
     }
 

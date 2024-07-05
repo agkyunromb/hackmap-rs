@@ -20,7 +20,7 @@ pub enum D2StringColorCodes {
 }
 
 impl D2StringColorCodes {
-    pub fn to_str_code(&self) -> &str {
+    pub fn to_str_code(&self) -> &'static str {
         // *self as u8 + 0x30
 
         match self {
