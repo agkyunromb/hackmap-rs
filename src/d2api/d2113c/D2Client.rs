@@ -109,6 +109,7 @@ pub mod Net {
                 in(reg) AddressTable.Net.SendPacket,
                 in("ebx") size,
                 lateout("eax") seqId,
+                clobber_abi("C"),
             );
         }
 
