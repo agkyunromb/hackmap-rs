@@ -1,9 +1,11 @@
 use super::common::*;
 use super::config::DropNotify;
+use super::config::PickupMethod;
 use super::image_loader;
 use super::HackMap;
 use super::config::ConfigRef;
 use super::item_state_monitor::*;
+use D2Client::D2ClientOffset;
 use D2Common::D2Unit;
 
 const MINIMAP_COLOR_DEFAULT: u8 = 0xFF;
@@ -192,10 +194,11 @@ impl UnitColor {
     }
 
     fn draw_player(&self, unit: &mut D2Unit, x: i32, y: i32) -> Result<(), ()> {
-        let unit_color_config = &self.cfg.borrow().unit_color;
+        // let unit_color_config = &self.cfg.borrow().unit_color;
         let player = D2Client::Units::GetClientPlayer().ok_or(())?;
 
-        self.draw_cell_by_blob_file(x, y, unit_color_config.my_blob_file.as_ref(), if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
+        // self.draw_cell_by_blob_file(x, y, unit_color_config.my_blob_file.as_ref(), if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
+        self.draw_default_cross(x, y, if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
 
         Ok(())
     }
@@ -483,21 +486,48 @@ impl UnitColor {
         }
     }
 
-    fn should_show_unit(&self, unit: &mut D2Unit) -> bool {
-        let cfg = self.cfg.borrow();
+    fn should_show_unit(&mut self, unit: &mut D2Unit) -> bool {
+        let is_unit_item = D2Common::Inventory::UnitIsItem(unit) != FALSE;
 
-        if cfg.unit_color.hide_items == false {
+        // if is_unit_item {
+        //     let _ = self.handle_auto_pickup(unit);
+        // }
+
+        let cfg = Rc::clone(&self.cfg);
+        let cfg = cfg.borrow();
+
+        if is_unit_item == false {
             return true;
         }
 
-        if D2Common::Inventory::UnitIsItem(unit) == FALSE {
+        let unit_color = &cfg.unit_color;
+        let mut should_auto_pickup = unit_color.auto_pickup;
+        let should_hide_items = unit_color.hide_items;
+
+        if should_auto_pickup {
+            if let Ok(pick) = self.should_auto_pickup_item(unit) {
+                should_auto_pickup = pick;
+            } else {
+                should_auto_pickup = false;
+            }
+        }
+
+        if should_hide_items == false && should_auto_pickup == false {
             return true;
         }
 
-        let color = match cfg.unit_color.get_color_from_unit(unit) {
+        let color = match unit_color.get_color_from_unit(unit) {
             None => return true,
             Some(color) => color,
         };
+
+        if should_auto_pickup {
+            let _ = self.handle_auto_pickup(unit, color);
+        }
+
+        if should_hide_items == false {
+            return true;
+        }
 
         let minimap_color = match color.minimap_color {
             None => return true,
@@ -587,6 +617,43 @@ impl UnitColor {
         }
     }
 
+    fn should_auto_pickup_item(&self, item: &D2Unit) -> Result<bool, ()> {
+        let player = D2Client::Units::GetClientPlayer().ok_or(())?;
+        let item_coord = D2Common::Units::GetCoords(item);
+        let distance = D2Common::Units::GetDistanceToCoordinates(player, item_coord.nX, item_coord.nY);
+
+        if distance > 5 {
+            return Ok(false);
+        }
+
+        Ok(true)
+    }
+
+    fn handle_auto_pickup(&mut self, item: &D2Unit, item_cfg: &super::config::ItemColor) -> Result<(), ()> {
+        let pickup = item_cfg.pickup.ok_or(())?;
+
+        match pickup {
+            PickupMethod::None => return Ok(()),
+
+            PickupMethod::Inventory => {
+                let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
+                    nHeader       : D2ClientCmd::PICKUP_ITEM as u8,
+                    dwUnitType    : D2UnitTypes::Item as u32,
+                    dwUnitGUID    : item.dwUnitId,
+                    bCursor       : 0,
+                };
+
+                D2ClientEx::Net::send_packet(&cmd);
+            },
+
+            PickupMethod::Cube => {
+
+            },
+        }
+
+        Ok(())
+    }
+
     pub fn init(&mut self, modules: &D2Modules) -> Result<(), HookError> {
         unsafe {
             let glide3x = modules.glide3x.unwrap();
@@ -627,6 +694,18 @@ impl UnitColor {
             if vk == cfg.hotkey.item_extra_info {
                 cfg.unit_color.item_extra_info = !cfg.unit_color.item_extra_info;
                 return (true, cfg.unit_color.item_extra_info)
+            }
+
+            (false, false)
+        });
+
+        input.reg_toggle("auto_pickup", |vk| {
+            let cfg = HackMap::config();
+            let mut cfg = cfg.borrow_mut();
+
+            if vk == cfg.hotkey.auto_pickup {
+                cfg.unit_color.auto_pickup = !cfg.unit_color.auto_pickup;
+                return (true, cfg.unit_color.auto_pickup)
             }
 
             (false, false)

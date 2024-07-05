@@ -17,6 +17,14 @@ pub(super) enum DropNotify {
     Property    = 2,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+#[repr(i32)]
+pub(super) enum PickupMethod {
+    None        = 0,
+    Inventory   = 1,
+    Cube        = 2,
+}
+
 #[derive(Debug, Deserialize)]
 pub(super) struct HotKeyConfig {
     pub reload              : VirtualKeyCode,
@@ -25,6 +33,7 @@ pub(super) struct HotKeyConfig {
     pub quick_next_game     : VirtualKeyCode,
     pub item_extra_info     : VirtualKeyCode,
     pub show_monster_id     : VirtualKeyCode,
+    pub auto_pickup         : VirtualKeyCode,
 }
 
 #[derive(Debug, Deserialize)]
@@ -49,6 +58,9 @@ pub(super) struct UnitColorConfig {
 
     #[serde(deserialize_with = "bool_from_int", default)]
     pub item_extra_info             : bool,
+
+    #[serde(deserialize_with = "bool_from_int", default)]
+    pub auto_pickup                 : bool,
 
     pub player_blob_file            : Option<String>,
     pub monster_blob_file           : Option<String>,
@@ -114,6 +126,7 @@ pub struct ItemColor {
 
     pub notify      : Option<DropNotify>,
     pub notify_text : Option<String>,
+    pub pickup      : Option<PickupMethod>,
 }
 
 impl UnitColorConfig {
@@ -190,6 +203,7 @@ impl Config {
                 quick_next_game     : Default::default(),
                 item_extra_info     : Default::default(),
                 show_monster_id     : Default::default(),
+                auto_pickup         : Default::default(),
             },
 
             tweaks: TweaksConfig{
@@ -202,6 +216,7 @@ impl Config {
                 show_socket_number              : true,
                 hide_items                      : true,
                 item_extra_info                 : false,
+                auto_pickup                     : false,
 
                 player_blob_file                : None,
                 monster_blob_file               : None,

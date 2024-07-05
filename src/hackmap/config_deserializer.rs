@@ -268,7 +268,21 @@ impl<'de> Deserialize<'de> for DropNotify {
             0 => Ok(Self::None),
             1 => Ok(Self::Name),
             2 => Ok(Self::Property),
-            _ => Err(serde::de::Error::custom("Unknown D2ItemQualities value")),
+            _ => Err(serde::de::Error::custom("Unknown DropNotify value")),
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for PickupMethod {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        match i64::deserialize(deserializer)? {
+            0 => Ok(Self::None),
+            1 => Ok(Self::Inventory),
+            2 => Ok(Self::Cube),
+            _ => Err(serde::de::Error::custom("Unknown PickupMethod value")),
         }
     }
 }

@@ -28,6 +28,8 @@ pub struct UnitsOffset {
     pub GetNearestTestedUnit    : FuncAddress,
     pub GetClientCoordX         : FuncAddress,
     pub GetClientCoordY         : FuncAddress,
+    pub GetDistanceToCoordinates: FuncAddress,
+    pub GetCoords               : FuncAddress,
 }
 
 pub struct ItemsOffset {
@@ -196,6 +198,18 @@ pub mod Units {
     pub fn GetClientCoordY(unit: &D2Unit) -> i32 {
         addr_to_stdcall(GetClientCoordY, AddressTable.Units.GetClientCoordY)(unit)
     }
+
+    pub fn GetDistanceToCoordinates(unit: &D2Unit, x: i32, y: i32) -> i32 {
+        addr_to_stdcall(GetDistanceToCoordinates, AddressTable.Units.GetDistanceToCoordinates)(unit, x, y)
+    }
+
+    pub fn _GetCoords(_unit: &D2Unit, _coord: &mut D2Coord) {}
+
+    pub fn GetCoords(unit: &D2Unit) -> D2Coord {
+        let mut coord =  D2Coord { nX: 0, nY: 0 };
+        addr_to_stdcall(_GetCoords, AddressTable.Units.GetCoords)(unit, &mut coord);
+        coord
+    }
 }
 
 pub mod Items {
@@ -359,6 +373,8 @@ pub fn init(d2common: usize) {
             GetNearestTestedUnit            : d2common + D2RVA::D2Common(0x6FD62330),
             GetClientCoordX                 : d2common + D2RVA::D2Common(0x6FD80290),
             GetClientCoordY                 : d2common + D2RVA::D2Common(0x6FD80240),
+            GetDistanceToCoordinates        : d2common + D2RVA::D2Common(0x6FDCF5E0),
+            GetCoords                       : d2common + D2RVA::D2Common(0x6FD80050),
         },
         Items: ItemsOffset{
             GetItemType                     : d2common + D2RVA::D2Common(0x6FD730F0),

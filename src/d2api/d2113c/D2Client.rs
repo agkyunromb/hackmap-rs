@@ -99,7 +99,7 @@ pub mod Net {
         old_handler
     }
 
-    pub fn SendPacket(payload: PVOID, size: usize) -> usize {
+    pub fn SendPacket(payload: *const u8, size: usize) -> usize {
         let seqId: usize;
 
         unsafe {

@@ -61,7 +61,7 @@ extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
 
         let ActiveMessage: &[u8] = &[0x15, 0x01, 0x09, b'1', 0x00, 0x00, 0x00];
 
-        D2Client::Net::SendPacket(ActiveMessage.as_ptr() as PVOID, ActiveMessage.len());
+        D2Client::Net::SendPacket(ActiveMessage.as_ptr(), ActiveMessage.len());
 
         break;
     }

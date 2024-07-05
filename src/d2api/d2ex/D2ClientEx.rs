@@ -92,6 +92,14 @@ pub mod Net {
         D2ClientEx::get().net.on_post_recv(cb)
     }
 
+    pub fn send_packet<T>(payload: &T) -> usize {
+        let slice = unsafe {
+            std::slice::from_raw_parts(addr_of!(*payload) as *const u8, std::mem::size_of::<T>())
+        };
+
+        D2Client::Net::SendPacket(slice.as_ptr(), slice.len())
+    }
+
     #[cfg(feature = "113c")]
     pub(super) fn call_gscmd_handler() {
 

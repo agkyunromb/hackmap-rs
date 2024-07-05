@@ -28,6 +28,22 @@ pub enum D2ItemActionType
 }
 
 #[repr(C, packed(1))]
+pub struct SCMD_PACKET_16_PIKCUP_ITEM {
+    // size: 0x000d
+    pub nHeader                 : u8,                   // 0x0000
+    pub dwUnitType              : u32,                  // 0x0001
+    pub dwUnitGUID              : u32,                  // 0x0005
+    pub bCursor                 : u32,                  // 0x0009
+}
+
+#[repr(C, packed(1))]
+pub struct SCMD_PACKET_17_DROPCURSORITEM {
+    // size: 0x0005
+    pub nHeader                 : u8,                   // 0x0000
+    pub dwItemGUID              : u32,                  // 0x0005
+}
+
+#[repr(C, packed(1))]
 pub struct SCMD_PACKET_9C_ITEMACTION {
     // size: 0x00fc
     pub nHeader                 : u8,                   // 0x0000

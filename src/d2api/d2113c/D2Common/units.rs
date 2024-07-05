@@ -70,3 +70,9 @@ impl D2Unit {
 pub struct D2Inventory {
 
 }
+
+#[repr(C, packed(4))]
+pub struct D2Coord {
+    pub nX      : i32,
+    pub nY      : i32,
+}
