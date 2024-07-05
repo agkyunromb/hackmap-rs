@@ -504,6 +504,8 @@ impl UnitColor {
             return false;
         }
 
+        unit.dwFlagEx.insert(D2UnitFlagsEx::IsInLos);
+
         true
     }
 
