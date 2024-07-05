@@ -42,6 +42,7 @@ pub struct AutoMapOffset {
     pub gPointOffsetX           : FuncAddress,
     pub gPointOffsetY           : FuncAddress,
     pub gRect                   : FuncAddress,
+    pub gIsMiniMapOn            : FuncAddress,
 }
 
 pub struct UnitsOffset {
@@ -256,6 +257,10 @@ pub mod AutoMap {
         unsafe { &mut *(AddressTable.AutoMap.gRect as *mut RECT) }
     }
 
+    pub fn IsMiniMapOn() -> BOOL {
+        read_at(AddressTable.AutoMap.gIsMiniMapOn)
+    }
+
 }
 
 pub mod Units {
@@ -370,6 +375,7 @@ pub fn init(d2client: usize) {
             gPointOffsetX           : d2client + D2RVA::D2Client(0x6FBCC1F8),
             gPointOffsetY           : d2client + D2RVA::D2Client(0x6FBCC1FC),
             gRect                   : d2client + D2RVA::D2Client(0x6FBCC228),
+            gIsMiniMapOn            : d2client + D2RVA::D2Client(0x6FBCC1B0),
         },
         Units: UnitsOffset{
             GetMonsterOwnerID       : d2client + D2RVA::D2Client(0x6FAD16A0),

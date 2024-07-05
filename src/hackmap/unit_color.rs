@@ -160,6 +160,11 @@ impl UnitColor {
         x = x / divisor - *D2Client::AutoMap::PointOffsetX() + 8;
         y = y / divisor - *D2Client::AutoMap::PointOffsetY() - 8;
 
+        if D2Client::AutoMap::IsMiniMapOn() != FALSE {
+            x -= 1;
+            y += 5;
+        }
+
         if x < rect.left || x > rect.right || y < rect.top || y > rect.bottom {
             return;
         }
