@@ -128,11 +128,11 @@ impl UnitColor {
         }
     }
 
-    fn draw_automap_units(&self) -> Result<(), ()> {
-        let player = D2Client::Units::GetClientPlayer().ok_or(())?;
-        let room = D2Common::Units::GetRoom(player).ok_or(())?;
+    fn draw_automap_units(&self) -> Option<()> {
+        let player = D2Client::Units::GetClientPlayer()?;
+        let room = D2Common::Units::GetRoom(player)?;
 
-        let adjacent_rooms = D2Common::Dungeon::GetAdjacentRoomsListFromRoom(room).ok_or(())?;
+        let adjacent_rooms = D2Common::Dungeon::GetAdjacentRoomsListFromRoom(room)?;
 
         for &room in adjacent_rooms.iter() {
             if room.is_null() {
@@ -149,7 +149,7 @@ impl UnitColor {
             }
         }
 
-        Ok(())
+        None
     }
 
     fn draw_unit(&self, unit: &mut D2Unit) {
@@ -193,55 +193,55 @@ impl UnitColor {
         }
     }
 
-    fn draw_player(&self, unit: &mut D2Unit, x: i32, y: i32) -> Result<(), ()> {
+    fn draw_player(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         // let unit_color_config = &self.cfg.borrow().unit_color;
-        let player = D2Client::Units::GetClientPlayer().ok_or(())?;
+        let player = D2Client::Units::GetClientPlayer()?;
 
         // self.draw_cell_by_blob_file(x, y, unit_color_config.my_blob_file.as_ref(), if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
         self.draw_default_cross(x, y, if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
 
-        Ok(())
+        None
     }
 
-    fn draw_monster(&self, unit: &mut D2Unit, x: i32, y: i32) -> Result<(), ()> {
+    fn draw_monster(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         let class_Id = unit.dwClassId;
 
         match class_Id {
-            179 => return Ok(()),   // A1 红牛
+            179 => return None,   // A1 红牛
             _ => {},
         }
 
         if D2Client::Units::IsCorpse(unit) {
-            return Ok(());
+            return None;
         }
 
         let unit_color_cfg    = &self.cfg.borrow().unit_color;
         let data_tables       = D2Common::DataTbls::sgptDataTables();
-        let monster_data      = unit.get_monster_data().ok_or(())?;
-        let mon_stats_txt     = monster_data.get_mon_stats_txt().ok_or(())?;
+        let monster_data      = unit.get_monster_data()?;
+        let mon_stats_txt     = monster_data.get_mon_stats_txt()?;
         let mon_stats_flags   = mon_stats_txt.dwMonStatsFlags;
 
         if mon_stats_flags & (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact) == (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact) {
             D2WinEx::Text::draw_text(D2Client::Units::GetName(unit), x, y - 8, D2Font::Font6, D2StringColorCodes::DarkGold);
             self.draw_cell_by_blob_file(x, y, unit_color_cfg.npc_blob_file.as_ref(), 0xFF);
-            return Ok(());
+            return None;
         }
 
         if mon_stats_flags.contains(D2MonStatsTxtFlags::InTown | D2MonStatsTxtFlags::Npc) {
-            return Ok(());
+            return None;
         }
 
-        let room = D2Common::Units::GetRoom(unit).ok_or(())?;
-        let level_txt = data_tables.get_levels_txt_record(D2Common::Dungeon::GetLevelIdFromRoom(room)).ok_or(())?;
+        let room = D2Common::Units::GetRoom(unit)?;
+        let level_txt = data_tables.get_levels_txt_record(D2Common::Dungeon::GetLevelIdFromRoom(room))?;
 
         for cmon in level_txt.wCMon {
             if cmon == class_Id as u16 {
-                return Ok(());
+                return None;
             }
         }
 
         if D2Client::Units::GetMonsterOwnerID(unit) != u32::MAX {
-            return Ok(());
+            return None;
         }
 
         // println!("class_id: {}", class_Id);
@@ -285,7 +285,7 @@ impl UnitColor {
         if let Some(c) = unit_color_cfg.monster_color.get(&class_Id) {
             match *c {
                 MINIMAP_COLOR_DEFAULT => {
-                    return Ok(());
+                    return None;
                 },
 
                 MINIMAP_COLOR_HIDE => {
@@ -354,31 +354,31 @@ impl UnitColor {
             D2WinEx::Text::draw_text(desc.to_utf16().as_ptr(), x, y - 10, D2Font::Font16, D2StringColorCodes::White);
         }
 
-        Ok(())
+        None
     }
 
-    fn draw_object(&self, unit: &mut D2Unit, x: i32, y: i32) -> Result<(), ()> {
-        let object_txt = D2Common::DataTbls::GetObjectsTxtRecord(unit.dwClassId).ok_or(())?;
+    fn draw_object(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
+        let object_txt = D2Common::DataTbls::GetObjectsTxtRecord(unit.dwClassId)?;
 
         if object_txt.nSubClass.contains(D2ObjectSubClasses::TownPortal) {
             self.draw_default_cross(x, y, 0x6D);
         }
 
-        Ok(())
+        None
     }
 
-    fn draw_item(&self, unit: &mut D2Unit, x: i32, y: i32) -> Result<(), ()> {
+    fn draw_item(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         let cfg = self.cfg.borrow();
-        let item_color = cfg.unit_color.get_color_from_unit(unit).ok_or(())?;
-        let minimap_color = item_color.minimap_color.ok_or(())?;
+        let item_color = cfg.unit_color.get_color_from_unit(unit)?;
+        let minimap_color = item_color.minimap_color?;
 
         if minimap_color == MINIMAP_COLOR_DEFAULT || minimap_color == MINIMAP_COLOR_HIDE {
-            return Ok(());
+            return None;
         }
 
         self.draw_cell_by_blob_file(x, y, cfg.unit_color.item_blob_file.as_ref(), minimap_color);
 
-        Ok(())
+        None
     }
 
     fn draw_cell_by_blob_file(&self, x: i32, y: i32, blob_file: Option<&String>, color: u8) {
@@ -505,7 +505,7 @@ impl UnitColor {
         let should_hide_items = unit_color.hide_items;
 
         if should_auto_pickup {
-            if let Ok(pick) = self.should_auto_pickup_item(unit) {
+            if let Some(pick) = self.should_auto_pickup_item(unit) {
                 should_auto_pickup = pick;
             } else {
                 should_auto_pickup = false;
@@ -617,23 +617,23 @@ impl UnitColor {
         }
     }
 
-    fn should_auto_pickup_item(&self, item: &D2Unit) -> Result<bool, ()> {
-        let player = D2Client::Units::GetClientPlayer().ok_or(())?;
+    fn should_auto_pickup_item(&self, item: &D2Unit) -> Option<bool> {
+        let player = D2Client::Units::GetClientPlayer()?;
         let item_coord = D2Common::Units::GetCoords(item);
         let distance = D2Common::Units::GetDistanceToCoordinates(player, item_coord.nX, item_coord.nY);
 
         if distance > 5 {
-            return Ok(false);
+            return Some(false);
         }
 
-        Ok(true)
+        Some(true)
     }
 
-    fn handle_auto_pickup(&mut self, item: &D2Unit, item_cfg: &super::config::ItemColor) -> Result<(), ()> {
-        let pickup = item_cfg.pickup.ok_or(())?;
+    fn handle_auto_pickup(&mut self, item: &D2Unit, item_cfg: &super::config::ItemColor) -> Option<()> {
+        let pickup = item_cfg.pickup?;
 
         match pickup {
-            PickupMethod::None => return Ok(()),
+            PickupMethod::None => return None,
 
             PickupMethod::Inventory => {
                 let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
@@ -651,7 +651,7 @@ impl UnitColor {
             },
         }
 
-        Ok(())
+        None
     }
 
     pub fn init(&mut self, modules: &D2Modules) -> Result<(), HookError> {

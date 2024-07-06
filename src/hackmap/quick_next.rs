@@ -205,19 +205,19 @@ impl QuickNextGame {
         }
     }
 
-    fn on_enter_lobby(&mut self) -> Result<(), ()> {
-        let on_create_game_tab_button_clicked = self.on_create_game_tab_button_clicked.ok_or(())?;
+    fn on_enter_lobby(&mut self) ->Option<()> {
+        let on_create_game_tab_button_clicked = self.on_create_game_tab_button_clicked?;
 
         if on_create_game_tab_button_clicked(null_mut()) == FALSE {
-            return Err(());
+            return None;
         }
 
         if self.auto_create_game == false {
-            return Ok(());
+            return None;
         }
 
-        let on_create_game_button_clicked = self.on_create_game_button_clicked.ok_or(())?;
-        let create_game_button = self.create_game_button.ok_or(())?;
+        let on_create_game_button_clicked = self.on_create_game_button_clicked?;
+        let create_game_button = self.create_game_button?;
 
         on_create_game_button_clicked(create_game_button);
 
@@ -226,7 +226,7 @@ impl QuickNextGame {
         self.create_game_button                  = None;
         self.auto_create_game                    = false;
 
-        Ok(())
+        None
     }
 
     pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {

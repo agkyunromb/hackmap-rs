@@ -81,11 +81,11 @@ extern "stdcall" fn D2Client_LeaveGameCleanUp() {
     get_stubs().D2Client_LeaveGameCleanUp.unwrap()()
 }
 
-fn reveal_map_ex() -> Result<(), ()> {
-    let client_player   = D2Client::Units::GetClientPlayer().ok_or(())?;
+fn reveal_map_ex() -> Option<()> {
+    let client_player   = D2Client::Units::GetClientPlayer()?;
     let drlg_act        = client_player.get_drlg_act();
 
-    let drlg            = D2Common::Dungeon::GetDrlgFromAct(drlg_act).ok_or(())?;
+    let drlg            = D2Common::Dungeon::GetDrlgFromAct(drlg_act)?;
     let current_act     = drlg_act.nAct;
     let max_level_id    = D2Common::DataTbls::sgptDataTables().levels_txt_record_count();
 
@@ -102,11 +102,11 @@ fn reveal_map_ex() -> Result<(), ()> {
         let _ = reveal_level_ex(level);
     }
 
-    Ok(())
+    None
 }
 
-fn reveal_level_ex(level: &mut D2Common::D2DrlgLevel) -> Result<(), ()> {
-    let mut drlg_room = ptr_to_ref_mut(level.pFirstRoomEx).ok_or(())?;
+fn reveal_level_ex(level: &mut D2Common::D2DrlgLevel) -> Option<()> {
+    let mut drlg_room = ptr_to_ref_mut(level.pFirstRoomEx)?;
 
     loop {
         if drlg_room.nType == D2DrlgTypes::Preset {
@@ -128,12 +128,12 @@ fn reveal_level_ex(level: &mut D2Common::D2DrlgLevel) -> Result<(), ()> {
             }
         }
 
-        drlg_room = ptr_to_ref_mut(drlg_room.pDrlgRoomNext).ok_or(())?;
+        drlg_room = ptr_to_ref_mut(drlg_room.pDrlgRoomNext)?;
     }
 }
 
-fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Result<(), ()>  {
-    let mut preset_unit = D2Common::DrlgRoom::GetPresetUnits(drlg_room).ok_or(())?;
+fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()>  {
+    let mut preset_unit = D2Common::DrlgRoom::GetPresetUnits(drlg_room)?;
 
     let level_id = D2Common::DrlgRoom::GetLevelId(drlg_room);
     let level_def = D2Common::DataTbls::GetLevelDefRecord(level_id).unwrap();
@@ -262,7 +262,7 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Result<(), (
             break;
         }
 
-        preset_unit = ptr_to_ref_mut(preset_unit.pNext).ok_or(())?;
+        preset_unit = ptr_to_ref_mut(preset_unit.pNext)?;
     }
 }
 

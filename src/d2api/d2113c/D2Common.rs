@@ -42,6 +42,7 @@ pub struct ItemsOffset {
 pub struct InventoryOffset {
     pub GetFirstItem            : FuncAddress,
     pub GetNextItem             : FuncAddress,
+    pub GetCursorItem           : FuncAddress,
     pub UnitIsItem              : FuncAddress,
 }
 
@@ -245,6 +246,12 @@ pub mod Inventory {
         addr_to_stdcall(GetNextItem, AddressTable.Inventory.GetNextItem)(item)
     }
 
+    pub fn _GetCursorItem(_inventory: &D2Inventory) -> *mut D2Unit { null_mut() }
+
+    pub fn GetCursorItem(inventory: &D2Inventory) -> Option<&mut D2Unit> {
+        ptr_to_ref_mut(addr_to_stdcall(_GetCursorItem, AddressTable.Inventory.GetCursorItem)(inventory))
+    }
+
     pub fn UnitIsItem(unit: &D2Unit) -> BOOL {
         addr_to_stdcall(UnitIsItem, AddressTable.Inventory.UnitIsItem)(unit)
     }
@@ -385,6 +392,7 @@ pub fn init(d2common: usize) {
         Inventory: InventoryOffset{
             GetFirstItem                    : d2common + D2RVA::D2Common(0x6FD6E190),
             GetNextItem                     : d2common + D2RVA::D2Common(0x6FD6E8F0),
+            GetCursorItem                   : d2common + D2RVA::D2Common(0x6FD6E8F0),
             UnitIsItem                      : d2common + D2RVA::D2Common(0x6FD6E400),
         },
         DrlgDrlg: DrlgDrlgOffset{

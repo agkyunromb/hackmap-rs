@@ -1,4 +1,5 @@
 mod common;
+pub mod D2CommonEx;
 pub mod D2GfxEx;
 pub mod D2WinEx;
 pub mod D2ClientEx;
