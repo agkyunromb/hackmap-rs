@@ -39,7 +39,7 @@ extern "stdcall" fn EnterBNLobby() -> BOOL {
         return FALSE;
     }
 
-    let _ = HackMap::quick_next().on_enter_lobby();
+    HackMap::quick_next().on_enter_lobby();
 
     TRUE
 }

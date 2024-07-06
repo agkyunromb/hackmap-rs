@@ -26,6 +26,7 @@ pub struct GameOffset {
     pub Info                    : FuncAddress,
     pub Call_D2SoundCleanup     : FuncAddress,
     pub Call_D2GFX_GetWindow    : FuncAddress,
+    pub IsLodGame               : FuncAddress,
 }
 
 pub struct AutoMapOffset {
@@ -179,6 +180,10 @@ pub mod Game {
 
     pub fn GetGameInfo() -> GameInfo {
         GameInfo(read_at(AddressTable.Game.Info))
+    }
+
+    pub fn IsLodGame() -> BOOL {
+        addr_to_stdcall(IsLodGame, AddressTable.Game.IsLodGame)()
     }
 }
 
@@ -359,6 +364,7 @@ pub fn init(d2client: usize) {
             Info                    : d2client + D2RVA::D2Client(0x6FBCB980),
             Call_D2SoundCleanup     : d2client + D2RVA::D2Client(0x6FAF515D),
             Call_D2GFX_GetWindow    : d2client + D2RVA::D2Client(0x6FAF423C),
+            IsLodGame               : d2client + D2RVA::D2Client(0x6FAF1940),
         },
         AutoMap: AutoMapOffset{
             NewAutoMapCell          : d2client + D2RVA::D2Client(0x6FB0F6B0),

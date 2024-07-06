@@ -30,20 +30,24 @@ pub struct UnitsOffset {
     pub GetClientCoordY         : FuncAddress,
     pub GetDistanceToCoordinates: FuncAddress,
     pub GetCoords               : FuncAddress,
+    pub GetInventoryRecordId    : FuncAddress,
 }
 
 pub struct ItemsOffset {
     pub GetItemType             : FuncAddress,
     pub GetItemQuality          : FuncAddress,
+    pub GetInvPage              : FuncAddress,
+    pub GetBaseCode             : FuncAddress,
     pub CheckItemTypeId         : FuncAddress,
     pub CheckItemFlag           : FuncAddress,
 }
 
 pub struct InventoryOffset {
+    pub UnitIsItem              : FuncAddress,
     pub GetFirstItem            : FuncAddress,
     pub GetNextItem             : FuncAddress,
     pub GetCursorItem           : FuncAddress,
-    pub UnitIsItem              : FuncAddress,
+    pub GetFreePosition         : FuncAddress,
 }
 
 pub struct DrlgDrlgOffset {
@@ -144,7 +148,7 @@ pub mod DataTbls {
         DataTable(read_at(AddressTable.DataTbls.sgptDataTables))
     }
 
-    pub fn _GetLevelDefRecord(_levelId: D2LevelId) -> *mut D2LevelDefBin { null_mut() }
+    fn _GetLevelDefRecord(_levelId: D2LevelId) -> *mut D2LevelDefBin { null_mut() }
 
     pub fn GetLevelDefRecord(levelId: D2LevelId) -> Option<&'static mut D2LevelDefBin> {
         let max_level_id = sgptDataTables().levels_txt_record_count();
@@ -158,7 +162,7 @@ pub mod DataTbls {
         }
     }
 
-    pub fn _GetObjectsTxtRecord(_objectId: u32) -> *mut D2ObjectsTxt { null_mut() }
+    fn _GetObjectsTxtRecord(_objectId: u32) -> *mut D2ObjectsTxt { null_mut() }
 
     pub fn GetObjectsTxtRecord(objectId: u32) -> Option<&'static mut D2ObjectsTxt> {
         if objectId as usize >= sgptDataTables().objects_txt_record_count() {
@@ -169,7 +173,7 @@ pub mod DataTbls {
         ptr_to_ref_mut(object_txt)
     }
 
-    pub fn _GetItemDataTables() -> *mut D2ItemDataTbl { null_mut() }
+    fn _GetItemDataTables() -> *mut D2ItemDataTbl { null_mut() }
 
     pub fn GetItemDataTables() -> Option<&'static mut D2ItemDataTbl> {
         ptr_to_ref_mut(addr_to_stdcall(_GetItemDataTables, AddressTable.DataTbls.GetItemDataTables)())
@@ -187,7 +191,7 @@ pub mod Units {
         addr_to_stdcall(TestCollisionWithUnit, AddressTable.Units.TestCollisionWithUnit)(unit1, unit2, collision_mask)
     }
 
-    pub fn _GetRoom(_unit: &D2Unit) -> *mut D2ActiveRoom { null_mut() }
+    fn _GetRoom(_unit: &D2Unit) -> *mut D2ActiveRoom { null_mut() }
     pub fn GetRoom(unit: &D2Unit) -> Option<&mut D2ActiveRoom> {
         ptr_to_ref_mut(addr_to_stdcall(_GetRoom, AddressTable.Units.GetRoom)(unit))
     }
@@ -204,13 +208,18 @@ pub mod Units {
         addr_to_stdcall(GetDistanceToCoordinates, AddressTable.Units.GetDistanceToCoordinates)(unit, x, y)
     }
 
-    pub fn _GetCoords(_unit: &D2Unit, _coord: &mut D2Coord) {}
+    fn _GetCoords(_unit: &D2Unit, _coord: &mut D2Coord) {}
 
     pub fn GetCoords(unit: &D2Unit) -> D2Coord {
         let mut coord =  D2Coord { nX: 0, nY: 0 };
         addr_to_stdcall(_GetCoords, AddressTable.Units.GetCoords)(unit, &mut coord);
         coord
     }
+
+    pub fn GetInventoryRecordId(unit: &D2Unit, invPage: D2ItemInvPage, isLod: BOOL) -> i32 {
+        addr_to_stdcall(GetInventoryRecordId, AddressTable.Units.GetInventoryRecordId)(unit, invPage, isLod)
+    }
+
 }
 
 pub mod Items {
@@ -224,11 +233,19 @@ pub mod Items {
         addr_to_stdcall(GetItemQuality, AddressTable.Items.GetItemQuality)(item)
     }
 
+    pub fn GetInvPage(item: &D2Unit) -> D2ItemInvPage {
+        addr_to_stdcall(GetInvPage, AddressTable.Items.GetInvPage)(item)
+    }
+
+    pub fn GetBaseCode(item: &D2Unit) -> u32 {
+        addr_to_stdcall(GetBaseCode, AddressTable.Items.GetBaseCode)(item)
+    }
+
     pub fn CheckItemTypeId(item: &D2Unit, itemType: i32) -> BOOL {
         addr_to_stdcall(CheckItemTypeId, AddressTable.Items.CheckItemTypeId)(item, itemType)
     }
 
-    pub fn _CheckItemFlag(_item: &D2Unit, _flags: D2ItemFlags, _line: usize, _file: usize) -> BOOL { FALSE }
+    fn _CheckItemFlag(_item: &D2Unit, _flags: D2ItemFlags, _line: usize, _file: usize) -> BOOL { FALSE }
 
     pub fn CheckItemFlag(item: &D2Unit, flags: D2ItemFlags) -> BOOL {
         addr_to_stdcall(_CheckItemFlag, AddressTable.Items.CheckItemFlag)(item, flags, 0, 0)
@@ -238,22 +255,41 @@ pub mod Items {
 pub mod Inventory {
     use super::*;
 
-    pub fn GetFirstItem(inventory: &D2Inventory) -> BOOL {
-        addr_to_stdcall(GetFirstItem, AddressTable.Inventory.GetFirstItem)(inventory)
+    fn _UnitIsItem(_unit: &D2Unit) -> *mut D2Unit { null_mut() }
+
+    pub fn UnitIsItem(unit: &D2Unit) -> BOOL {
+        if addr_to_stdcall(_UnitIsItem, AddressTable.Inventory.UnitIsItem)(unit).is_null() { FALSE } else { TRUE }
     }
 
-    pub fn GetNextItem(item: &D2Unit) -> &mut D2Unit {
-        addr_to_stdcall(GetNextItem, AddressTable.Inventory.GetNextItem)(item)
+    fn _GetFirstItem(_inventory: &D2Inventory) -> *mut D2Unit { null_mut() }
+
+    pub fn GetFirstItem(inventory: &D2Inventory) -> Option<&mut D2Unit> {
+        ptr_to_ref_mut(addr_to_stdcall(_GetFirstItem, AddressTable.Inventory.GetFirstItem)(inventory))
     }
 
-    pub fn _GetCursorItem(_inventory: &D2Inventory) -> *mut D2Unit { null_mut() }
+    fn _GetNextItem(_item: &D2Unit) -> *mut D2Unit { null_mut() }
+
+    pub fn GetNextItem(item: &D2Unit) -> Option<&mut D2Unit> {
+        ptr_to_ref_mut(addr_to_stdcall(_GetNextItem, AddressTable.Inventory.GetNextItem)(item))
+    }
+
+    fn _GetCursorItem(_inventory: &D2Inventory) -> *mut D2Unit { null_mut() }
 
     pub fn GetCursorItem(inventory: &D2Inventory) -> Option<&mut D2Unit> {
         ptr_to_ref_mut(addr_to_stdcall(_GetCursorItem, AddressTable.Inventory.GetCursorItem)(inventory))
     }
 
-    pub fn UnitIsItem(unit: &D2Unit) -> BOOL {
-        addr_to_stdcall(UnitIsItem, AddressTable.Inventory.UnitIsItem)(unit)
+    fn _GetFreePosition(_inventory: &D2Inventory, _item: &D2Unit, _inventoryRecordId: i32, _x: *mut i32, _y: *mut i32, _page: D2ItemInvPage) -> BOOL { FALSE }
+
+    pub fn GetFreePosition(inventory: &D2Inventory, item: &D2Unit, inventoryRecordId: i32, page: D2ItemInvPage) -> Option<(i32, i32)> {
+        let mut x = 0;
+        let mut y = 0;
+
+        if addr_to_stdcall(_GetFreePosition, AddressTable.Inventory.GetFreePosition)(inventory, item, inventoryRecordId, &mut x, &mut y, page) == FALSE {
+            return None;
+        }
+
+        Some((x, y))
     }
 }
 
@@ -264,7 +300,7 @@ pub mod DrlgDrlg {
         addr_to_stdcall(GetActNoFromLevelId, AddressTable.DrlgDrlg.GetActNoFromLevelId)(levelId)
     }
 
-    pub fn _GetLevel(_drlg: &D2Drlg, _levelId: D2LevelId) -> *mut D2DrlgLevel { null_mut() }
+    fn _GetLevel(_drlg: &D2Drlg, _levelId: D2LevelId) -> *mut D2DrlgLevel { null_mut() }
 
     pub fn GetLevel(drlg: &D2Drlg, levelId: D2LevelId) -> Option<&mut D2DrlgLevel> {
         let drlg_level = addr_to_stdcall(_GetLevel, AddressTable.DrlgDrlg.GetLevel)(drlg, levelId);
@@ -275,7 +311,7 @@ pub mod DrlgDrlg {
 pub mod DrlgRoom {
     use super::*;
 
-    pub fn _GetPresetUnits(_drlgRoom: &D2DrlgRoom) -> *mut D2PresetUnit { null_mut() }
+    fn _GetPresetUnits(_drlgRoom: &D2DrlgRoom) -> *mut D2PresetUnit { null_mut() }
 
     pub fn GetPresetUnits(drlgRoom: &D2DrlgRoom) -> Option<&'static mut D2PresetUnit> {
         ptr_to_ref_mut(addr_to_fastcall(_GetPresetUnits, AddressTable.DrlgRoom.GetPresetUnits)(drlgRoom))
@@ -303,7 +339,7 @@ pub mod Dungeon {
     use super::AddressTable;
     pub use super::drlg::*;
 
-    pub fn _GetDrlgFromAct(_act: &D2DrlgAct) -> *mut D2Drlg { null_mut() }
+    fn _GetDrlgFromAct(_act: &D2DrlgAct) -> *mut D2Drlg { null_mut() }
 
     pub fn GetDrlgFromAct(act: &D2DrlgAct) -> Option<&mut D2Drlg> {
         let drlg = addr_to_stdcall(_GetDrlgFromAct, AddressTable.Dungeon.GetDrlgFromAct)(act);
@@ -326,7 +362,7 @@ pub mod Dungeon {
         addr_to_stdcall(GetRoomFromAct, AddressTable.Dungeon.GetRoomFromAct)(drlgAct)
     }
 
-    pub fn _GetAdjacentRoomsListFromRoom(_activeRoom: &D2ActiveRoom, _roomList: *mut *mut *mut D2ActiveRoom, _roomCount: *mut usize) {}
+    fn _GetAdjacentRoomsListFromRoom(_activeRoom: &D2ActiveRoom, _roomList: *mut *mut *mut D2ActiveRoom, _roomCount: *mut usize) {}
 
     pub fn GetAdjacentRoomsListFromRoom(activeRoom: &D2ActiveRoom) -> Option<&[*mut D2ActiveRoom]> {
         let mut rooms: *mut *mut D2ActiveRoom = null_mut();
@@ -382,18 +418,22 @@ pub fn init(d2common: usize) {
             GetClientCoordY                 : d2common + D2RVA::D2Common(0x6FD80240),
             GetDistanceToCoordinates        : d2common + D2RVA::D2Common(0x6FDCF5E0),
             GetCoords                       : d2common + D2RVA::D2Common(0x6FD80050),
+            GetInventoryRecordId            : d2common + D2RVA::D2Common(0x6FD7FB60),
         },
         Items: ItemsOffset{
             GetItemType                     : d2common + D2RVA::D2Common(0x6FD730F0),
             GetItemQuality                  : d2common + D2RVA::D2Common(0x6FD73B40),
+            GetInvPage                      : d2common + D2RVA::D2Common(0x6FD737C0),
+            GetBaseCode                     : d2common + D2RVA::D2Common(0x6FD73290),
             CheckItemTypeId                 : d2common + D2RVA::D2Common(0x6FD74430),
             CheckItemFlag                   : d2common + D2RVA::D2Common(0x6FD73940),
         },
         Inventory: InventoryOffset{
+            UnitIsItem                      : d2common + D2RVA::D2Common(0x6FD6E400),
             GetFirstItem                    : d2common + D2RVA::D2Common(0x6FD6E190),
             GetNextItem                     : d2common + D2RVA::D2Common(0x6FD6E8F0),
-            GetCursorItem                   : d2common + D2RVA::D2Common(0x6FD6E8F0),
-            UnitIsItem                      : d2common + D2RVA::D2Common(0x6FD6E400),
+            GetCursorItem                   : d2common + D2RVA::D2Common(0x6FD6DFB0),
+            GetFreePosition                 : d2common + D2RVA::D2Common(0x6FD708E0),
         },
         DrlgDrlg: DrlgDrlgOffset{
             GetActNoFromLevelId             : d2common + D2RVA::D2Common(0x6FD7D2C0),

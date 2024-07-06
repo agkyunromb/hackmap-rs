@@ -1,9 +1,10 @@
 use super::common::*;
-use super::config::DropNotify;
-use super::config::PickupMethod;
+use super::config::{DropNotify, PickupMethod, ConfigRef};
+use std::alloc::System;
+use std::ops::Add;
+use std::time::{SystemTime, Duration};
 use super::image_loader;
 use super::HackMap;
-use super::config::ConfigRef;
 use super::item_state_monitor::*;
 use D2Client::D2ClientOffset;
 use D2Common::D2Unit;
@@ -48,7 +49,7 @@ extern "stdcall" fn d2sigma_automap_draw() {
     }
 
     D2Client::AutoMap::DrawAutoMapCells();
-    let _ = HackMap::unit_color().draw_automap_units();
+    HackMap::unit_color().draw_automap_units();
 }
 
 extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, arg3: u32) {
@@ -97,6 +98,7 @@ pub(super) struct UnitColor {
     pub cfg                 : ConfigRef,
     pub boss_monster_id     : HashMap<u32, u32>,
     pub glide3x_is_d2sigma  : *mut u8,
+    pub items_to_cube       : HashMap<u32, SystemTime>,
 }
 
 impl UnitColor {
@@ -105,6 +107,7 @@ impl UnitColor {
             cfg,
             boss_monster_id     : HashMap::new(),
             glide3x_is_d2sigma  : null_mut(),
+            items_to_cube       : HashMap::new(),
         }
     }
 
@@ -173,20 +176,20 @@ impl UnitColor {
 
         match unit.dwUnitType {
             D2UnitTypes::Player => {
-                let _ = self.draw_player(unit, x, y);
+                self.draw_player(unit, x, y);
             },
             D2UnitTypes::Monster => {
-                let _ = self.draw_monster(unit, x, y);
+                self.draw_monster(unit, x, y);
             },
             D2UnitTypes::Object => {
-                let _ = self.draw_object(unit, x, y);
+                self.draw_object(unit, x, y);
             },
 
             D2UnitTypes::Missile => {},
             D2UnitTypes::Item => {
                 // D2Sigma::Units::DisplayItemProperties(D2Client::Units::GetClientUnitTypeTable(), unit);
 
-                let _ = self.draw_item(unit, x, y);
+                self.draw_item(unit, x, y);
             },
 
             _ => {},
@@ -489,16 +492,12 @@ impl UnitColor {
     fn should_show_unit(&mut self, unit: &mut D2Unit) -> bool {
         let is_unit_item = D2Common::Inventory::UnitIsItem(unit) != FALSE;
 
-        // if is_unit_item {
-        //     let _ = self.handle_auto_pickup(unit);
-        // }
-
-        let cfg = Rc::clone(&self.cfg);
-        let cfg = cfg.borrow();
-
         if is_unit_item == false {
             return true;
         }
+
+        let cfg = Rc::clone(&self.cfg);
+        let cfg = cfg.borrow();
 
         let unit_color = &cfg.unit_color;
         let mut should_auto_pickup = unit_color.auto_pickup;
@@ -516,20 +515,20 @@ impl UnitColor {
             return true;
         }
 
-        let color = match unit_color.get_color_from_unit(unit) {
+        let item_cfg = match unit_color.get_color_from_unit(unit) {
             None => return true,
             Some(color) => color,
         };
 
         if should_auto_pickup {
-            let _ = self.handle_auto_pickup(unit, color);
+            self.handle_auto_pickup(unit, item_cfg);
         }
 
         if should_hide_items == false {
             return true;
         }
 
-        let minimap_color = match color.minimap_color {
+        let minimap_color = match item_cfg.minimap_color {
             None => return true,
             Some(color) => color,
         };
@@ -544,25 +543,33 @@ impl UnitColor {
         true
     }
 
-    fn on_post_recv(&mut self, cmd: D2GSCmd, payload: *mut u8) {
+    fn on_leave_game(&mut self) {
+        self.items_to_cube.clear();
+    }
+
+    fn on_post_recv(&mut self, cmd: D2GSCmd, payload: *mut u8) -> Option<()> {
         let mut state = ItemStateMonitor::new();
 
         state.on_scmd(cmd, payload);
 
-        if state.add_to_ground == false && state.cursor_to_ground == false {
-            return;
+        if state.add_to_ground == false && state.cursor_to_ground == false && state.ground_to_cursor == false {
+            return None;
         }
 
-        let item = match D2Client::Units::GetClientUnit(state.unit_id, D2UnitTypes::Item) {
-            None => return,
-            Some(i) => i,
-        };
+        let item = D2Client::Units::GetClientUnit(state.unit_id, D2UnitTypes::Item)?;
 
-        self.handle_dropped_item(item);
+        if state.add_to_ground || state.cursor_to_ground {
+            self.handle_dropped_item(item);
+        } else if state.ground_to_cursor {
+            self.handle_auto_pickup_cube(item);
+        }
+
+        None
     }
 
     fn handle_dropped_item(&mut self, item: &D2Unit) {
-        let cfg = self.cfg.borrow();
+        let cfg = Rc::clone(&self.cfg);
+        let cfg = cfg.borrow();
 
         let item_color = match cfg.unit_color.get_color_from_unit(item) {
             None => return,
@@ -629,6 +636,16 @@ impl UnitColor {
         Some(true)
     }
 
+    fn handle_auto_pickup_cube(&mut self, item: &D2Unit) -> Option<()> {
+        let expire_time = self.items_to_cube.get(&item.dwUnitId)?;
+
+        if SystemTime::now() < *expire_time {
+            D2ClientEx::Utils::cursor_item_to_cube();
+        }
+
+        None
+    }
+
     fn handle_auto_pickup(&mut self, item: &D2Unit, item_cfg: &super::config::ItemColor) -> Option<()> {
         let pickup = item_cfg.pickup?;
 
@@ -647,7 +664,18 @@ impl UnitColor {
             },
 
             PickupMethod::Cube => {
+                D2ClientEx::Inventory::get_free_position_for_item(item, D2ItemInvPage::Cube)?;
 
+                let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
+                    nHeader       : D2ClientCmd::PICKUP_ITEM as u8,
+                    dwUnitType    : D2UnitTypes::Item as u32,
+                    dwUnitGUID    : item.dwUnitId,
+                    bCursor       : 1,
+                };
+
+                D2ClientEx::Net::send_packet(&cmd);
+
+                self.items_to_cube.insert(item.dwUnitId, SystemTime::now().add(Duration::from_secs(5)));
             },
         }
 
@@ -713,6 +741,10 @@ impl UnitColor {
 
         D2ClientEx::Net::on_post_recv(|cmd, payload| {
             HackMap::unit_color().on_post_recv(cmd, payload);
+        });
+
+        D2ClientEx::Game::on_leave_game(|| {
+            HackMap::unit_color().on_leave_game();
         });
 
         Ok(())

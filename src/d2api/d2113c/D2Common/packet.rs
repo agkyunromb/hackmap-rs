@@ -37,10 +37,18 @@ pub struct SCMD_PACKET_16_PIKCUP_ITEM {
 }
 
 #[repr(C, packed(1))]
-pub struct SCMD_PACKET_17_DROPCURSORITEM {
+pub struct SCMD_PACKET_17_DROP_CURSOR_ITEM {
     // size: 0x0005
     pub nHeader                 : u8,                   // 0x0000
-    pub dwItemGUID              : u32,                  // 0x0005
+    pub dwItemGUID              : u32,                  // 0x0001
+}
+
+#[repr(C, packed(1))]
+pub struct SCMD_PACKET_2A_ITEM_TO_CUBE {
+    // size: 0x0009
+    pub nHeader                 : u8,                   // 0x0000
+    pub dwItemGUID              : u32,                  // 0x0001
+    pub dwCubeGUID              : u32,                  // 0x0005
 }
 
 #[repr(C, packed(1))]

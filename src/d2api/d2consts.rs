@@ -1016,6 +1016,23 @@ pub enum D2ItemQualities
     Tempered            = 9,
 }
 
+#[repr(u8)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
+pub enum D2ItemInvPage {
+    Inventory           = 0,
+    Equip               = 1,
+    Trade               = 2,
+    Cube                = 3,
+    Stash               = 4,
+    Belt                = 5,
+    Null                = 255,
+}
+
+pub struct D2ItemCodes {}
+impl D2ItemCodes {
+    pub const Cube: u32 = u32::from_le_bytes(*b"box ");
+}
+
 bitflags! {
     #[derive(PartialEq, Copy, Clone)]
     pub struct D2MonStatsTxtFlags : u32 {

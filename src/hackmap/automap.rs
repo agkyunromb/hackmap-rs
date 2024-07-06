@@ -53,7 +53,7 @@ extern "fastcall" fn Handle_D2GS_LOADCOMPLETE_04(payload: *const u8) {
         D2Sigma::AutoMap::RevealMap();
     }
 
-    let _ = reveal_map_ex();
+    reveal_map_ex();
 }
 
 extern "fastcall" fn D2Client_AutoMap_DrawCells(cell: &D2AutoMapCellDataEx, arg2: usize) {
@@ -99,7 +99,7 @@ fn reveal_map_ex() -> Option<()> {
             None => continue,
         };
 
-        let _ = reveal_level_ex(level);
+        reveal_level_ex(level);
     }
 
     None
@@ -123,7 +123,7 @@ fn reveal_level_ex(level: &mut D2Common::D2DrlgLevel) -> Option<()> {
                 => {},
 
                 _ => {
-                    let _ = add_custom_automap_cell(drlg_room);
+                    add_custom_automap_cell(drlg_room);
                 },
             }
         }

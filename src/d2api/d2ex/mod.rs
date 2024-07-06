@@ -8,6 +8,7 @@ pub mod D2SigmaEx;
 use crate::d2api::types::*;
 
 pub fn d2ex_init(modules: &D2Modules) -> Result<(), common::HookError> {
+    D2CommonEx::init(modules)?;
     D2GfxEx::init(modules)?;
     D2WinEx::init(modules)?;
     D2ClientEx::init(modules)?;

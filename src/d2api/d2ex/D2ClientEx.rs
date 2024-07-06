@@ -210,6 +210,77 @@ pub mod Game {
     }
 
 }
+pub mod Inventory {
+    use D2Common::D2Unit;
+
+    use super::*;
+
+    pub fn get_free_position_for_item(item: &D2Unit, inv_page: D2ItemInvPage) -> Option<(i32, i32)> {
+        let player = D2Client::Units::GetClientPlayer()?;
+
+        D2Common::Inventory::GetFreePosition(
+            ptr_to_ref(player.pInventory)?,
+            item,
+            D2Common::Units::GetInventoryRecordId(player, inv_page, D2Client::Game::IsLodGame()),
+            D2ItemInvPage::Cube,
+        )
+    }
+}
+
+pub mod Utils {
+    use super::*;
+    use D2Common::D2Unit;
+    use crate::D2CommonEx;
+
+    pub fn send_cursor_item_to_cube(cursor_item: &D2Unit, cube: &D2Unit) {
+        let payload = D2Common::SCMD_PACKET_2A_ITEM_TO_CUBE{
+            nHeader     : D2ClientCmd::ITEM_TO_CUBE as u8,
+            dwItemGUID  : cursor_item.dwUnitId,
+            dwCubeGUID  : cube.dwUnitId,
+        };
+
+        super::Net::send_packet(&payload);
+    }
+
+    pub fn cursor_item_to_cube() -> Option<()> {
+        let cursor_item = D2CommonEx::Inventory::get_player_cursor_item()?;
+        let cube = get_cube_from_inv()?;
+
+        super::Inventory::get_free_position_for_item(cursor_item, D2ItemInvPage::Cube)?;
+
+        send_cursor_item_to_cube(cursor_item, cube);
+
+        None
+    }
+
+    pub fn get_cube_from_inv() -> Option<&'static D2Unit> {
+        let player = D2Client::Units::GetClientPlayer()?;
+
+        let mut opt_item = D2Common::Inventory::GetFirstItem(ptr_to_ref(player.pInventory)?);
+
+        while let Some(item) = opt_item {
+            loop {
+                if D2Common::Inventory::UnitIsItem(item) == FALSE {
+                    break;
+                }
+
+                match D2Common::Items::GetInvPage(item) {
+                    D2ItemInvPage::Inventory | D2ItemInvPage::Stash => {},
+                    _ => break,
+                }
+
+                if D2Common::Items::GetBaseCode(item) != D2ItemCodes::Cube {
+                    break;
+                }
+
+                return Some(item);
+            }
+            opt_item = D2Common::Inventory::GetNextItem(item);
+        }
+
+        None
+    }
+}
 
 pub(super) fn init(_modules: &D2Modules) -> Result<(), HookError> {
     let cli = D2ClientEx::get();
