@@ -604,8 +604,15 @@ impl UnitColor {
 
         name.reverse();
 
-        let name = if notify == DropNotify::Name || (quality == D2ItemQualities::Unique && (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount) {
+        let is_weapon_or_armor = (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount;
+        let is_misc = !is_weapon_or_armor;
+
+        let name = if is_misc {
+            name.join(" - ")
+
+        } else if notify == DropNotify::Name || quality == D2ItemQualities::Unique {
             name[1..].join(" - ")
+
         } else {
             name.join(" - ")
         };

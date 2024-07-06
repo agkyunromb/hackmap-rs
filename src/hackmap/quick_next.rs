@@ -46,18 +46,20 @@ extern "stdcall" fn EnterBNLobby() -> BOOL {
 
 
 pub(super) struct QuickNextGame {
-    pub auto_create_game                    : bool,
-    pub auto_game_name                      : String,
-    pub auto_game_password                  : String,
-    pub auto_game_index                     : Option<i32>,
-    pub create_game_button                  : Option<PVOID>,
-    pub on_create_game_tab_button_clicked   : Option<D2Win::Control::PerformFnType>,
-    pub on_create_game_button_clicked       : Option<D2Win::Control::PerformFnType>,
+    game_joined                         : bool,
+    auto_create_game                    : bool,
+    auto_game_name                      : String,
+    auto_game_password                  : String,
+    auto_game_index                     : Option<i32>,
+    create_game_button                  : Option<PVOID>,
+    on_create_game_tab_button_clicked   : Option<D2Win::Control::PerformFnType>,
+    on_create_game_button_clicked       : Option<D2Win::Control::PerformFnType>,
 }
 
 impl QuickNextGame {
     pub const fn new() -> Self {
         Self {
+            game_joined                         : false,
             auto_create_game                    : false,
             auto_game_name                      : String::new(),
             auto_game_password                  : String::new(),
@@ -230,14 +232,35 @@ impl QuickNextGame {
     }
 
     pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {
-        HackMap::input().on_key_down(|vk| {
-            let cfg = HackMap::config();
-            let cfg = cfg.borrow();
+        D2ClientEx::Game::on_join_game(|| {
+            HackMap::quick_next().game_joined = true;
+        });
 
-            if vk == cfg.hotkey.quick_next_game {
+        D2ClientEx::Game::on_leave_game(|| {
+            HackMap::quick_next().game_joined = false;
+        });
+
+        HackMap::input().on_key_down(|vk| {
+            loop {
+                if HackMap::quick_next().game_joined == false {
+                    break;
+                }
+
+                let cfg = HackMap::config();
+                let cfg = cfg.borrow();
+
+                if vk != cfg.hotkey.quick_next_game {
+                    break;
+                }
+
+                if D2Client::Game::IsGameExited() != FALSE {
+                    break;
+                }
+
                 HackMap::quick_next().generate_next_game_info(if unsafe { GetKeyState(VK_CONTROL as i32) } < 0 { 0 } else { 1 });
                 let hwnd = D2Gfx::Window::GetWindow();
                 get_stubs().SaveAndExitGame.unwrap()(0, &hwnd);
+                HackMap::quick_next().game_joined = false;
             }
 
             false

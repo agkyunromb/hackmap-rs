@@ -74,6 +74,8 @@ impl Input {
 
         let vk = msg.virtual_key();
 
+        let mut lines = vec![];
+
         for (name, cb) in self.toggles.iter_mut() {
             let (handled, toggle_enabled) = cb(vk);
             if handled == false {
@@ -83,10 +85,19 @@ impl Input {
             let toggle_state = if toggle_enabled { "ON" } else { "OFF" };
             let toggle_color = if toggle_enabled { D2StringColorCodes::LightGreen } else { D2StringColorCodes::Red };
 
-            D2Client::UI::DisplayQuickMessage(
-                &format!("{name} -> {}{toggle_state}", toggle_color.to_str_code()),
-                D2StringColorCodes::Orange,
-            );
+            lines.push(format!("{name} -> {}{toggle_state}", toggle_color.to_str_code()));
+        }
+
+        if lines.is_empty() == false {
+            let empty_lines = std::cmp::max(super::tweaks::Tweaks::MAX_QUICK_MESSAGE_COUNT - lines.len() as i32, 0);
+
+            for l in lines {
+                D2Client::UI::DisplayQuickMessage(&l, D2StringColorCodes::Orange);
+            }
+
+            for _ in 0..empty_lines {
+                D2Client::UI::DisplayQuickMessage("", D2StringColorCodes::Orange);
+            }
         }
 
         for cb in self.on_keydown_callbacks.iter_mut() {

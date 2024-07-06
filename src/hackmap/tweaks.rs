@@ -152,21 +152,14 @@ pub(super) struct Tweaks {
 }
 
 impl Tweaks {
+    pub const MAX_GLOBAL_MESSAGE_COUNT: i32 = 30;
+    pub const MAX_QUICK_MESSAGE_COUNT: i32 = 20;
+
     pub fn new(cfg: ConfigRef) -> Self{
         Self{
             cfg,
             current_monster_name: vec![],
         }
-    }
-
-    fn on_key_down(&self, vk: u16) -> bool {
-        let mut cfg = self.cfg.borrow_mut();
-
-        if vk == cfg.hotkey.perm_show_items {
-            cfg.tweaks.perm_show_items = !cfg.tweaks.perm_show_items;
-        }
-
-        false
     }
 
     fn should_hide_unit(&self, _unit: PVOID) -> (bool, bool) {
@@ -190,10 +183,6 @@ impl Tweaks {
     }
 
     pub fn init(&mut self, modules: &D2Modules) -> Result<(), HookError> {
-        HackMap::input().on_key_down(|vk| -> bool {
-            HackMap::tweaks().on_key_down(vk)
-        });
-
         let D2Client = modules.D2Client.unwrap();
 
         unsafe {
@@ -204,7 +193,8 @@ impl Tweaks {
             patch_memory_value(D2Client, D2RVA::D2Client(0x6FB0948B), 0xEB, 1)?;
 
             // global message 上限
-            patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D9B2), 30, 1)?;
+            patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D9B2), Self::MAX_GLOBAL_MESSAGE_COUNT as u64, 1)?;
+            patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D7E3), Self::MAX_QUICK_MESSAGE_COUNT as u64, 1)?;
 
             // HDText_drawFramedText_is_alt_clicked
             match glide3x.FileHeader.TimeDateStamp {
@@ -244,6 +234,18 @@ impl Tweaks {
             if vk == cfg.hotkey.show_monster_id {
                 cfg.tweaks.show_monster_id = !cfg.tweaks.show_monster_id;
                 return (true, cfg.tweaks.show_monster_id)
+            }
+
+            (false, false)
+        });
+
+        HackMap::input().reg_toggle("perm_show_items", |vk| {
+            let cfg = HackMap::config();
+            let mut cfg = cfg.borrow_mut();
+
+            if vk == cfg.hotkey.perm_show_items {
+                cfg.tweaks.perm_show_items = !cfg.tweaks.perm_show_items;
+                return (true, cfg.tweaks.perm_show_items)
             }
 
             (false, false)
