@@ -72,6 +72,8 @@ pub(super) struct UnitColorConfig {
     pub my_blob_file                : Option<String>,
     pub corpse_blob_file            : Option<String>,
 
+    pub my_blob_color               : u8,
+    pub party_blob_color            : u8,
     pub normal_monster_color        : u8,
     pub boss_monster_color          : u8,
     pub minion_monster_color        : u8,
@@ -234,6 +236,8 @@ impl Config {
                 cold_enchanted_desc             : None,
                 mana_burn_desc                  : None,
 
+                my_blob_color                   : 0x68,
+                party_blob_color                : 0x68,
                 normal_monster_color            : 0xFF,
                 boss_monster_color              : 0xFF,
                 minion_monster_color            : 0xFF,

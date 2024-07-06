@@ -187,8 +187,6 @@ impl UnitColor {
 
             D2UnitTypes::Missile => {},
             D2UnitTypes::Item => {
-                // D2Sigma::Units::DisplayItemProperties(D2Client::Units::GetClientUnitTypeTable(), unit);
-
                 self.draw_item(unit, x, y);
             },
 
@@ -197,11 +195,12 @@ impl UnitColor {
     }
 
     fn draw_player(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
-        // let unit_color_config = &self.cfg.borrow().unit_color;
+        let unit_color_config = &self.cfg.borrow().unit_color;
         let player = D2Client::Units::GetClientPlayer()?;
+        let color = if player.dwUnitId == unit.dwUnitId { unit_color_config.my_blob_color } else { unit_color_config.party_blob_color };
 
-        // self.draw_cell_by_blob_file(x, y, unit_color_config.my_blob_file.as_ref(), if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
-        self.draw_default_cross(x, y, if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
+        self.draw_cell_by_blob_file(x, y, unit_color_config.my_blob_file.as_ref(), color);
+        // self.draw_default_cross(x, y, if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
 
         None
     }
