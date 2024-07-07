@@ -75,7 +75,7 @@ pub(super) struct HelperBot {
 
 impl HelperBot {
     pub fn new(cfg: ConfigRef) -> Self{
-        Self{
+        Self {
             cfg,
         }
     }

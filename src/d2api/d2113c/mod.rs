@@ -11,6 +11,7 @@ pub mod D2Win;
 pub mod D2Multi;
 pub mod D2CMP;
 pub mod Fog;
+pub mod Storm;
 pub mod D2Sigma;
 
 pub struct D2ImageBase113C;

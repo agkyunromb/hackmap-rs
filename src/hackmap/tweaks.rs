@@ -5,15 +5,17 @@ use super::HackMap;
 use super::config::ConfigRef;
 
 struct Stubs {
-    UI_HandleUIVars: Option<extern "stdcall" fn(PVOID)>,
-    continue_attacking_after_target_dead_left: Option<extern "stdcall" fn()>,
-    continue_attacking_after_target_dead_right: Option<extern "stdcall" fn()>,
+    UI_HandleUIVars                             : Option<extern "stdcall" fn(PVOID)>,
+    continue_attacking_after_target_dead_left   : Option<extern "stdcall" fn()>,
+    continue_attacking_after_target_dead_right  : Option<extern "stdcall" fn()>,
+    MPQLoadFile                                 : Option<extern "stdcall" fn(*const u8, *mut u8, usize, *mut usize, *const u8, usize, usize) -> BOOL>,
 }
 
 static mut STUBS: Stubs = Stubs{
     UI_HandleUIVars                             : None,
     continue_attacking_after_target_dead_left   : None,
     continue_attacking_after_target_dead_right  : None,
+    MPQLoadFile                                 : None,
 };
 
 #[allow(static_mut_refs)]
@@ -146,6 +148,37 @@ fn continue_attacking_after_target_dead() {
     }
 }
 
+extern "stdcall" fn MPQLoadFile(fileInfo: *const u8, buffer: *mut u8, bufferSize: usize, mut fileSize: *mut usize, eventInfo: *const u8, arg6: usize, arg7: usize) -> BOOL {
+    let mut file_size: usize = 0;
+
+    if fileSize.is_null() {
+        fileSize = &mut file_size;
+    }
+
+    let success = get_stubs().MPQLoadFile.unwrap()(fileInfo, buffer, bufferSize, fileSize, eventInfo, arg6, arg7);
+
+    while success != FALSE {
+        let file_name = ((fileInfo as usize + 8) as *const u8).to_str();
+
+        if file_name == "(attributes)" {
+            break;
+        }
+
+        let dump_path = std::path::Path::new("MPQDumped").join(file_name);
+        std::fs::create_dir_all(dump_path.parent().unwrap()).unwrap();
+
+        let content = unsafe { std::slice::from_raw_parts(buffer, *fileSize) };
+
+        std::fs::write(dump_path, content).unwrap();
+
+        // println!("load {file_name}");
+
+        break;
+    }
+
+    success
+}
+
 pub(super) struct Tweaks {
     pub cfg: ConfigRef,
     pub current_monster_name: Vec<u16>,
@@ -186,6 +219,8 @@ impl Tweaks {
         let D2Client = modules.D2Client.unwrap();
 
         unsafe {
+            // inline_hook_jmp(0, Storm::AddressTable.MPQLoadFile, MPQLoadFile as usize, Some(&mut STUBS.MPQLoadFile), None)?;
+
             // 永久显示地面物品
             let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);
 

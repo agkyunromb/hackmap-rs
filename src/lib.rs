@@ -58,7 +58,7 @@ fn init(base_address: PVOID) -> BOOL {
         (&mut d2modules.D2CMP,      Some(D2CMP::init),      "D2CMP.dll"),
         (&mut d2modules.D2Multi,    Some(D2Multi::init),    "D2Multi.dll"),
         (&mut d2modules.Fog,        Some(Fog::init),        "Fog.dll"),
-        // (&mut d2modules.Storm,      None,                   "Storm.dll"),
+        (&mut d2modules.Storm,      Some(Storm::init),      "Storm.dll"),
         (&mut d2modules.glide3x,    None,                   "glide3x.dll"),
     ];
 
