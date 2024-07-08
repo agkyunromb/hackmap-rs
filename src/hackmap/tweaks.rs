@@ -164,12 +164,17 @@ extern "stdcall" fn MPQLoadFile(fileInfo: *const u8, buffer: *mut u8, bufferSize
             break;
         }
 
-        let dump_path = std::path::Path::new("MPQDumped").join(file_name);
-        std::fs::create_dir_all(dump_path.parent().unwrap()).unwrap();
+        match file_name.to_lowercase().as_str() {
+            r"data\global\missiles\extra\fireexplodeejecta.dcc" => return FALSE,
+            _ => {},
+        }
 
-        let content = unsafe { std::slice::from_raw_parts(buffer, *fileSize) };
+        // let dump_path = std::path::Path::new("MPQDumped").join(file_name);
+        // std::fs::create_dir_all(dump_path.parent().unwrap()).unwrap();
 
-        std::fs::write(dump_path, content).unwrap();
+        // let content = unsafe { std::slice::from_raw_parts(buffer, *fileSize) };
+
+        // std::fs::write(dump_path, content).unwrap();
 
         // println!("load {file_name}");
 
@@ -219,7 +224,7 @@ impl Tweaks {
         let D2Client = modules.D2Client.unwrap();
 
         unsafe {
-            // inline_hook_jmp(0, Storm::AddressTable.MPQLoadFile, MPQLoadFile as usize, Some(&mut STUBS.MPQLoadFile), None)?;
+            inline_hook_jmp(0, Storm::AddressTable.MPQLoadFile, MPQLoadFile as usize, Some(&mut STUBS.MPQLoadFile), None)?;
 
             // 永久显示地面物品
             let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);
@@ -229,6 +234,8 @@ impl Tweaks {
 
             // global message 上限
             patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D9B2), Self::MAX_GLOBAL_MESSAGE_COUNT as u64, 1)?;
+
+            // quick message 上限
             patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D7E3), Self::MAX_QUICK_MESSAGE_COUNT as u64, 1)?;
 
             // HDText_drawFramedText_is_alt_clicked
