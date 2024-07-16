@@ -155,19 +155,21 @@ extern "stdcall" fn MPQLoadFile(fileInfo: *const u8, buffer: *mut u8, bufferSize
         fileSize = &mut file_size;
     }
 
+    let file_name = ((fileInfo as usize + 8) as *const u8).to_str().to_lowercase();
+    let file_name = file_name.as_str();
+
+    // println!("load {file_name}");
+
+    if HackMap::config().borrow().tweaks.excluded_dc6.contains(file_name) {
+        return FALSE;
+    }
+
     let success = get_stubs().MPQLoadFile.unwrap()(fileInfo, buffer, bufferSize, fileSize, eventInfo, arg6, arg7);
 
     while success != FALSE {
-        let file_name = ((fileInfo as usize + 8) as *const u8).to_str();
-
-        if file_name == "(attributes)" {
-            break;
-        }
-
-        match file_name.to_lowercase().as_str() {
-            r"data\global\missiles\extra\fireexplodeejecta.dcc" => return FALSE,
-            _ => {},
-        }
+        // if file_name == "(attributes)" {
+        //     break;
+        // }
 
         // let dump_path = std::path::Path::new("MPQDumped").join(file_name);
         // std::fs::create_dir_all(dump_path.parent().unwrap()).unwrap();
@@ -175,8 +177,6 @@ extern "stdcall" fn MPQLoadFile(fileInfo: *const u8, buffer: *mut u8, bufferSize
         // let content = unsafe { std::slice::from_raw_parts(buffer, *fileSize) };
 
         // std::fs::write(dump_path, content).unwrap();
-
-        // println!("load {file_name}");
 
         break;
     }

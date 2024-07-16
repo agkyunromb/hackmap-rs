@@ -1,5 +1,6 @@
 use std::path::Path;
 use std::io::Read;
+use std::collections::HashSet;
 use serde::Deserialize;
 use super::common::*;
 use D2Common::D2Unit;
@@ -46,6 +47,8 @@ pub(super) struct TweaksConfig {
 
     #[serde(deserialize_with = "bool_from_int")]
     pub continue_attacking_after_target_dead: bool,
+
+    pub excluded_dc6: HashSet<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -209,9 +212,10 @@ impl Config {
             },
 
             tweaks: TweaksConfig{
-                perm_show_items: true,
-                show_monster_id: false,
+                perm_show_items                     : true,
+                show_monster_id                     : false,
                 continue_attacking_after_target_dead: true,
+                excluded_dc6                        : HashSet::new(),
             },
 
             unit_color: UnitColorConfig{

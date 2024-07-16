@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use std::collections::HashSet;
 use serde::de::{self, Deserializer, Unexpected};
 use super::common::*;
 use lazy_static::lazy_static;
@@ -394,4 +395,12 @@ where
     }
 
     Ok(result)
+}
+
+pub fn vec_to_hashset<'de, D>(deserializer: D) -> Result<HashSet<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let vec: Vec<String> = Vec::deserialize(deserializer)?;
+    Ok(vec.into_iter().map(|s| s.to_lowercase()).collect())
 }
