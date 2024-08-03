@@ -439,13 +439,15 @@ impl UnitColor {
     fn d2sigma_items_get_item_name(&self, item: &D2Unit, buffer: PWSTR) {
         let mut name = buffer.to_string();
 
-        let socks_num = D2Common::StatList::GetUnitBaseStat(item, D2ItemStats::Item_NumSockets, 0);
-
-        if socks_num != 0 {
-            name += &format!("({socks_num}s)");
-        }
-
         let cfg = self.cfg.borrow();
+
+        if cfg.unit_color.show_socket_number {
+            let socks_num = D2Common::StatList::GetUnitBaseStat(item, D2ItemStats::Item_NumSockets, 0);
+
+            if socks_num != 0 {
+                name += &format!("({socks_num}s)");
+            }
+        }
 
         if cfg.unit_color.item_extra_info {
             let quality = D2Common::Items::GetItemQuality(item);
