@@ -1,0 +1,2345 @@
+   1 恶臭瓦斯药水
+   2 油
+   3 窒息瓦斯药水
+   4 爆炸药水
+   5 勒颈瓦斯药水
+   6 猛爆性药水
+   7 吉德宾诱饵 Gidbinn Decoy
+   8 吉德宾 Gidbbin
+   9 怀特的腿 Wirt's leg
+  10 赫拉迪克之锤 Horadric Malus
+  11 地狱熔炉铁锤 Hellforge Hammer
+  12 赫拉迪姆法杖 Horadric's Staff
+  13 国王之杖 Staff of Kings
+  14 卡林姆的连枷 Khalim's Flail
+  15 卡林姆的意志 Khalim's Will
+  16 飞斧【普通】
+  17 阔剑【普通】
+  18 钩镰枪【普通】
+  19 天使之星 Angel Star (1)
+  20 天使之星 Angel Star (2)
+  21 天使之星 Angel Star (3)
+  22 天使之星 Angel Star (4)
+  23 天使之星 Angel Star [神圣] (Sacred)
+  24 斧 Axe (1)
+  25 斧 Axe (2)
+  26 斧 Axe (3)
+  27 斧 Axe (4)
+  28 斧 Axe [神圣] (Sacred)
+  29 单刃剑 Backsword (1)
+  30 单刃剑 Backsword (2)
+  31 单刃剑 Backsword (3)
+  32 单刃剑 Backsword (4)
+  33 单刃剑 Backsword [神圣] (Sacred)
+  34 平衡斧 Balanced Axe (1)
+  35 平衡斧 Balanced Axe (2)
+  36 平衡斧 Balanced Axe (3)
+  37 平衡斧 Balanced Axe (4)
+  38 平衡斧 Balanced Axe [神圣] (Sacred)
+  39 平衡小刀 Balanced Knife (1)
+  40 平衡小刀 Balanced Knife (2)
+  41 平衡小刀 Balanced Knife (3)
+  42 平衡小刀 Balanced Knife (4)
+  43 平衡小刀 Balanced Knife [神圣] (Sacred)
+  44 大砍刀 Bardiche (1)
+  45 大砍刀 Bardiche (2)
+  46 大砍刀 Bardiche (3)
+  47 大砍刀 Bardiche (4)
+  48 大砍刀 Bardiche [神圣] (Sacred)
+  49 重剑 Bastard Sword (1)
+  50 重剑 Bastard Sword (2)
+  51 重剑 Bastard Sword (3)
+  52 重剑 Bastard Sword (4)
+  53 重剑 Bastard Sword [神圣] (Sacred)
+  54 战斗斧 Battle Axe (1)
+  55 战斗斧 Battle Axe (2)
+  56 战斗斧 Battle Axe (3)
+  57 战斗斧 Battle Axe (4)
+  58 战斗斧 Battle Axe [神圣] (Sacred)
+  59 战斗法杖 Battle Staff (1)
+  60 战斗法杖 Battle Staff (2)
+  61 战斗法杖 Battle Staff (3)
+  62 战斗法杖 Battle Staff (4)
+  63 战斗法杖 Battle Staff [神圣] (Sacred)
+  64 短刀 Blade (1)
+  65 短刀 Blade (2)
+  66 短刀 Blade (3)
+  67 短刀 Blade (4)
+  68 短刀 Blade [神圣] (Sacred)
+  69 刃爪 Blade Talons (1)
+  70 刃爪 Blade Talons (2)
+  71 刃爪 Blade Talons (3)
+  72 刃爪 Blade Talons (4)
+  73 刃爪 Blade Talons [神圣] (Sacred)
+  74 骨杖 Bone Wand (1)
+  75 骨杖 Bone Wand (2)
+  76 骨杖 Bone Wand (3)
+  77 骨杖 Bone Wand (4)
+  78 骨杖 Bone Wand [神圣] (Sacred)
+  79 碎骨者 Bonebreaker (1)
+  80 碎骨者 Bonebreaker (2)
+  81 碎骨者 Bonebreaker (3)
+  82 碎骨者 Bonebreaker (4)
+  83 碎骨者 Bonebreaker [神圣] (Sacred)
+  84 裂骨镰刀 Bonesplitter (1)
+  85 裂骨镰刀 Bonesplitter (2)
+  86 裂骨镰刀 Bonesplitter (3)
+  87 裂骨镰刀 Bonesplitter (4)
+  88 裂骨镰刀 Bonesplitter [神圣] (Sacred)
+  89 叉 Brandistock (1)
+  90 叉 Brandistock (2)
+  91 叉 Brandistock (3)
+  92 叉 Brandistock (4)
+  93 叉 Brandistock [神圣] (Sacred)
+  94 阔斧 Broad Axe (1)
+  95 阔斧 Broad Axe (2)
+  96 阔斧 Broad Axe (3)
+  97 阔斧 Broad Axe (4)
+  98 阔斧 Broad Axe [神圣] (Sacred)
+  99 阔剑 Broad Sword (1)
+ 100 阔剑 Broad Sword (2)
+ 101 阔剑 Broad Sword (3)
+ 102 阔剑 Broad Sword (4)
+ 103 阔剑 Broad Sword [神圣] (Sacred)
+ 104 铜剑 Bronze Sword (1)
+ 105 铜剑 Bronze Sword (2)
+ 106 铜剑 Bronze Sword (3)
+ 107 铜剑 Bronze Sword (4)
+ 108 铜剑 Bronze Sword [神圣] (Sacred)
+ 109 腰刀 Cestus (1)
+ 110 腰刀 Cestus (2)
+ 111 腰刀 Cestus (3)
+ 112 腰刀 Cestus (4)
+ 113 腰刀 Cestus [神圣] (Sacred)
+ 114 握扣法珠 Clasped Orb (1)
+ 115 握扣法珠 Clasped Orb (2)
+ 116 握扣法珠 Clasped Orb (3)
+ 117 握扣法珠 Clasped Orb (4)
+ 118 握扣法珠 Clasped Orb [神圣] (Sacred)
+ 119 爪 Claws (1)
+ 120 爪 Claws (2)
+ 121 爪 Claws (3)
+ 122 爪 Claws (4)
+ 123 爪 Claws [神圣] (Sacred)
+ 124 双刃大剑 Claymore (1)
+ 125 双刃大剑 Claymore (2)
+ 126 双刃大剑 Claymore (3)
+ 127 双刃大剑 Claymore (4)
+ 128 双刃大剑 Claymore [神圣] (Sacred)
+ 129 木棒 Club (1)
+ 130 木棒 Club (2)
+ 131 木棒 Club (3)
+ 132 木棒 Club (4)
+ 133 木棒 Club [神圣] (Sacred)
+ 134 复合弓 Composite Bow (1)
+ 135 复合弓 Composite Bow (2)
+ 136 复合弓 Composite Bow (3)
+ 137 复合弓 Composite Bow (4)
+ 138 复合弓 Composite Bow [神圣] (Sacred)
+ 139 合成弓 Compound Bow (1)
+ 140 合成弓 Compound Bow (2)
+ 141 合成弓 Compound Bow (3)
+ 142 合成弓 Compound Bow (4)
+ 143 合成弓 Compound Bow [神圣] (Sacred)
+ 144 弩 Crossbow (1)
+ 145 弩 Crossbow (2)
+ 146 弩 Crossbow (3)
+ 147 弩 Crossbow (4)
+ 148 弩 Crossbow [神圣] (Sacred)
+ 149 水晶剑 Crystal Sword (1)
+ 150 水晶剑 Crystal Sword (2)
+ 151 水晶剑 Crystal Sword (3)
+ 152 水晶剑 Crystal Sword (4)
+ 153 水晶剑 Crystal Sword [神圣] (Sacred)
+ 154 匕首 Dagger (1)
+ 155 匕首 Dagger (2)
+ 156 匕首 Dagger (3)
+ 157 匕首 Dagger (4)
+ 158 匕首 Dagger [神圣] (Sacred)
+ 159 掷镖器 Dart Thrower (1)
+ 160 掷镖器 Dart Thrower (2)
+ 161 掷镖器 Dart Thrower (3)
+ 162 掷镖器 Dart Thrower (4)
+ 163 掷镖器 Dart Thrower [神圣] (Sacred)
+ 164 长匕首 Dirk (1)
+ 165 长匕首 Dirk (2)
+ 166 长匕首 Dirk (3)
+ 167 长匕首 Dirk (4)
+ 168 长匕首 Dirk [神圣] (Sacred)
+ 169 双刃斧 Double Axe (1)
+ 170 双刃斧 Double Axe (2)
+ 171 双刃斧 Double Axe (3)
+ 172 双刃斧 Double Axe (4)
+ 173 双刃斧 Double Axe [神圣] (Sacred)
+ 174 杰瑞德之石 Jared's Stone (1)
+ 175 杰瑞德之石 Jared's Stone (2)
+ 176 杰瑞德之石 Jared's Stone (3)
+ 177 杰瑞德之石 Jared's Stone (4)
+ 178 杰瑞德之石 Jared's Stone [神圣] (Sacred)
+ 179 鹰眼法珠 Eagle Orb (1)
+ 180 鹰眼法珠 Eagle Orb (2)
+ 181 鹰眼法珠 Eagle Orb (3)
+ 182 鹰眼法珠 Eagle Orb (4)
+ 183 鹰眼法珠 Eagle Orb [神圣] (Sacred)
+ 184 弯刃剑 Falchion (1)
+ 185 弯刃剑 Falchion (2)
+ 186 弯刃剑 Falchion (3)
+ 187 弯刃剑 Falchion (4)
+ 188 弯刃剑 Falchion [神圣] (Sacred)
+ 189 连枷 Flail (1)
+ 190 连枷 Flail (2)
+ 191 连枷 Flail (3)
+ 192 连枷 Flail (4)
+ 193 连枷 Flail [神圣] (Sacred)
+ 194 蛇形剑 Flamberge (1)
+ 195 蛇形剑 Flamberge (2)
+ 196 蛇形剑 Flamberge (3)
+ 197 蛇形剑 Flamberge (4)
+ 198 蛇形剑 Flamberge [神圣] (Sacred)
+ 199 祭司法杖 Flamen Staff (1)
+ 200 祭司法杖 Flamen Staff (2)
+ 201 祭司法杖 Flamen Staff (3)
+ 202 祭司法杖 Flamen Staff (4)
+ 203 祭司法杖 Flamen Staff [神圣] (Sacred)
+ 204 飞刃 Flying Knife (1)
+ 205 飞刃 Flying Knife (2)
+ 206 飞刃 Flying Knife (3)
+ 207 飞刃 Flying Knife (4)
+ 208 飞刃 Flying Knife [神圣] (Sacred)
+ 209 双手巨斧 Giant Axe (1)
+ 210 双手巨斧 Giant Axe (2)
+ 211 双手巨斧 Giant Axe (3)
+ 212 双手巨斧 Giant Axe (4)
+ 213 双手巨斧 Giant Axe [神圣] (Sacred)
+ 214 大剑 Giant Sword (1)
+ 215 大剑 Giant Sword (2)
+ 216 大剑 Giant Sword (3)
+ 217 大剑 Giant Sword (4)
+ 218 大剑 Giant Sword [神圣] (Sacred)
+ 219 剑刃戟 Glaive (1)
+ 220 剑刃戟 Glaive (2)
+ 221 剑刃戟 Glaive (3)
+ 222 剑刃戟 Glaive (4)
+ 223 剑刃戟 Glaive [神圣] (Sacred)
+ 224 多节法杖 Gnarled Staff (1)
+ 225 多节法杖 Gnarled Staff (2)
+ 226 多节法杖 Gnarled Staff (3)
+ 227 多节法杖 Gnarled Staff (4)
+ 228 多节法杖 Gnarled Staff [神圣] (Sacred)
+ 229 尖刺钉锤 Goedendag (1)
+ 230 尖刺钉锤 Goedendag (2)
+ 231 尖刺钉锤 Goedendag (3)
+ 232 尖刺钉锤 Goedendag (4)
+ 233 尖刺钉锤 Goedendag [神圣] (Sacred)
+ 234 雄伟权杖 Grand Scepter (1)
+ 235 雄伟权杖 Grand Scepter (2)
+ 236 雄伟权杖 Grand Scepter (3)
+ 237 雄伟权杖 Grand Scepter (4)
+ 238 雄伟权杖 Grand Scepter [神圣] (Sacred)
+ 239 大斧 Great Axe (1)
+ 240 大斧 Great Axe (2)
+ 241 大斧 Great Axe (3)
+ 242 大斧 Great Axe (4)
+ 243 大斧 Great Axe [神圣] (Sacred)
+ 244 巨型大头锤 Great Maul (1)
+ 245 巨型大头锤 Great Maul (2)
+ 246 巨型大头锤 Great Maul (3)
+ 247 巨型大头锤 Great Maul (4)
+ 248 巨型大头锤 Great Maul [神圣] (Sacred)
+ 249 双手巨剑 Great Sword (1)
+ 250 双手巨剑 Great Sword (2)
+ 251 双手巨剑 Great Sword (3)
+ 252 双手巨剑 Great Sword (4)
+ 253 双手巨剑 Great Sword [神圣] (Sacred)
+ 254 残酷魔杖 Grim Wand (1)
+ 255 残酷魔杖 Grim Wand (2)
+ 256 残酷魔杖 Grim Wand (3)
+ 257 残酷魔杖 Grim Wand (4)
+ 258 残酷魔杖 Grim Wand [神圣] (Sacred)
+ 259 斧枪 Halberd (1)
+ 260 斧枪 Halberd (2)
+ 261 斧枪 Halberd (3)
+ 262 斧枪 Halberd (4)
+ 263 斧枪 Halberd [神圣] (Sacred)
+ 264 锤头斧 Hammerhead Axe (1)
+ 265 锤头斧 Hammerhead Axe (2)
+ 266 锤头斧 Hammerhead Axe (3)
+ 267 锤头斧 Hammerhead Axe (4)
+ 268 锤头斧 Hammerhead Axe [神圣] (Sacred)
+ 269 手斧 Hand Axe (1)
+ 270 手斧 Hand Axe (2)
+ 271 手斧 Hand Axe (3)
+ 272 手斧 Hand Axe (4)
+ 273 手斧 Hand Axe [神圣] (Sacred)
+ 274 神之手 Hand of God (1)
+ 275 神之手 Hand of God (2)
+ 276 神之手 Hand of God (3)
+ 277 神之手 Hand of God (4)
+ 278 神之手 Hand of God [神圣] (Sacred)
+ 279 斧手 Hatchet Hands (1)
+ 280 斧手 Hatchet Hands (2)
+ 281 斧手 Hatchet Hands (3)
+ 282 斧手 Hatchet Hands (4)
+ 283 斧手 Hatchet Hands [神圣] (Sacred)
+ 284 重弩 Heavy Crossbow (1)
+ 285 重弩 Heavy Crossbow (2)
+ 286 重弩 Heavy Crossbow (3)
+ 287 重弩 Heavy Crossbow (4)
+ 288 重弩 Heavy Crossbow [神圣] (Sacred)
+ 289 诅咒之刃 Hexblade (1)
+ 290 诅咒之刃 Hexblade (2)
+ 291 诅咒之刃 Hexblade (3)
+ 292 诅咒之刃 Hexblade (4)
+ 293 诅咒之刃 Hexblade [神圣] (Sacred)
+ 294 圣枪 Holy Lance (1)
+ 295 圣枪 Holy Lance (2)
+ 296 圣枪 Holy Lance (3)
+ 297 圣枪 Holy Lance (4)
+ 298 圣枪 Holy Lance [神圣] (Sacred)
+ 299 猎弓 Hunter's Bow (1)
+ 300 猎弓 Hunter's Bow (2)
+ 301 猎弓 Hunter's Bow (3)
+ 302 猎弓 Hunter's Bow (4)
+ 303 猎弓 Hunter's Bow [神圣] (Sacred)
+ 304 约鲁巴剑 Ida (1)
+ 305 约鲁巴剑 Ida (2)
+ 306 约鲁巴剑 Ida (3)
+ 307 约鲁巴剑 Ida (4)
+ 308 约鲁巴剑 Ida [神圣] (Sacred)
+ 309 标枪 Javelin (1)
+ 310 标枪 Javelin (2)
+ 311 标枪 Javelin (3)
+ 312 标枪 Javelin (4)
+ 313 标枪 Javelin [神圣] (Sacred)
+ 314 拳剑 Katar (1)
+ 315 拳剑 Katar (2)
+ 316 拳剑 Katar (3)
+ 317 拳剑 Katar (4)
+ 318 拳剑 Katar [神圣] (Sacred)
+ 319 日耳曼战刀 Kriegsmesser (1)
+ 320 日耳曼战刀 Kriegsmesser (2)
+ 321 日耳曼战刀 Kriegsmesser (3)
+ 322 日耳曼战刀 Kriegsmesser (4)
+ 323 日耳曼战刀 Kriegsmesser [神圣] (Sacred)
+ 324 波浪刀 Kriss (1)
+ 325 波浪刀 Kriss (2)
+ 326 波浪刀 Kriss (3)
+ 327 波浪刀 Kriss (4)
+ 328 波浪刀 Kriss [神圣] (Sacred)
+ 329 双刃重斧 Labrys (1)
+ 330 双刃重斧 Labrys (2)
+ 331 双刃重斧 Labrys (3)
+ 332 双刃重斧 Labrys (4)
+ 333 双刃重斧 Labrys [神圣] (Sacred)
+ 334 巨斧 Large Axe (1)
+ 335 巨斧 Large Axe (2)
+ 336 巨斧 Large Axe (3)
+ 337 巨斧 Large Axe (4)
+ 338 巨斧 Large Axe [神圣] (Sacred)
+ 339 轻弩 Light Crossbow (1)
+ 340 轻弩 Light Crossbow (2)
+ 341 轻弩 Light Crossbow (3)
+ 342 轻弩 Light Crossbow (4)
+ 343 轻弩 Light Crossbow [神圣] (Sacred)
+ 344 长战斗弓 Long Battle Bow (1)
+ 345 长战斗弓 Long Battle Bow (2)
+ 346 长战斗弓 Long Battle Bow (3)
+ 347 长战斗弓 Long Battle Bow (4)
+ 348 长战斗弓 Long Battle Bow [神圣] (Sacred)
+ 349 长弓 Long Bow (1)
+ 350 长弓 Long Bow (2)
+ 351 长弓 Long Bow (3)
+ 352 长弓 Long Bow (4)
+ 353 长弓 Long Bow [神圣] (Sacred)
+ 354 长法杖 Long Staff (1)
+ 355 长法杖 Long Staff (2)
+ 356 长法杖 Long Staff (3)
+ 357 长法杖 Long Staff (4)
+ 358 长法杖 Long Staff [神圣] (Sacred)
+ 359 长剑 Long Sword (1)
+ 360 长剑 Long Sword (2)
+ 361 长剑 Long Sword (3)
+ 362 长剑 Long Sword (4)
+ 363 长剑 Long Sword [神圣] (Sacred)
+ 364 长巨战弓 Long War Bow (1)
+ 365 长巨战弓 Long War Bow (2)
+ 366 长巨战弓 Long War Bow (3)
+ 367 长巨战弓 Long War Bow (4)
+ 368 长巨战弓 Long War Bow [神圣] (Sacred)
+ 369 钉锤 Mace (1)
+ 370 钉锤 Mace (2)
+ 371 钉锤 Mace (3)
+ 372 钉锤 Mace (4)
+ 373 钉锤 Mace [神圣] (Sacred)
+ 374 女士镖枪 Maiden Javelin (1)
+ 375 女士镖枪 Maiden Javelin (2)
+ 376 女士镖枪 Maiden Javelin (3)
+ 377 女士镖枪 Maiden Javelin (4)
+ 378 女士镖枪 Maiden Javelin [神圣] (Sacred)
+ 379 女士长矛 Maiden Pike (1)
+ 380 女士长矛 Maiden Pike (2)
+ 381 女士长矛 Maiden Pike (3)
+ 382 女士长矛 Maiden Pike (4)
+ 383 女士长矛 Maiden Pike [神圣] (Sacred)
+ 384 女士之矛 Maiden Spear (1)
+ 385 女士之矛 Maiden Spear (2)
+ 386 女士之矛 Maiden Spear (3)
+ 387 女士之矛 Maiden Spear (4)
+ 388 女士之矛 Maiden Spear [神圣] (Sacred)
+ 389 马门斧 Mammen Axe (1)
+ 390 马门斧 Mammen Axe (2)
+ 391 马门斧 Mammen Axe (3)
+ 392 马门斧 Mammen Axe (4)
+ 393 马门斧 Mammen Axe [神圣] (Sacred)
+ 394 枫木弓 Maple Bow (1)
+ 395 枫木弓 Maple Bow (2)
+ 396 枫木弓 Maple Bow (3)
+ 397 枫木弓 Maple Bow (4)
+ 398 枫木弓 Maple Bow [神圣] (Sacred)
+ 399 骨髓法杖 Marrow Staff (1)
+ 400 骨髓法杖 Marrow Staff (2)
+ 401 骨髓法杖 Marrow Staff (3)
+ 402 骨髓法杖 Marrow Staff (4)
+ 403 骨髓法杖 Marrow Staff [神圣] (Sacred)
+ 404 大头锤 Maul (1)
+ 405 大头锤 Maul (2)
+ 406 大头锤 Maul (3)
+ 407 大头锤 Maul (4)
+ 408 大头锤 Maul [神圣] (Sacred)
+ 409 军用锹 Military Pick (1)
+ 410 军用锹 Military Pick (2)
+ 411 军用锹 Military Pick (3)
+ 412 军用锹 Military Pick (4)
+ 413 军用锹 Military Pick [神圣] (Sacred)
+ 414 流星锤 Morning Star (1)
+ 415 流星锤 Morning Star (2)
+ 416 流星锤 Morning Star (3)
+ 417 流星锤 Morning Star (4)
+ 418 流星锤 Morning Star [神圣] (Sacred)
+ 419 薙刀 Naginata (1)
+ 420 薙刀 Naginata (2)
+ 421 薙刀 Naginata (3)
+ 422 薙刀 Naginata (4)
+ 423 薙刀 Naginata [神圣] (Sacred)
+ 424 针弩 Needle Crossbow (1)
+ 425 针弩 Needle Crossbow (2)
+ 426 针弩 Needle Crossbow (3)
+ 427 针弩 Needle Crossbow (4)
+ 428 针弩 Needle Crossbow [神圣] (Sacred)
+ 429 东瀛斧 Ono (1)
+ 430 东瀛斧 Ono (2)
+ 431 东瀛斧 Ono (3)
+ 432 东瀛斧 Ono (4)
+ 433 东瀛斧 Ono [神圣] (Sacred)
+ 434 长枪 Pike (1)
+ 435 长枪 Pike (2)
+ 436 长枪 Pike (3)
+ 437 长枪 Pike (4)
+ 438 长枪 Pike [神圣] (Sacred)
+ 439 长标枪 Pilum (1)
+ 440 长标枪 Pilum (2)
+ 441 长标枪 Pilum (3)
+ 442 长标枪 Pilum (4)
+ 443 长标枪 Pilum [神圣] (Sacred)
+ 444 迅猛镰刀 Raptor Scythe (1)
+ 445 迅猛镰刀 Raptor Scythe (2)
+ 446 迅猛镰刀 Raptor Scythe (3)
+ 447 迅猛镰刀 Raptor Scythe (4)
+ 448 迅猛镰刀 Raptor Scythe [神圣] (Sacred)
+ 449 反曲弓 Recurve Bow (1)
+ 450 反曲弓 Recurve Bow (2)
+ 451 反曲弓 Recurve Bow (3)
+ 452 反曲弓 Recurve Bow (4)
+ 453 反曲弓 Recurve Bow [神圣] (Sacred)
+ 454 反射之弓 Reflex Bow (1)
+ 455 反射之弓 Reflex Bow (2)
+ 456 反射之弓 Reflex Bow (3)
+ 457 反射之弓 Reflex Bow (4)
+ 458 反射之弓 Reflex Bow [神圣] (Sacred)
+ 459 连弩 Repeating Crossbow (1)
+ 460 连弩 Repeating Crossbow (2)
+ 461 连弩 Repeating Crossbow (3)
+ 462 连弩 Repeating Crossbow (4)
+ 463 连弩 Repeating Crossbow [神圣] (Sacred)
+ 464 剑 Saber (1)
+ 465 剑 Saber (2)
+ 466 剑 Saber (3)
+ 467 剑 Saber (4)
+ 468 剑 Saber [神圣] (Sacred)
+ 469 神圣天球 Sacred Globe (1)
+ 470 神圣天球 Sacred Globe (2)
+ 471 神圣天球 Sacred Globe (3)
+ 472 神圣天球 Sacred Globe (4)
+ 473 神圣天球 Sacred Globe [神圣] (Sacred)
+ 474 权杖 Scepter (1)
+ 475 权杖 Scepter (2)
+ 476 权杖 Scepter (3)
+ 477 权杖 Scepter (4)
+ 478 权杖 Scepter [神圣] (Sacred)
+ 479 西米塔弯刀 Scimitar (1)
+ 480 西米塔弯刀 Scimitar (2)
+ 481 西米塔弯刀 Scimitar (3)
+ 482 西米塔弯刀 Scimitar (4)
+ 483 西米塔弯刀 Scimitar [神圣] (Sacred)
+ 484 剪咬刃 Scissors Katar (1)
+ 485 剪咬刃 Scissors Katar (2)
+ 486 剪咬刃 Scissors Katar (3)
+ 487 剪咬刃 Scissors Katar (4)
+ 488 剪咬刃 Scissors Katar [神圣] (Sacred)
+ 489 镰刀 Scythe (1)
+ 490 镰刀 Scythe (2)
+ 491 镰刀 Scythe (3)
+ 492 镰刀 Scythe (4)
+ 493 镰刀 Scythe [神圣] (Sacred)
+ 494 蟒蛇弓 Serpent Bow (1)
+ 495 蟒蛇弓 Serpent Bow (2)
+ 496 蟒蛇弓 Serpent Bow (3)
+ 497 蟒蛇弓 Serpent Bow (4)
+ 498 蟒蛇弓 Serpent Bow [神圣] (Sacred)
+ 499 短战斗弓 Short Battle Bow (1)
+ 500 短战斗弓 Short Battle Bow (2)
+ 501 短战斗弓 Short Battle Bow (3)
+ 502 短战斗弓 Short Battle Bow (4)
+ 503 短战斗弓 Short Battle Bow [神圣] (Sacred)
+ 504 短弓 Short Bow (1)
+ 505 短弓 Short Bow (2)
+ 506 短弓 Short Bow (3)
+ 507 短弓 Short Bow (4)
+ 508 短弓 Short Bow [神圣] (Sacred)
+ 509 短矛 Short Spear (1)
+ 510 短矛 Short Spear (2)
+ 511 短矛 Short Spear (3)
+ 512 短矛 Short Spear (4)
+ 513 短矛 Short Spear [神圣] (Sacred)
+ 514 短法杖 Short Staff (1)
+ 515 短法杖 Short Staff (2)
+ 516 短法杖 Short Staff (3)
+ 517 短法杖 Short Staff (4)
+ 518 短法杖 Short Staff [神圣] (Sacred)
+ 519 短剑 Short Sword (1)
+ 520 短剑 Short Sword (2)
+ 521 短剑 Short Sword (3)
+ 522 短剑 Short Sword (4)
+ 523 短剑 Short Sword [神圣] (Sacred)
+ 524 短巨战弓 Short War Bow (1)
+ 525 短巨战弓 Short War Bow (2)
+ 526 短巨战弓 Short War Bow (3)
+ 527 短巨战弓 Short War Bow (4)
+ 528 短巨战弓 Short War Bow [神圣] (Sacred)
+ 529 拢烟之球 Smoked Sphere (1)
+ 530 拢烟之球 Smoked Sphere (2)
+ 531 拢烟之球 Smoked Sphere (3)
+ 532 拢烟之球 Smoked Sphere (4)
+ 533 拢烟之球 Smoked Sphere [神圣] (Sacred)
+ 534 佩剑 Spatha (1)
+ 535 佩剑 Spatha (2)
+ 536 佩剑 Spatha (3)
+ 537 佩剑 Spatha (4)
+ 538 佩剑 Spatha [神圣] (Sacred)
+ 539 长矛 Spear (1)
+ 540 长矛 Spear (2)
+ 541 长矛 Spear (3)
+ 542 长矛 Spear (4)
+ 543 长矛 Spear [神圣] (Sacred)
+ 544 大战戟 Spetum (1)
+ 545 大战戟 Spetum (2)
+ 546 大战戟 Spetum (3)
+ 547 大战戟 Spetum (4)
+ 548 大战戟 Spetum [神圣] (Sacred)
+ 549 狼牙棒 Spiked Club (1)
+ 550 狼牙棒 Spiked Club (2)
+ 551 狼牙棒 Spiked Club (3)
+ 552 狼牙棒 Spiked Club (4)
+ 553 狼牙棒 Spiked Club [神圣] (Sacred)
+ 554 灵魂利刃 Spirit Edge (1)
+ 555 灵魂利刃 Spirit Edge (2)
+ 556 灵魂利刃 Spirit Edge (3)
+ 557 灵魂利刃 Spirit Edge (4)
+ 558 灵魂利刃 Spirit Edge [神圣] (Sacred)
+ 559 男性之弓 Stag Bow (1)
+ 560 男性之弓 Stag Bow (2)
+ 561 男性之弓 Stag Bow (3)
+ 562 男性之弓 Stag Bow (4)
+ 563 男性之弓 Stag Bow [神圣] (Sacred)
+ 564 蜇弩 Stinger Crossbow (1)
+ 565 蜇弩 Stinger Crossbow (2)
+ 566 蜇弩 Stinger Crossbow (3)
+ 567 蜇弩 Stinger Crossbow (4)
+ 568 蜇弩 Stinger Crossbow [神圣] (Sacred)
+ 569 阿兹特克长矛 Tepoztopilli (1)
+ 570 阿兹特克长矛 Tepoztopilli (2)
+ 571 阿兹特克长矛 Tepoztopilli (3)
+ 572 阿兹特克长矛 Tepoztopilli (4)
+ 573 阿兹特克长矛 Tepoztopilli [神圣] (Sacred)
+ 574 飞斧 Throwing Axe (1)
+ 575 飞斧 Throwing Axe (2)
+ 576 飞斧 Throwing Axe (3)
+ 577 飞斧 Throwing Axe (4)
+ 578 飞斧 Throwing Axe [神圣] (Sacred)
+ 579 飞刀 Throwing Knife (1)
+ 580 飞刀 Throwing Knife (2)
+ 581 飞刀 Throwing Knife (3)
+ 582 飞刀 Throwing Knife (4)
+ 583 飞刀 Throwing Knife [神圣] (Sacred)
+ 584 飞矛 Throwing Spear (1)
+ 585 飞矛 Throwing Spear (2)
+ 586 飞矛 Throwing Spear (3)
+ 587 飞矛 Throwing Spear (4)
+ 588 飞矛 Throwing Spear [神圣] (Sacred)
+ 589 投石机 Trebuchet (1)
+ 590 投石机 Trebuchet (2)
+ 591 投石机 Trebuchet (3)
+ 592 投石机 Trebuchet (4)
+ 593 投石机 Trebuchet [神圣] (Sacred)
+ 594 三叉戟 Trident (1)
+ 595 三叉戟 Trident (2)
+ 596 三叉戟 Trident (3)
+ 597 三叉戟 Trident (4)
+ 598 三叉戟 Trident [神圣] (Sacred)
+ 599 双手剑 Two-Handed Sword (1)
+ 600 双手剑 Two-Handed Sword (2)
+ 601 双手剑 Two-Handed Sword (3)
+ 602 双手剑 Two-Handed Sword (4)
+ 603 双手剑 Two-Handed Sword [神圣] (Sacred)
+ 604 放牧斧 Valaska (1)
+ 605 放牧斧 Valaska (2)
+ 606 放牧斧 Valaska (3)
+ 607 放牧斧 Valaska (4)
+ 608 放牧斧 Valaska [神圣] (Sacred)
+ 609 蝰蛇弓 Viper Bow (1)
+ 610 蝰蛇弓 Viper Bow (2)
+ 611 蝰蛇弓 Viper Bow (3)
+ 612 蝰蛇弓 Viper Bow (4)
+ 613 蝰蛇弓 Viper Bow [神圣] (Sacred)
+ 614 朴刀 Voulge (1)
+ 615 朴刀 Voulge (2)
+ 616 朴刀 Voulge (3)
+ 617 朴刀 Voulge (4)
+ 618 朴刀 Voulge [神圣] (Sacred)
+ 619 魔杖 Wand (1)
+ 620 魔杖 Wand (2)
+ 621 魔杖 Wand (3)
+ 622 魔杖 Wand (4)
+ 623 魔杖 Wand [神圣] (Sacred)
+ 624 战斧 War Axe (1)
+ 625 战斧 War Axe (2)
+ 626 战斧 War Axe (3)
+ 627 战斧 War Axe (4)
+ 628 战斧 War Axe [神圣] (Sacred)
+ 629 战锤 War Hammer (1)
+ 630 战锤 War Hammer (2)
+ 631 战锤 War Hammer (3)
+ 632 战锤 War Hammer (4)
+ 633 战锤 War Hammer [神圣] (Sacred)
+ 634 巨战权杖 War Scepter (1)
+ 635 巨战权杖 War Scepter (2)
+ 636 巨战权杖 War Scepter (3)
+ 637 巨战权杖 War Scepter (4)
+ 638 巨战权杖 War Scepter [神圣] (Sacred)
+ 639 战争法杖 War Staff (1)
+ 640 战争法杖 War Staff (2)
+ 641 战争法杖 War Staff (3)
+ 642 战争法杖 War Staff (4)
+ 643 战争法杖 War Staff [神圣] (Sacred)
+ 644 战争剑 War Sword (1)
+ 645 战争剑 War Sword (2)
+ 646 战争剑 War Sword (3)
+ 647 战争剑 War Sword (4)
+ 648 战争剑 War Sword [神圣] (Sacred)
+ 649 扭曲之刃 Warp Blade (1)
+ 650 扭曲之刃 Warp Blade (2)
+ 651 扭曲之刃 Warp Blade (3)
+ 652 扭曲之刃 Warp Blade (4)
+ 653 扭曲之刃 Warp Blade [神圣] (Sacred)
+ 654 腕刃 Wrist Blade (1)
+ 655 腕刃 Wrist Blade (2)
+ 656 腕刃 Wrist Blade (3)
+ 657 腕刃 Wrist Blade (4)
+ 658 腕刃 Wrist Blade [神圣] (Sacred)
+ 659 紫杉之杖 Yew Wand (1)
+ 660 紫杉之杖 Yew Wand (2)
+ 661 紫杉之杖 Yew Wand (3)
+ 662 紫杉之杖 Yew Wand (4)
+ 663 紫杉之杖 Yew Wand [神圣] (Sacred)
+ 664 ÿc1神弓 Sacred Bow
+ 665 神秘之刀 Mystical Blade
+ 666 暴君之刃 Tyrannical Blade
+ 667 虚空咒誓之弓 Voidsworn Bow
+ 668 虚空魔杖 Voidforged Staff\nÿc;这就是沮丧杖，最好油成功\nÿc9今日我为微风细语，明日星辰为我闪耀
+ 669 怀特的另一条腿 Wirt's Other Leg
+ 670 长老法杖 Elder Staff
+ 671 长老法杖 Elder Staff
+ 672 法力之刃(神秘) Mana Blade (Mythical)
+ 673 女士之弓 Maiden Bow [大师级] (Mastercrafted)
+ 674 反曲刀 Kukri [大师级] (Mastercrafted)
+ 675 哥德之杖 Gothic Staff [大师级] (Mastercrafted)
+ 676 军用锹 Military Pick [天使级] (Angelic)
+ 677 巨斧 Large Axe [天使级] (Angelic)
+ 678 战争剑 War Sword [天使级] (Angelic)
+ 679 大剑 Giant Sword [天使级] (Angelic)
+ 680 流星锤 Morning Star [天使级] (Angelic)
+ 681 权杖 Scepter [天使级] (Angelic)
+ 682 匕首 Dagger [天使级] (Angelic)
+ 683 战斗法杖 Battle Staff [天使级] (Angelic)
+ 684 长法杖 Long Staff [天使级] (Angelic)
+ 685 弩 Crossbow [天使级] (Angelic)
+ 686 三叉戟 Trident [天使级] (Angelic)
+1001 皇冠【普通】
+1002 实战铠甲【普通】【中】
+1003 护胫【普通】
+1004 铁手套【普通】
+1005 塔盾【普通】【重】
+1006 艾文之盾 Aerin Shield (1)
+1007 艾文之盾 Aerin Shield (2)
+1008 艾文之盾 Aerin Shield (3)
+1009 艾文之盾 Aerin Shield (4)
+1010 艾文之盾 Aerin Shield [神圣] (Sacred)
+1011 古代装甲 Ancient Armor (1)
+1012 古代装甲 Ancient Armor (2)
+1013 古代装甲 Ancient Armor (3)
+1014 古代装甲 Ancient Armor (4)
+1015 古代装甲 Ancient Armor [神圣] (Sacred)
+1016 鹿角 Antlers (1)
+1017 鹿角 Antlers (2)
+1018 鹿角 Antlers (3)
+1019 鹿角 Antlers (4)
+1020 鹿角 Antlers [神圣] (Sacred)
+1021 角蝮盾 Aspis (1)
+1022 角蝮盾 Aspis (2)
+1023 角蝮盾 Aspis (3)
+1024 角蝮盾 Aspis (4)
+1025 角蝮盾 Aspis [神圣] (Sacred)
+1026 突击盔 Assault Helmet (1)
+1027 突击盔 Assault Helmet (2)
+1028 突击盔 Assault Helmet (3)
+1029 突击盔 Assault Helmet (4)
+1030 突击盔 Assault Helmet [神圣] (Sacred)
+1031 阿苏拉之手 Athulua's Hand (1)
+1032 阿苏拉之手 Athulua's Hand (2)
+1033 阿苏拉之手 Athulua's Hand (3)
+1034 阿苏拉之手 Athulua's Hand (4)
+1035 阿苏拉之手 Athulua's Hand [神圣] (Sacred)
+1036 复仇者之盔 Avenger Guard (1)
+1037 复仇者之盔 Avenger Guard (2)
+1038 复仇者之盔 Avenger Guard (3)
+1039 复仇者之盔 Avenger Guard (4)
+1040 复仇者之盔 Avenger Guard [神圣] (Sacred)
+1041 板条甲 Banded Plate (1)
+1042 板条甲 Banded Plate (2)
+1043 板条甲 Banded Plate (3)
+1044 板条甲 Banded Plate (4)
+1045 板条甲 Banded Plate [神圣] (Sacred)
+1046 腰带 Belt (1)
+1047 腰带 Belt (2)
+1048 腰带 Belt (3)
+1049 腰带 Belt (4)
+1050 腰带 Belt [神圣] (Sacred)
+1051 黑守卫头盔 Blackguard Helm (1)
+1052 黑守卫头盔 Blackguard Helm (2)
+1053 黑守卫头盔 Blackguard Helm (3)
+1054 黑守卫头盔 Blackguard Helm (4)
+1055 黑守卫头盔 Blackguard Helm [神圣] (Sacred)
+1056 刃盾 Bladed Shield (1)
+1057 刃盾 Bladed Shield (2)
+1058 刃盾 Bladed Shield (3)
+1059 刃盾 Bladed Shield (4)
+1060 刃盾 Bladed Shield [神圣] (Sacred)
+1061 白骨头盔 Bone Helm (1)
+1062 白骨头盔 Bone Helm (2)
+1063 白骨头盔 Bone Helm (3)
+1064 白骨头盔 Bone Helm (4)
+1065 白骨头盔 Bone Helm [神圣] (Sacred)
+1066 骨盾 Bone Shield (1)
+1067 骨盾 Bone Shield (2)
+1068 骨盾 Bone Shield (3)
+1069 骨盾 Bone Shield (4)
+1070 骨盾 Bone Shield [神圣] (Sacred)
+1071 短靴 Boots (1)
+1072 短靴 Boots (2)
+1073 短靴 Boots (3)
+1074 短靴 Boots (4)
+1075 短靴 Boots [神圣] (Sacred)
+1076 胸甲 Breast Plate (1)
+1077 胸甲 Breast Plate (2)
+1078 胸甲 Breast Plate (3)
+1079 胸甲 Breast Plate (4)
+1080 胸甲 Breast Plate [神圣] (Sacred)
+1081 铜盾 Bronze Shield (1)
+1082 铜盾 Bronze Shield (2)
+1083 铜盾 Bronze Shield (3)
+1084 铜盾 Bronze Shield (4)
+1085 铜盾 Bronze Shield [神圣] (Sacred)
+1086 圆盾 Buckler (1)
+1087 圆盾 Buckler (2)
+1088 圆盾 Buckler (3)
+1089 圆盾 Buckler (4)
+1090 圆盾 Buckler [神圣] (Sacred)
+1091 牛头盾 Bull Shield (1)
+1092 牛头盾 Bull Shield (2)
+1093 牛头盾 Bull Shield (3)
+1094 牛头盾 Bull Shield (4)
+1095 牛头盾 Bull Shield [神圣] (Sacred)
+1096 软帽 Cap (1)
+1097 软帽 Cap (2)
+1098 软帽 Cap (3)
+1099 软帽 Cap (4)
+1100 软帽 Cap [神圣] (Sacred)
+1101 祭仪装甲 Ceremonial Armor (1)
+1102 祭仪装甲 Ceremonial Armor (2)
+1103 祭仪装甲 Ceremonial Armor (3)
+1104 祭仪装甲 Ceremonial Armor (4)
+1105 祭仪装甲 Ceremonial Armor [神圣] (Sacred)
+1106 贴合骷髅帽 Cervelliere (1)
+1107 贴合骷髅帽 Cervelliere (2)
+1108 贴合骷髅帽 Cervelliere (3)
+1109 贴合骷髅帽 Cervelliere (4)
+1110 贴合骷髅帽 Cervelliere [神圣] (Sacred)
+1111 锁链靴 Chain Boots (1)
+1112 锁链靴 Chain Boots (2)
+1113 锁链靴 Chain Boots (3)
+1114 锁链靴 Chain Boots (4)
+1115 锁链靴 Chain Boots [神圣] (Sacred)
+1116 锁链手套 Chain Gloves (1)
+1117 锁链手套 Chain Gloves (2)
+1118 锁链手套 Chain Gloves (3)
+1119 锁链手套 Chain Gloves (4)
+1120 锁链手套 Chain Gloves [神圣] (Sacred)
+1121 锁子甲 Chain Mail (1)
+1122 锁子甲 Chain Mail (2)
+1123 锁子甲 Chain Mail (3)
+1124 锁子甲 Chain Mail (4)
+1125 锁子甲 Chain Mail [神圣] (Sacred)
+1126 头饰 Circlet (1)
+1127 头饰 Circlet (2)
+1128 头饰 Circlet (3)
+1129 头饰 Circlet (4)
+1130 头饰 Circlet [神圣] (Sacred)
+1131 宝冠 Coronet (1)
+1132 宝冠 Coronet (2)
+1133 宝冠 Coronet (3)
+1134 宝冠 Coronet (4)
+1135 宝冠 Coronet [神圣] (Sacred)
+1136 皇冠 Crown (1)
+1137 皇冠 Crown (2)
+1138 皇冠 Crown (3)
+1139 皇冠 Crown (4)
+1140 皇冠 Crown [神圣] (Sacred)
+1141 冠冕之盾 Crown Shield (1)
+1142 冠冕之盾 Crown Shield (2)
+1143 冠冕之盾 Crown Shield (3)
+1144 冠冕之盾 Crown Shield (4)
+1145 冠冕之盾 Crown Shield [神圣] (Sacred)
+1146 恶魔之首 Demon Head (1)
+1147 恶魔之首 Demon Head (2)
+1148 恶魔之首 Demon Head (3)
+1149 恶魔之首 Demon Head (4)
+1150 恶魔之首 Demon Head [神圣] (Sacred)
+1151 权冠 Diadem (1)
+1152 权冠 Diadem (2)
+1153 权冠 Diadem (3)
+1154 权冠 Diadem (4)
+1155 权冠 Diadem [神圣] (Sacred)
+1156 英魂盔 Einherjar Helm (1)
+1157 英魂盔 Einherjar Helm (2)
+1158 英魂盔 Einherjar Helm (3)
+1159 英魂盔 Einherjar Helm (4)
+1160 英魂盔 Einherjar Helm [神圣] (Sacred)
+1161 猎鹰面具 Falcon Mask (1)
+1162 猎鹰面具 Falcon Mask (2)
+1163 猎鹰面具 Falcon Mask (3)
+1164 猎鹰面具 Falcon Mask (4)
+1165 猎鹰面具 Falcon Mask [神圣] (Sacred)
+1166 尖牙盔 Fanged Helm (1)
+1167 尖牙盔 Fanged Helm (2)
+1168 尖牙盔 Fanged Helm (3)
+1169 尖牙盔 Fanged Helm (4)
+1170 尖牙盔 Fanged Helm [神圣] (Sacred)
+1171 实战铠甲 Field Plate (1)
+1172 实战铠甲 Field Plate (2)
+1173 实战铠甲 Field Plate (3)
+1174 实战铠甲 Field Plate (4)
+1175 实战铠甲 Field Plate [神圣] (Sacred)
+1176 高级头盔 Full Helm (1)
+1177 高级头盔 Full Helm (2)
+1178 高级头盔 Full Helm (3)
+1179 高级头盔 Full Helm (4)
+1180 高级头盔 Full Helm [神圣] (Sacred)
+1181 高级战甲 Full Plate Mail (1)
+1182 高级战甲 Full Plate Mail (2)
+1183 高级战甲 Full Plate Mail (3)
+1184 高级战甲 Full Plate Mail (4)
+1185 高级战甲 Full Plate Mail [神圣] (Sacred)
+1186 紧身软甲 Gambeson (1)
+1187 紧身软甲 Gambeson (2)
+1188 紧身软甲 Gambeson (3)
+1189 紧身软甲 Gambeson (4)
+1190 紧身软甲 Gambeson [神圣] (Sacred)
+1191 石像鬼之首 Gargoyle Head (1)
+1192 石像鬼之首 Gargoyle Head (2)
+1193 石像鬼之首 Gargoyle Head (3)
+1194 石像鬼之首 Gargoyle Head (4)
+1195 石像鬼之首 Gargoyle Head [神圣] (Sacred)
+1196 护手 Gauntlets (1)
+1197 护手 Gauntlets (2)
+1198 护手 Gauntlets (3)
+1199 护手 Gauntlets (4)
+1200 护手 Gauntlets [神圣] (Sacred)
+1201 镀金盾 Gilded Shield (1)
+1202 镀金盾 Gilded Shield (2)
+1203 镀金盾 Gilded Shield (3)
+1204 镀金盾 Gilded Shield (4)
+1205 镀金盾 Gilded Shield [神圣] (Sacred)
+1206 哥德战甲 Gothic Plate (1)
+1207 哥德战甲 Gothic Plate (2)
+1208 哥德战甲 Gothic Plate (3)
+1209 哥德战甲 Gothic Plate (4)
+1210 哥德战甲 Gothic Plate [神圣] (Sacred)
+1211 哥特盾 Gothic Shield (1)
+1212 哥特盾 Gothic Shield (2)
+1213 哥特盾 Gothic Shield (3)
+1214 哥特盾 Gothic Shield (4)
+1215 哥特盾 Gothic Shield [神圣] (Sacred)
+1216 巨型战盔 Great Helm (1)
+1217 巨型战盔 Great Helm (2)
+1218 巨型战盔 Great Helm (3)
+1219 巨型战盔 Great Helm (4)
+1220 巨型战盔 Great Helm [神圣] (Sacred)
+1221 护胫 Greaves (1)
+1222 护胫 Greaves (2)
+1223 护胫 Greaves (3)
+1224 护胫 Greaves (4)
+1225 护胫 Greaves [神圣] (Sacred)
+1226 硬皮甲 Hard Leather Armor (1)
+1227 硬皮甲 Hard Leather Armor (2)
+1228 硬皮甲 Hard Leather Armor (3)
+1229 硬皮甲 Hard Leather Armor (4)
+1230 硬皮甲 Hard Leather Armor [神圣] (Sacred)
+1231 飞鹰头盔 Hawk Helm (1)
+1232 飞鹰头盔 Hawk Helm (2)
+1233 飞鹰头盔 Hawk Helm (3)
+1234 飞鹰头盔 Hawk Helm (4)
+1235 飞鹰头盔 Hawk Helm [神圣] (Sacred)
+1236 重扣带 Heavy Belt (1)
+1237 重扣带 Heavy Belt (2)
+1238 重扣带 Heavy Belt (3)
+1239 重扣带 Heavy Belt (4)
+1240 重扣带 Heavy Belt [神圣] (Sacred)
+1241 重靴 Heavy Boots (1)
+1242 重靴 Heavy Boots (2)
+1243 重靴 Heavy Boots (3)
+1244 重靴 Heavy Boots (4)
+1245 重靴 Heavy Boots [神圣] (Sacred)
+1246 重手套 Heavy Gloves (1)
+1247 重手套 Heavy Gloves (2)
+1248 重手套 Heavy Gloves (3)
+1249 重手套 Heavy Gloves (4)
+1250 重手套 Heavy Gloves [神圣] (Sacred)
+1251 头盔 Helm (1)
+1252 头盔 Helm (2)
+1253 头盔 Helm (3)
+1254 头盔 Helm (4)
+1255 头盔 Helm [神圣] (Sacred)
+1256 纹章盾 Heraldic Shield (1)
+1257 纹章盾 Heraldic Shield (2)
+1258 纹章盾 Heraldic Shield (3)
+1259 纹章盾 Heraldic Shield (4)
+1260 纹章盾 Heraldic Shield [神圣] (Sacred)
+1261 角盔 Horned Helm (1)
+1262 角盔 Horned Helm (2)
+1263 角盔 Horned Helm (3)
+1264 角盔 Horned Helm (4)
+1265 角盔 Horned Helm [神圣] (Sacred)
+1266 犬颅盔 Hundsgugel (1)
+1267 犬颅盔 Hundsgugel (2)
+1268 犬颅盔 Hundsgugel (3)
+1269 犬颅盔 Hundsgugel (4)
+1270 犬颅盔 Hundsgugel [神圣] (Sacred)
+1271 颚骨帽 Jawbone Cap (1)
+1272 颚骨帽 Jawbone Cap (2)
+1273 颚骨帽 Jawbone Cap (3)
+1274 颚骨帽 Jawbone Cap (4)
+1275 颚骨帽 Jawbone Cap [神圣] (Sacred)
+1276 珠藤甲衣 Kazarghand (1)
+1277 珠藤甲衣 Kazarghand (2)
+1278 珠藤甲衣 Kazarghand (3)
+1279 珠藤甲衣 Kazarghand (4)
+1280 珠藤甲衣 Kazarghand [神圣] (Sacred)
+1281 鸢盾 Kite Shield (1)
+1282 鸢盾 Kite Shield (2)
+1283 鸢盾 Kite Shield (3)
+1284 鸢盾 Kite Shield (4)
+1285 鸢盾 Kite Shield [神圣] (Sacred)
+1286 札甲 Lamellar Armor (1)
+1287 札甲 Lamellar Armor (2)
+1288 札甲 Lamellar Armor (3)
+1289 札甲 Lamellar Armor (4)
+1290 札甲 Lamellar Armor [神圣] (Sacred)
+1291 大盾牌 Large Shield (1)
+1292 大盾牌 Large Shield (2)
+1293 大盾牌 Large Shield (3)
+1294 大盾牌 Large Shield (4)
+1295 大盾牌 Large Shield [神圣] (Sacred)
+1296 皮甲 Leather Armor (1)
+1297 皮甲 Leather Armor (2)
+1298 皮甲 Leather Armor (3)
+1299 皮甲 Leather Armor (4)
+1300 皮甲 Leather Armor [神圣] (Sacred)
+1301 皮手套 Leather Gloves (1)
+1302 皮手套 Leather Gloves (2)
+1303 皮手套 Leather Gloves (3)
+1304 皮手套 Leather Gloves (4)
+1305 皮手套 Leather Gloves [神圣] (Sacred)
+1306 轻扣带 Light Belt (1)
+1307 轻扣带 Light Belt (2)
+1308 轻扣带 Light Belt (3)
+1309 轻扣带 Light Belt (4)
+1310 轻扣带 Light Belt [神圣] (Sacred)
+1311 轻型铁手套 Light Gauntlets (1)
+1312 轻型铁手套 Light Gauntlets (2)
+1313 轻型铁手套 Light Gauntlets (3)
+1314 轻型铁手套 Light Gauntlets (4)
+1315 轻型铁手套 Light Gauntlets [神圣] (Sacred)
+1316 轻型装甲 Light Plate (1)
+1317 轻型装甲 Light Plate (2)
+1318 轻型装甲 Light Plate (3)
+1319 轻型装甲 Light Plate (4)
+1320 轻型装甲 Light Plate [神圣] (Sacred)
+1321 轻型金属靴 Light Plated Boots (1)
+1322 轻型金属靴 Light Plated Boots (2)
+1323 轻型金属靴 Light Plated Boots (3)
+1324 轻型金属靴 Light Plated Boots (4)
+1325 轻型金属靴 Light Plated Boots [神圣] (Sacred)
+1326 面具 Mask (1)
+1327 面具 Mask (2)
+1328 面具 Mask (3)
+1329 面具 Mask (4)
+1330 面具 Mask [神圣] (Sacred)
+1331 高顶头盔 Morion (1)
+1332 高顶头盔 Morion (2)
+1333 高顶头盔 Morion (3)
+1334 高顶头盔 Morion (4)
+1335 高顶头盔 Morion [神圣] (Sacred)
+1336 帕尔玛盾 Parma (1)
+1337 帕尔玛盾 Parma (2)
+1338 帕尔玛盾 Parma (3)
+1339 帕尔玛盾 Parma (4)
+1340 帕尔玛盾 Parma [神圣] (Sacred)
+1341 凤凰盾 Phoenix Shield (1)
+1342 凤凰盾 Phoenix Shield (2)
+1343 凤凰盾 Phoenix Shield (3)
+1344 凤凰盾 Phoenix Shield (4)
+1345 凤凰盾 Phoenix Shield [神圣] (Sacred)
+1346 铠甲 Plate Mail (1)
+1347 铠甲 Plate Mail (2)
+1348 铠甲 Plate Mail (3)
+1349 铠甲 Plate Mail (4)
+1350 铠甲 Plate Mail [神圣] (Sacred)
+1351 金属扣带 Plated Belt (1)
+1352 金属扣带 Plated Belt (2)
+1353 金属扣带 Plated Belt (3)
+1354 金属扣带 Plated Belt (4)
+1355 金属扣带 Plated Belt [神圣] (Sacred)
+1356 防腐之首 Preserved Head (1)
+1357 防腐之首 Preserved Head (2)
+1358 防腐之首 Preserved Head (3)
+1359 防腐之首 Preserved Head (4)
+1360 防腐之首 Preserved Head [神圣] (Sacred)
+1361 软垫甲 Quilted Armor (1)
+1362 软垫甲 Quilted Armor (2)
+1363 软垫甲 Quilted Armor (3)
+1364 软垫甲 Quilted Armor (4)
+1365 软垫甲 Quilted Armor [神圣] (Sacred)
+1366 锁环甲 Ring Mail (1)
+1367 锁环甲 Ring Mail (2)
+1368 锁环甲 Ring Mail (3)
+1369 锁环甲 Ring Mail (4)
+1370 锁环甲 Ring Mail [神圣] (Sacred)
+1371 装饰盾牌 Rondache (1)
+1372 装饰盾牌 Rondache (2)
+1373 装饰盾牌 Rondache (3)
+1374 装饰盾牌 Rondache (4)
+1375 装饰盾牌 Rondache [神圣] (Sacred)
+1376 裹腰 Sash (1)
+1377 裹腰 Sash (2)
+1378 裹腰 Sash (3)
+1379 裹腰 Sash (4)
+1380 裹腰 Sash [神圣] (Sacred)
+1381 鳞甲 Scale Mail (1)
+1382 鳞甲 Scale Mail (2)
+1383 鳞甲 Scale Mail (3)
+1384 鳞甲 Scale Mail (4)
+1385 鳞甲 Scale Mail [神圣] (Sacred)
+1386 骑兵盾 Setzschild (1)
+1387 骑兵盾 Setzschild (2)
+1388 骑兵盾 Setzschild (3)
+1389 骑兵盾 Setzschild (4)
+1390 骑兵盾 Setzschild [神圣] (Sacred)
+1391 骷髅帽 Skull Cap (1)
+1392 骷髅帽 Skull Cap (2)
+1393 骷髅帽 Skull Cap (3)
+1394 骷髅帽 Skull Cap (4)
+1395 骷髅帽 Skull Cap [神圣] (Sacred)
+1396 小盾牌 Small Shield (1)
+1397 小盾牌 Small Shield (2)
+1398 小盾牌 Small Shield (3)
+1399 小盾牌 Small Shield (4)
+1400 小盾牌 Small Shield [神圣] (Sacred)
+1401 武神盔 Spangenhelm (1)
+1402 武神盔 Spangenhelm (2)
+1403 武神盔 Spangenhelm (3)
+1404 武神盔 Spangenhelm (4)
+1405 武神盔 Spangenhelm [神圣] (Sacred)
+1406 尖刺盾牌 Spiked Shield (1)
+1407 尖刺盾牌 Spiked Shield (2)
+1408 尖刺盾牌 Spiked Shield (3)
+1409 尖刺盾牌 Spiked Shield (4)
+1410 尖刺盾牌 Spiked Shield [神圣] (Sacred)
+1411 灵魂面具 Spirit Mask (1)
+1412 灵魂面具 Spirit Mask (2)
+1413 灵魂面具 Spirit Mask (3)
+1414 灵魂面具 Spirit Mask (4)
+1415 灵魂面具 Spirit Mask [神圣] (Sacred)
+1416 板甲 Splint Mail (1)
+1417 板甲 Splint Mail (2)
+1418 板甲 Splint Mail (3)
+1419 神圣大盾 Divine Guard
+1420 板甲 Splint Mail (4)
+1421 板甲 Splint Mail [神圣] (Sacred)
+1422 镶嵌甲 Studded Leather (1)
+1423 镶嵌甲 Studded Leather (2)
+1424 镶嵌甲 Studded Leather (3)
+1425 镶嵌甲 Studded Leather (4)
+1426 镶嵌甲 Studded Leather [神圣] (Sacred)
+1427 小盾 Targe (1)
+1428 小盾 Targe (2)
+1429 小盾 Targe (3)
+1430 小盾 Targe (4)
+1431 小盾 Targe [神圣] (Sacred)
+1432 三重冠 Tiara (1)
+1433 三重冠 Tiara (2)
+1434 三重冠 Tiara (3)
+1435 三重冠 Tiara (4)
+1436 三重冠 Tiara [神圣] (Sacred)
+1437 图腾盾 Totem Shield (1)
+1438 战争护手 Warkeepers
+1439 翼足 Winged Feet
+1440 图腾盾 Totem Shield (2)
+1441 图腾盾 Totem Shield (3)
+1442 法师装甲 Mage's Plate
+1443 玛那腰带 Mana Belt
+1444 图腾盾 Totem Shield (4)
+1445 图腾盾 Totem Shield [神圣] (Sacred)
+1446 塔盾 Tower Shield (1)
+1447 塔盾 Tower Shield (2)
+1448 塔盾 Tower Shield (3)
+1449 塔盾 Tower Shield (4)
+1450 塔盾 Tower Shield [神圣] (Sacred)
+1451 揭露者之首 Unraveller Head (1)
+1452 揭露者之首 Unraveller Head (2)
+1453 揭露者之首 Unraveller Head (3)
+1454 揭露者之首 Unraveller Head (4)
+1455 揭露者之首 Unraveller Head [神圣] (Sacred)
+1456 狼头 Wolf Head (1)
+1457 狼头 Wolf Head (2)
+1458 狼头 Wolf Head (3)
+1459 狼头 Wolf Head (4)
+1460 狼头 Wolf Head [神圣] (Sacred)
+1461 僵尸之首 Zombie Head (1)
+1462 僵尸之首 Zombie Head (2)
+1463 僵尸之首 Zombie Head (3)
+1464 僵尸之首 Zombie Head (4)
+1465 僵尸之首 Zombie Head [神圣] (Sacred)
+1466 法师面具 Sorcerer's Mask
+1467 华丽战甲 Ornate Plate
+1468 束带 Cincture [大师级] (Mastercrafted)
+1469 高级头盔 Full Helm [天使级] (Angelic)
+1470 轻型装甲 Light Plate [天使级] (Angelic)
+1471 鸢盾 Kite Shield [天使级] (Angelic)
+1472 轻型金属靴 Light Plated Boots [天使级] (Angelic)
+1473 轻型铁手套 Light Gauntlets [天使级] (Angelic)
+1474 腰带 Belt [天使级] (Angelic)
+2001 灵药
+2002 FLYING POLAR BUFFALO ERROR
+2003 FLYING POLAR BUFFALO ERROR
+2004 FLYING POLAR BUFFALO ERROR
+2005 FLYING POLAR BUFFALO ERROR
+2006 体力药水
+2007 解毒药水
+2008 融解药水
+2009 心脏
+2010 脑
+2011 颚骨
+2012 眼球
+2013 角
+2014 尾巴
+2015 旗帜
+2016 尖牙
+2017 硬毛
+2018 灵魂
+2019 头皮
+2020 脾脏
+2021 火焰
+2022 黑塔之钥 The Black Tower Key
+2023 鼠标右键点击之后，可以永久性的增加50点生命\n生命药剂 Postion of Life
+2024 药草
+2025 FLYING POLAR BUFFALO ERROR
+2026 FLYING POLAR BUFFALO ERROR
+2027 FLYING POLAR BUFFALO ERROR
+2028 FLYING POLAR BUFFALO ERROR
+2029 知识卷轴
+2030 ÿc8颠茄萃取物 Belladonna Extract\nÿc;洗点水
+2031 艾尼弗斯卷轴 Scroll of Inifuss
+2032 石冢之钥 Key to the Cairn Stones
+2033 玉制小人 A Jade Figurine
+2034 黄金鸟 The Golden Bird
+2035 兰姆·艾森之书 Lam Esen's Tome
+2036 赫拉迪姆卷轴 Horadric's Scroll
+2037 墨菲斯托的灵魂石 Mephisto's Soulstone
+2038 鼠标右键点击后可以增加一点技能点数\n技能之书 Book of Skill
+2039 使用它来融化安亚身上的冰雪\n玛娜之药
+2040 耳
+2041 赫拉迪姆方块 Horadric Cube
+2042 卡林姆的眼球 Khalim's Eye
+2043 卡林姆的心脏 Khalim's Heart
+2044 卡林姆的大脑 Khalim's Brain
+2045 抗性卷轴 Scroll of Resistance
+2046 蝰蛇护符 Amulet of the Viper
+2047 护符 Amulet
+2048 戒指 Ring
+2049 珠宝 Jewel
+2050 遗物 Relic
+2051 黄金
+2052 ÿc8回环 Cycle
+2053 ÿc8回环 Cycle
+2054 ÿc8回环 Cycle
+2055 城镇传送之书
+2056 鉴定之书
+2057 城镇传送卷轴
+2058 鉴定卷轴
+2059 弓箭袋 Arrow Quiver
+2060 弩箭袋 Bolt Quiver
+2061 钥匙 Key
+2062 弱效生命药水
+2063 轻效生命药水
+2064 生命药水
+2065 强效生命药水
+2066 特效生命药水
+2067 弱效法力药水
+2068 轻效法力药水
+2069 法力药水
+2070 强效法力药水
+2071 特效法力药水
+2072 活力药水
+2073 全效活力药水
+2074 ÿc;苹果 Apple
+2075 ÿc;碎裂的紫宝石 Chipped Amethyst
+2076 ÿc;有瑕疵的紫宝石 Flawed Amethyst
+2077 ÿc;紫宝石 Amethyst
+2078 ÿc;无暇的紫宝石 Flawless Amethyst
+2079 ÿc;完美的紫宝石 Perfect Amethyst
+2080 ÿc;碎裂的黄宝石 Chipped Topaz
+2081 ÿc;有瑕疵的黄宝石 Flawed Topaz
+2082 ÿc;黄宝石 Topaz
+2083 ÿc;无暇的黄宝石 Flawless Topaz
+2084 ÿc;完美的黄宝石 Perfect Topaz
+2085 ÿc;碎裂的蓝宝石 Chipped Sapphire
+2086 ÿc;有瑕疵的蓝宝石 Flawed Sapphire
+2087 ÿc;蓝宝石 Sapphire
+2088 ÿc;无暇的蓝宝石 Flawless Sapphire
+2089 ÿc;完美的蓝宝石 Perfect Sapphire
+2090 ÿc;碎裂的绿宝石 Chipped Emerald
+2091 ÿc;有瑕疵的绿宝石 Flawed Emerald
+2092 ÿc;绿宝石 Emerald
+2093 ÿc;无暇的绿宝石 Flawless Emerald
+2094 ÿc;完美的绿宝石 Perfect Emerald
+2095 ÿc;碎裂的红宝石 Chipped Ruby
+2096 ÿc;有瑕疵的红宝石 Flawed Ruby
+2097 ÿc;红宝石 Ruby
+2098 ÿc;无暇的红宝石 Flawless Ruby
+2099 ÿc;完美的红宝石 Perfect Ruby
+2100 ÿc;碎裂的钻石 Chipped Diamond
+2101 ÿc;有瑕疵的钻石 Flawed Diamond
+2102 ÿc;钻石 Diamond
+2103 ÿc;无暇的钻石 Flawless Diamond
+2104 ÿc;完美的钻石 Perfect Diamond
+2105 ÿc;碎裂的骷髅 Chipped Skull
+2106 ÿc;有瑕疵的骷髅 Flawed Skull
+2107 ÿc;骷髅 Skull
+2108 ÿc;无暇的骷髅 Flawless Skull
+2109 ÿc;完美的骷髅 Perfect Skull
+2110 ÿc;碎裂的玛瑙 Chipped Onyx
+2111 ÿc;有瑕疵的玛瑙 Flawed Onyx
+2112 ÿc;玛瑙 Onyx
+2113 ÿc;无瑕的玛瑙石 Flawless Onyx
+2114 ÿc;完美的玛瑙石 Perfect Onyx
+2115 ÿc;碎裂的血石 Chipped Bloodstone
+2116 ÿc;有瑕疵的血石 Flawed Bloodstone
+2117 ÿc;血石 Bloodstone
+2118 ÿc;无瑕的血石 Flawless Bloodstone
+2119 ÿc;完美的血石 Perfect Bloodstone
+2120 ÿc;碎裂的绿松石 Chipped Turquoise
+2121 ÿc;有瑕疵的绿松石 Flawed Turquoise
+2122 ÿc;绿松石 Turquoise
+2123 ÿc;无瑕的绿松石 Flawless Turquoise
+2124 ÿc;完美的绿松石 Perfect Turquoise
+2125 ÿc;碎裂的琥珀 Chipped Amber
+2126 ÿc;有瑕疵的琥珀 Flawed Amber
+2127 ÿc;琥珀 Amber
+2128 ÿc;无瑕的琥珀 Flawless Amber
+2129 ÿc;完美的琥珀 Perfect Amber
+2130 ÿc;碎裂的彩虹石 Chipped Rainbow Stone
+2131 ÿc;有瑕疵的彩虹石 Flawed Rainbow Stone
+2132 ÿc;彩虹石 Rainbow Stone
+2133 ÿc;无瑕的彩虹石 Flawless Rainbow Stone
+2134 ÿc;完美的彩虹石 Perfect Rainbow Stone
+2135 ÿc8红宝石簇群 Ruby Cluster
+2136 ÿc8绿宝石簇群 Emerald Cluster
+2137 ÿc8蓝宝石簇群 Sapphire Cluster
+2138 ÿc8黄宝石簇群 Topaz Cluster
+2139 ÿc8钻石簇群 Diamond Cluster
+2140 ÿc8紫宝石簇群 Amethyst Cluster
+2141 ÿc8骷髅簇群 Skull Cluster
+2142 ÿc8彩虹石簇群 Rainbow Stone Cluster
+2143 ÿc8血石簇群 Bloodstone Cluster
+2144 ÿc8玛瑙簇群 Onyx Cluster
+2145 ÿc8琥珀簇群 Amber Cluster
+2146 ÿc8绿松石簇群 Turquoise Cluster
+2147 ÿc;符文：艾尔 El (1#)
+2148 ÿc;符文：艾德 Eld (2#)
+2149 ÿc;符文：特尔 Tir (3#)
+2150 ÿc;符文：那夫 Nef (4#)
+2151 ÿc;符文：爱斯 Eth (5#)
+2152 ÿc;符文：伊司 Ith (6#)
+2153 ÿc;符文：塔尔 Tal (7#)
+2154 ÿc;符文：拉尔 Ral (8#)
+2155 ÿc;符文：欧特 Ort (9#)
+2156 ÿc;符文：书尔 Thul (10#)
+2157 ÿc;符文：安姆 Amn (11#)
+2158 ÿc;符文：索尔 Sol (12#)
+2159 ÿc;符文：夏 Shael (13#)
+2160 ÿc;符文：多尔 Dol (14#)
+2161 ÿc;符文：海尔 Hel (15#)
+2162 ÿc;符文：破 Io (16#)
+2163 ÿc;符文：卢姆 Lum (17#)
+2164 ÿc;符文：科 Ko (18#)
+2165 ÿc;符文：法尔 Fal (19#)
+2166 ÿc;符文：蓝姆 Lem (20#)
+2167 ÿc;符文：普尔 Pul (21#)
+2168 ÿc;符文：乌姆 Um (22#)
+2169 ÿc;符文：马尔 Mal (23#)
+2170 ÿc;符文：伊斯特 Ist (24#)
+2171 ÿc;符文：古尔 Gul (25#)
+2172 ÿc;符文：伐克斯 Vex (26#)
+2173 ÿc;符文：欧姆 Ohm (27#)
+2174 ÿc;符文：罗 Lo (28#)
+2175 ÿc;符文：瑟 Sur (29#)
+2176 ÿc;符文：贝 Ber (30#)
+2177 ÿc;符文：乔 Jah (31#)
+2178 ÿc;符文：查姆 Cham (32#)
+2179 ÿc;符文：萨德 Zod (33#)
+2180 ÿc0强化符文 Enchanted Rune (01)\nÿc;符文：欧尔 Ol
+2181 ÿc0强化符文 Enchanted Rune (02)\nÿc9常用来做风行鞋\nÿc;符文：艾克 Elq
+2182 ÿc0强化符文 Enchanted Rune (03)\nÿc9本能斧所需符文之一\nÿc;符文：泰尔 Tyr
+2183 ÿc0强化符文 Enchanted Rune (04)\nÿc;符文：尼夫 Nif
+2184 ÿc0强化符文 Enchanted Rune (05)\nÿc;符文：歇斯 Xeth
+2185 ÿc0强化符文 Enchanted Rune (06)\nÿc9开启英雄级炼狱机械所需\nÿc;符文：西斯 Xith
+2186 ÿc0强化符文 Enchanted Rune (07)\nÿc9开启英雄级死亡发射器所需\nÿc;符文：特哈尔 Thal
+2187 ÿc0强化符文 Enchanted Rune (08)\nÿc9固有系盾，衣服所需符文之一\nÿc;符文：拉哈尔 Rhal
+2188 ÿc0强化符文 Enchanted Rune (09)\nÿc9开启英雄级屠夫所需\nÿc;符文：尤特 Urt
+2189 ÿc0强化符文 Enchanted Rune (10)\nÿc;符文：图尔 Tuul
+2190 ÿc0强化符文 Enchanted Rune (11)\nÿc;符文：安恩 Ahmn
+2191 ÿc0强化符文 Enchanted Rune (12)\nÿc9黎明，反叛RW必备\nÿc;符文：佐尔 Zol
+2192 ÿc0强化符文 Enchanted Rune (13)\nÿc;符文：夏恩 Shaen
+2193 ÿc0强化符文 Enchanted Rune (14)\nÿc;符文：多吉 Doj
+2194 ÿc0强化符文 Enchanted Rune (15)\nÿc;符文：赫姆 Hem
+2195 ÿc0强化符文 Enchanted Rune (16)\nÿc;符文：艾尤 Iu
+2196 ÿc0强化符文 Enchanted Rune (17)\nÿc;符文：卢克斯 Lux
+2197 ÿc0强化符文 Enchanted Rune (18)\nÿc9力量系常用堆力量，也可做召唤毕业手套\nÿc;符文：卡 Ka
+2198 ÿc0强化符文 Enchanted Rune (19)\nÿc9敏捷系用来堆敏捷\nÿc;符文：费尔 Fel
+2199 ÿc0强化符文 Enchanted Rune (20)\nÿc9体力系用来堆体力\nÿc;符文：列维 Lew
+2200 ÿc0强化符文 Enchanted Rune (21)\nÿc9精力系用来堆精力\nÿc;符文：普勒 Phul
+2201 ÿc0强化符文 Enchanted Rune (22)\nÿc9法系毕业头所需符文之一\nÿc;符文：乌恩 Un
+2202 ÿc0强化符文 Enchanted Rune (23)\nÿc9一般用来做智天使盾，部分用来堆全属\nÿc;符文：马哈尔 Mhal
+2203 ÿc0强化符文 Enchanted Rune (24)\nÿc;符文：依丝特 Yst
+2204 ÿc0强化符文 Enchanted Rune (25)\nÿc9固有系毕业衣服，本能斧所需符文之一\nÿc;符文：格尔 Gur
+2205 ÿc0强化符文 Enchanted Rune (26)\nÿc;符文：伐克兹 Vez
+2206 ÿc0强化符文 Enchanted Rune (27)\nÿc9固有系盾，火系毕业衣服所需符文之一\nÿc;符文：欧恩 Ohn
+2207 ÿc0强化符文 Enchanted Rune (28)\nÿc;符文：罗兹 Loz
+2208 ÿc0强化符文 Enchanted Rune (29)\nÿc9法师用物抗甲或图腾毕业杖需求\nÿc;符文：泽尔 Zur
+2209 ÿc0强化符文 Enchanted Rune (30)\nÿc;符文：布 Bur
+2210 ÿc0强化符文 Enchanted Rune (31)\nÿc9天使腰带两大必须符文之一\nÿc;符文：伊阿 Iah
+2211 ÿc0强化符文 Enchanted Rune (32)\nÿc9天使腰带两大必须符文之一，最贵符文\nÿc;符文：雅姆 Yham
+2212 ÿc0强化符文 Enchanted Rune (33)\nÿc9用来做33剑，同时也能撑技能用\nÿc;符文：索德 Xod
+2213 ÿc8El Container (01)\n符文容器：艾尔 El
+2214 ÿc8Eld Container (02)\n符文容器：艾德 Eld
+2215 ÿc8Tir Container (03)\n符文容器：特尔 Tir
+2216 ÿc8Nef Container (04)\n符文容器：那夫 Nef
+2217 ÿc8Eth Container (05)\n符文容器：爱斯 Eth
+2218 ÿc8Ith Container (06)\n符文容器：伊司 Ith
+2219 ÿc8Tal Container (07)\n符文容器：塔尔 Tal
+2220 ÿc8Ral Container (08)\n符文容器：拉尔 Ral
+2221 ÿc8Ort Container (09)\n符文容器：欧特 Ort
+2222 ÿc8Thul Container (10)\n符文容器：书尔 Thul
+2223 ÿc8Amn Container (11)\n符文容器：安姆 Amn
+2224 ÿc8Sol Container (12)\n符文容器：索尔 Sol
+2225 ÿc8Shael Container (13)\n符文容器：夏 Shael
+2226 ÿc8Dol Container (14)\n符文容器：多尔 Dol
+2227 ÿc8Hel Container (15)\n符文容器：海尔 Hel
+2228 ÿc8Io Container (16)\n符文容器：破 Io
+2229 ÿc8Lum Container (17)\n符文容器：卢姆 Lum
+2230 ÿc8Ko Container (18)\n符文容器：科 Ko
+2231 ÿc8Fal Container (19)\n符文容器：法尔 Fal
+2232 ÿc8Lem Container (20)\n符文容器：蓝姆 Lem
+2233 ÿc8Pul Container (21)\n符文容器：普尔 Pul
+2234 ÿc8Um Container (22)\n符文容器：乌姆 Um
+2235 ÿc8Mal Container (23)\n符文容器：马尔 Mal
+2236 ÿc8Ist Container (24)\n符文容器：伊斯特 Ist
+2237 ÿc8Gul Container (25)\n符文容器：古尔 Gul
+2238 ÿc8Vex Container (26)\n符文容器：伐克斯 Vex
+2239 ÿc8Ohm Container (27)\n符文容器：欧姆 Ohm
+2240 ÿc8Lo Container (28)\n符文容器：罗 Lo
+2241 ÿc8Sur Container (29)\n符文容器：瑟 Sur
+2242 ÿc8Ber Container (30)\n符文容器：贝 Ber
+2243 ÿc8Jah Container (31)\n符文容器：乔 Jah
+2244 ÿc8Cham Container (32)\n符文容器：查姆 Cham
+2245 ÿc8Zod Container (33)\n符文容器：萨德 Zod
+2246 ÿc0高级符文 Great Rune\nÿc;符文：塔哈 Taha
+2247 ÿc0高级符文 Great Rune\nÿc;符文：盖尔 Ghal
+2248 ÿc0高级符文 Great Rune\nÿc9最贵的高级符文\nÿc;符文：库 Qor
+2249 ÿc0元素符文\nÿc;符文：火焰 Fire
+2250 ÿc0元素符文\nÿc;符文：磐石 Stone
+2251 ÿc0元素符文\nÿc;符文：奥术 Arcane
+2252 ÿc0元素符文\nÿc;符文：毒素 Poison
+2253 ÿc0元素符文\nÿc;符文：光明 Light
+2254 ÿc0元素符文\nÿc;符文：寒冰 Ice
+2255 ÿc;符文：Sha (34#)
+2256 ÿc;符文：Lah (35#)
+2257 ÿc;符文：Kur (36#)
+2258 ÿc;符文：Ix (37#)
+2259 ÿc;符文：Thur (38#)
+2260 ÿc;符文：Nas (39#)
+2261 ÿc;符文：Ath (40#)
+2262 ÿc;符文：Kra (41#)
+2263 ÿc;符文：Vith (42#)
+2264 ÿc;符文：No (43#)
+2265 ÿc;符文：Yul (44#)
+2266 ÿc;符文：Thai (45#)
+2267 ÿc;符文：Rha (46#)
+2268 ÿc;符文：Xar (47#)
+2269 ÿc;符文：Nih (48#)
+2270 ÿc;符文：Lai (49#)
+2271 ÿc;符文：On (50#)
+2272 ÿc0高级符文 Great Rune\nÿc;符文：克莱斯 Krys
+2273 ÿc0高级符文 Great Rune\nÿc;符文：奥赫 Auhe
+2274 ÿc0高级符文 Great Rune\nÿc;符文：沙埃德 Sha'ad
+2275 ÿc0强化符文 Enchanted Rune\nÿc;符文：Xis
+2276 ÿc;单手武器，装甲：(4CB/20力量/5%力量)\n双手武器，盔甲：(7CB/28力量/12%力量)\nÿc8惊悚容器 Creepy Vessel
+2277 ÿc;单手武器，装甲：(120%AR/20敏捷/5%敏捷)\n双手武器，盔甲：(170%AR/28敏捷/12%敏捷)\nÿc8废弃容器 Abandoned Vessel
+2278 ÿc;单手武器，装甲：(20体力，5%体力)\n双手武器，盔甲：(28体力，12%体力，10秒回)\nÿc8静谧容器 Quiet Vessel
+2279 ÿc;单手武器，装甲：(30法专/20精力/5%精力)\n双手武器，盔甲：(60法专/28精力/12%精力)\nÿc8可怖容器 Eerie Vessel
+2280 ÿc;单手武器，装甲：(6-12伤害/40%增强伤害)\n双手武器，盔甲：(9-18伤害/55%增强伤害)\nÿc8怪异容器 Weird Vessel
+2281 ÿc;单手武器，装甲：(35%增强伤害/3DS)\n双手武器，盔甲：(50%增强伤害/4DS)\nÿc8威吓容器 Intimidating Vessel
+2282 ÿc;单手武器，装甲：(25%召唤伤害/50%召唤准确)\n双手武器，盔甲：(35%召唤伤害/70%召唤准确)\nÿc8堕落容器 Tainted Vessel
+2283 ÿc;单手武器，装甲：(8%火焰法伤/5减抗)\n双手武器，盔甲：(15%火焰法伤/10减抗)\nÿc8迷人容器 Fascinating Vessel
+2284 ÿc;单手武器，装甲：(8%闪电法术伤害/5减抗)\n双手武器，盔甲：(15闪电法术伤害/10减抗)\nÿc8华丽容器 Ornate Vessel
+2285 ÿc;单手武器，装甲：(8%冰冷法伤/5减抗)\n双手武器，盔甲：(15%冰冷法伤/10减抗)\nÿc8神圣容器 Sacred Vessel
+2286 ÿc;单手武器，装甲：(8%毒素法伤/5减抗)\n双手武器，盔甲:(15%毒素法伤/10减抗)\nÿc8微光容器 Shimmering Vessel
+2287 ÿc;单手武器，装甲：(10快速施法/20%法力恢复)\n双手武器，盔甲：(15快速施法/45%法力恢复)\nÿc8灵魂容器 Spiritual Vessel
+2288 ÿc;单手武器，装甲：(30%召唤生命/15%召唤抗性)\n双手武器，盔甲：(50%召唤生命/25%召唤抗性)\nÿc8魔法容器 Magical Vessel
+2289 ÿc;单手武器，装甲：(10%物理魔法法伤/2魔抗)\n双手武器，盔甲：(20%物理魔法法伤/4魔抗)\nÿc8强化容器 Enchanted Vessel
+2290 ÿc8隐藏容器 Hidden Vessel
+2291 ÿc;单手武器，装甲：(4固有元素/10所有属性)\n双手武器，盔甲：(8固有元素/4%所有属性)\nÿc8三合一容器 Trinity Vessel
+2292 ÿc8惊悚圣坛 Creepy Shrine (10)
+2293 ÿc8惊悚圣坛 Creepy Shrine (9)
+2294 ÿc8惊悚圣坛 Creepy Shrine (8)
+2295 ÿc8惊悚圣坛 Creepy Shrine (7)
+2296 ÿc8惊悚圣坛 Creepy Shrine (6)
+2297 ÿc8惊悚圣坛 Creepy Shrine (5)
+2298 ÿc8惊悚圣坛 Creepy Shrine (4)
+2299 ÿc8惊悚圣坛 Creepy Shrine (3)
+2300 ÿc8惊悚圣坛 Creepy Shrine (2)
+2301 ÿc8惊悚圣坛 Creepy Shrine (1)
+2302 ÿc8废弃圣坛 Abandoned Shrine (10)
+2303 ÿc8废弃圣坛 Abandoned Shrine (9)
+2304 ÿc8废弃圣坛 Abandoned Shrine (8)
+2305 ÿc8废弃圣坛 Abandoned Shrine (7)
+2306 ÿc8废弃圣坛 Abandoned Shrine (6)
+2307 ÿc8废弃圣坛 Abandoned Shrine (5)
+2308 ÿc8废弃圣坛 Abandoned Shrine (4)
+2309 ÿc8废弃圣坛 Abandoned Shrine (3)
+2310 ÿc8废弃圣坛 Abandoned Shrine (2)
+2311 ÿc8废弃圣坛 Abandoned Shrine (1)
+2312 ÿc8静谧圣坛 Quiet Shrine (10)
+2313 ÿc8静谧圣坛 Quiet Shrine (9)
+2314 ÿc8静谧圣坛 Quiet Shrine (8)
+2315 ÿc8静谧圣坛 Quiet Shrine (7)
+2316 ÿc8静谧圣坛 Quiet Shrine (6)
+2317 ÿc8静谧圣坛 Quiet Shrine (5)
+2318 ÿc8静谧圣坛 Quiet Shrine (4)
+2319 ÿc8静谧圣坛 Quiet Shrine (3)
+2320 ÿc8静谧圣坛 Quiet Shrine (2)
+2321 ÿc8静谧圣坛 Quiet Shrine (1)
+2322 ÿc8可怖圣坛 Eerie Shrine (10)
+2323 ÿc8可怖圣坛 Eerie Shrine (9)
+2324 ÿc8可怖圣坛 Eerie Shrine (8)
+2325 ÿc8可怖圣坛 Eerie Shrine (7)
+2326 ÿc8可怖圣坛 Eerie Shrine (6)
+2327 ÿc8可怖圣坛 Eerie Shrine (5)
+2328 ÿc8可怖圣坛 Eerie Shrine (4)
+2329 ÿc8可怖圣坛 Eerie Shrine (3)
+2330 ÿc8可怖圣坛 Eerie Shrine (2)
+2331 ÿc8可怖圣坛 Eerie Shrine (1)
+2332 ÿc8怪异圣坛 Weird Shrine (10)
+2333 ÿc8怪异圣坛 Weird Shrine (9)
+2334 ÿc8怪异圣坛 Weird Shrine (8)
+2335 ÿc8怪异圣坛 Weird Shrine (7)
+2336 ÿc8怪异圣坛 Weird Shrine (6)
+2337 ÿc8怪异圣坛 Weird Shrine (5)
+2338 ÿc8怪异圣坛 Weird Shrine (4)
+2339 ÿc8怪异圣坛 Weird Shrine (3)
+2340 ÿc8怪异圣坛 Weird Shrine (2)
+2341 ÿc8怪异圣坛 Weird Shrine (1)
+2342 ÿc8堕落圣坛 Tainted Shrine (10)
+2343 ÿc8堕落圣坛 Tainted Shrine (9)
+2344 ÿc8堕落圣坛 Tainted Shrine (8)
+2345 ÿc8堕落圣坛 Tainted Shrine (7)
+2346 ÿc8堕落圣坛 Tainted Shrine (6)
+2347 ÿc8堕落圣坛 Tainted Shrine (5)
+2348 ÿc8堕落圣坛 Tainted Shrine (4)
+2349 ÿc8堕落圣坛 Tainted Shrine (3)
+2350 ÿc8堕落圣坛 Tainted Shrine (2)
+2351 ÿc8堕落圣坛 Tainted Shrine (1)
+2352 ÿc8威吓圣坛 Intimidating Shrine (10)
+2353 ÿc8威吓圣坛 Intimidating Shrine (9)
+2354 ÿc8威吓圣坛 Intimidating Shrine (8)
+2355 ÿc8威吓圣坛 Intimidating Shrine (7)
+2356 ÿc8威吓圣坛 Intimidating Shrine (6)
+2357 ÿc8威吓圣坛 Intimidating Shrine (5)
+2358 ÿc8威吓圣坛 Intimidating Shrine (4)
+2359 ÿc8威吓圣坛 Intimidating Shrine (3)
+2360 ÿc8威吓圣坛 Intimidating Shrine (2)
+2361 ÿc8威吓圣坛 Intimidating Shrine (1)
+2362 ÿc8三合一圣坛 Trinity Shrine (10)
+2363 ÿc8三合一圣坛 Trinity Shrine (9)
+2364 ÿc8三合一圣坛 Trinity Shrine (8)
+2365 ÿc8三合一圣坛 Trinity Shrine (7)
+2366 ÿc8三合一圣坛 Trinity Shrine (6)
+2367 ÿc8三合一圣坛 Trinity Shrine (5)
+2368 ÿc8三合一圣坛 Trinity Shrine (4)
+2369 ÿc8三合一圣坛 Trinity Shrine (3)
+2370 ÿc8三合一圣坛 Trinity Shrine (2)
+2371 ÿc8三合一圣坛 Trinity Shrine (1)
+2372 ÿc8迷人圣坛 Fascinating Shrine (10)
+2373 ÿc8迷人圣坛 Fascinating Shrine (9)
+2374 ÿc8迷人圣坛 Fascinating Shrine (8)
+2375 ÿc8迷人圣坛 Fascinating Shrine (7)
+2376 ÿc8迷人圣坛 Fascinating Shrine (6)
+2377 ÿc8迷人圣坛 Fascinating Shrine (5)
+2378 ÿc8迷人圣坛 Fascinating Shrine (4)
+2379 ÿc8迷人圣坛 Fascinating Shrine (3)
+2380 ÿc8迷人圣坛 Fascinating Shrine (2)
+2381 ÿc8迷人圣坛 Fascinating Shrine (1)
+2382 ÿc8华丽圣坛 Ornate Shrine (10)
+2383 ÿc8华丽圣坛 Ornate Shrine (9)
+2384 ÿc8华丽圣坛 Ornate Shrine (8)
+2385 ÿc8华丽圣坛 Ornate Shrine (7)
+2386 ÿc8华丽圣坛 Ornate Shrine (6)
+2387 ÿc8华丽圣坛 Ornate Shrine (5)
+2388 ÿc8华丽圣坛 Ornate Shrine (4)
+2389 ÿc8华丽圣坛 Ornate Shrine (3)
+2390 ÿc8华丽圣坛 Ornate Shrine (2)
+2391 ÿc8华丽圣坛 Ornate Shrine (1)
+2392 ÿc8神圣圣坛 Sacred Shrine (10)
+2393 ÿc8神圣圣坛 Sacred Shrine (9)
+2394 ÿc8神圣圣坛 Sacred Shrine (8)
+2395 ÿc8神圣圣坛 Sacred Shrine (7)
+2396 ÿc8神圣圣坛 Sacred Shrine (6)
+2397 ÿc8神圣圣坛 Sacred Shrine (5)
+2398 ÿc8神圣圣坛 Sacred Shrine (4)
+2399 ÿc8神圣圣坛 Sacred Shrine (3)
+2400 ÿc8神圣圣坛 Sacred Shrine (2)
+2401 ÿc8神圣圣坛 Sacred Shrine (1)
+2402 ÿc8微光圣坛 Shimmering Shrine (10)
+2403 ÿc8微光圣坛 Shimmering Shrine (9)
+2404 ÿc8微光圣坛 Shimmering Shrine (8)
+2405 ÿc8微光圣坛 Shimmering Shrine (7)
+2406 ÿc8微光圣坛 Shimmering Shrine (6)
+2407 ÿc8微光圣坛 Shimmering Shrine (5)
+2408 ÿc8微光圣坛 Shimmering Shrine (4)
+2409 ÿc8微光圣坛 Shimmering Shrine (3)
+2410 ÿc8微光圣坛 Shimmering Shrine (2)
+2411 ÿc8微光圣坛 Shimmering Shrine (1)
+2412 ÿc8灵魂圣坛 Spiritual Shrine (10)
+2413 ÿc8灵魂圣坛 Spiritual Shrine (9)
+2414 ÿc8灵魂圣坛 Spiritual Shrine (8)
+2415 ÿc8灵魂圣坛 Spiritual Shrine (7)
+2416 ÿc8灵魂圣坛 Spiritual Shrine (6)
+2417 ÿc8灵魂圣坛 Spiritual Shrine (5)
+2418 ÿc8灵魂圣坛 Spiritual Shrine (4)
+2419 ÿc8灵魂圣坛 Spiritual Shrine (3)
+2420 ÿc8灵魂圣坛 Spiritual Shrine (2)
+2421 ÿc8灵魂圣坛 Spiritual Shrine (1)
+2422 ÿc8魔法圣坛 Magical Shrine (10)
+2423 ÿc8魔法圣坛 Magical Shrine (9)
+2424 ÿc8魔法圣坛 Magical Shrine (8)
+2425 ÿc8魔法圣坛 Magical Shrine (7)
+2426 ÿc8魔法圣坛 Magical Shrine (6)
+2427 ÿc8魔法圣坛 Magical Shrine (5)
+2428 ÿc8魔法圣坛 Magical Shrine (4)
+2429 ÿc8魔法圣坛 Magical Shrine (3)
+2430 ÿc8魔法圣坛 Magical Shrine (2)
+2431 ÿc8魔法圣坛 Magical Shrine (1)
+2432 ÿc8强化圣坛 Enchanted Shrine (10)
+2433 ÿc8强化圣坛 Enchanted Shrine (9)
+2434 ÿc8强化圣坛 Enchanted Shrine (8)
+2435 ÿc8强化圣坛 Enchanted Shrine (7)
+2436 ÿc8强化圣坛 Enchanted Shrine (6)
+2437 ÿc8强化圣坛 Enchanted Shrine (5)
+2438 ÿc8强化圣坛 Enchanted Shrine (4)
+2439 ÿc8强化圣坛 Enchanted Shrine (3)
+2440 ÿc8强化圣坛 Enchanted Shrine (2)
+2441 ÿc8强化圣坛 Enchanted Shrine (1)
+2442 ÿc8隐藏圣坛 Hidden Shrine (10)
+2443 ÿc8隐藏圣坛 Hidden Shrine (9)
+2444 ÿc8隐藏圣坛 Hidden Shrine (8)
+2445 ÿc8隐藏圣坛 Hidden Shrine (7)
+2446 ÿc8隐藏圣坛 Hidden Shrine (6)
+2447 ÿc8隐藏圣坛 Hidden Shrine (5)
+2448 ÿc8隐藏圣坛 Hidden Shrine (4)
+2449 ÿc8隐藏圣坛 Hidden Shrine (3)
+2450 ÿc8隐藏圣坛 Hidden Shrine (2)
+2451 ÿc8隐藏圣坛 Hidden Shrine (1)
+2452 ÿc8神秘球体 Mystic Orb
+2453 ÿc8神秘球体 Mystic Orb
+2454 ÿc8神秘球体 Mystic Orb
+2455 ÿc8神秘球体 Mystic Orb
+2456 ÿc8神秘球体 Mystic Orb
+2457 ÿc8神秘球体 Mystic Orb
+2458 ÿc8神秘球体 Mystic Orb
+2459 ÿc8神秘球体 Mystic Orb
+2460 ÿc8神秘球体 Mystic Orb
+2461 ÿc8神秘球体 Mystic Orb
+2462 ÿc8神秘球体 Mystic Orb
+2463 ÿc8神秘球体 Mystic Orb
+2464 ÿc8神秘球体 Mystic Orb
+2465 ÿc8神秘球体 Mystic Orb
+2466 ÿc8神秘球体 Mystic Orb
+2467 ÿc8神秘球体 Mystic Orb
+2468 ÿc8神秘球体 Mystic Orb
+2469 ÿc8神秘球体 Mystic Orb
+2470 ÿc8神秘球体 Mystic Orb
+2471 ÿc8神秘球体 Mystic Orb
+2472 ÿc8神秘球体 Mystic Orb
+2473 ÿc8神秘球体 Mystic Orb
+2474 ÿc8神秘球体 Mystic Orb
+2475 ÿc8神秘球体 Mystic Orb
+2476 ÿc8神秘球体 Mystic Orb
+2477 ÿc8神秘球体 Mystic Orb
+2478 ÿc8神秘球体 Mystic Orb
+2479 ÿc8神秘球体 Mystic Orb
+2480 ÿc8神秘球体 Mystic Orb
+2481 ÿc8神秘球体 Mystic Orb
+2482 ÿc8神秘球体 Mystic Orb
+2483 ÿc8神秘球体 Mystic Orb
+2484 ÿc8神秘球体 Mystic Orb
+2485 ÿc8神秘球体 Mystic Orb
+2486 ÿc8神秘球体 Mystic Orb
+2487 ÿc8神秘球体 Mystic Orb
+2488 ÿc8神秘球体 Mystic Orb
+2489 ÿc8神秘球体 Mystic Orb
+2490 ÿc8神秘球体 Mystic Orb
+2491 ÿc8神秘球体 Mystic Orb
+2492 ÿc8神秘球体 Mystic Orb
+2493 ÿc8神秘球体 Mystic Orb
+2494 ÿc8神秘球体 Mystic Orb
+2495 ÿc8神秘球体 Mystic Orb
+2496 ÿc8神秘球体 Mystic Orb
+2497 ÿc8神秘球体 Mystic Orb
+2498 ÿc8神秘球体 Mystic Orb
+2499 ÿc8神秘球体 Mystic Orb
+2500 ÿc8神秘球体 Mystic Orb\n卡菈的小饰物 Kara's Trinket
+2501 ÿc8神秘球体 Mystic Orb\n怪兽球 Monsterball
+2502 ÿc8神秘球体 Mystic Orb\n冰霜之心 Heart of Frost
+2503 ÿc8神秘球体 Mystic Orb\n亚瑞斯之手 Hand of Yaerius
+2504 ÿc8神秘球体 Mystic Orb\nÿc;减抗用\nÿc8无尽之光 The Endless Light
+2505 ÿc8神秘球体 Mystic Orb\nÿc;物理系用\nÿc8神射手之眼 Marksman's Eye
+2506 ÿc8神秘球体 Mystic Orb\nÿc;击回专用球\nÿc8法恩汉丢失的弹珠 Farnham's Lost Marble
+2507 ÿc8神秘球体 Mystic Orb\n扎伊尔的灵魂球 Zayl's Soul Orb
+2508 ÿc8神秘球体 Mystic Orb\n马利克之眼 Eye of Malic
+2509 ÿc8神秘球体 Mystic Orb\n纷争之苹果 Apple of Discord
+2510 ÿc8神秘球体 Mystic Orb\n星之像 Idol of Stars
+2511 ÿc8神秘球体 Mystic Orb\nÿc;MF球\nÿc8娜迦珍珠 Nagapearl
+2512 ÿc8神秘球体 Mystic Orb\nÿc;法系用\nÿc8月之水晶 The Moon Crystal
+2513 ÿc8神秘球体 Mystic Orb\nÿc;法系可用，堆法术专注\nÿc8奥莉尔的专注 Auriel's Focus
+2514 ÿc8神秘球体 Mystic Orb\nÿc;该球体只能打一个\nÿc8独行 Solitude
+2515 ÿc8神秘球体 Mystic Orb\n拉祖克的炮弹 Larzuk's Round Shot
+2516 ÿc8神秘球体 Mystic Orb\n维兹郡的滚珠 Vizjun's Ball Bearing
+2517 ÿc8神秘球体 Mystic Orb\n诺尔·提拉的烈焰球体 Nor Tiraj's Flaming Sphere
+2518 ÿc8神秘球体 Mystic Orb\n恶魔核心 The Demon Core
+2519 ÿc8神秘球体 Mystic Orb\nÿc;法系用球,堆SF\nÿc8乌迪贤之魂 Uldyssian's Spirit
+2520 ÿc8神秘球体 Mystic Orb\n毁灭之球 Orb of Annihilation
+2521 ÿc8神秘球体 Mystic Orb\n战争使者 Warbringer
+2522 ÿc8神秘球体 Mystic Orb\n全倒球 Ten Pin Striker
+2523 ÿc8神秘球体 Mystic Orb\n盛怒之魂 Wrathspirit
+2524 ÿc8神秘球体 Mystic Orb\nÿc;物理系通用球\nÿc8泪之晶 Crystal of Tears
+2525 ÿc8神秘球体 Mystic Orb\nÿc;物理系可用\nÿc8伊瑟瑞尔的精华 Essence of Itherael
+2526 ÿc8神秘球体 Mystic Orb\nÿc;一般体力系用\nÿc8生命护身符 Periapt of Life
+2527 ÿc8神秘球体 Mystic Orb\n磁石 Lodestone
+2528 ÿc8神秘球体 Mystic Orb\n探索者之球 Explorer's Globe
+2529 ÿc8神秘球体 Mystic Orb\n风暴之眼 Eye of the Storm
+2530 ÿc8神秘球体 Mystic Orb\nÿc;该球体只能打一个\nÿc8无影 Invisible
+2531 ÿc:金钱印章 Signet of Gold
+2532 ÿc:经验印章 Signet of Experience
+2533 ÿc:学习印章 Signet of Learning
+2534 ÿc:自定义学习印章 Custom Signet of Learning
+2535 ÿc:自定义学习印章 Custom Signet of Learning
+2536 ÿc:自定义学习印章 Custom Signet of Learning
+2537 ÿc:学习印章L  Large Signet of Learning
+2538 ÿc:自定义学习印章 Custom Signet of Learning
+2539 ÿc:自定义学习印章 Custom Signet of Learning
+2540 ÿc:自定义学习印章 Custom Signet of Learning
+2541 ÿc:自定义学习印章 Custom Signet of Learning
+2542 ÿc:自定义学习印章 Custom Signet of Learning
+2543 ÿc:自定义学习印章 Custom Signet of Learning
+2544 ÿc:自定义学习印章 Custom Signet of Learning
+2545 ÿc:自定义学习印章 Custom Signet of Learning
+2546 ÿc:自定义学习印章 Custom Signet of Learning
+2547 ÿc:自定义学习印章 Custom Signet of Learning
+2548 ÿc:自定义学习印章 Custom Signet of Learning
+2549 ÿc:自定义学习印章 Custom Signet of Learning
+2550 ÿc:自定义学习印章 Custom Signet of Learning
+2551 ÿc:自定义学习印章 Custom Signet of Learning
+2552 ÿc:自定义学习印章 Custom Signet of Learning
+2553 ÿc:自定义学习印章 Custom Signet of Learning
+2554 ÿc:自定义学习印章 Custom Signet of Learning
+2555 ÿc:自定义学习印章 Custom Signet of Learning
+2556 ÿc:自定义学习印章 Custom Signet of Learning
+2557 ÿc:学习印章G  Greater Signet of Learning
+2558 ÿc:金钱印章 Signet of Gold
+2559 ÿc:经验印章L  Large Signet of Experience
+2560 ÿc:金钱印章G  Greater Signet of Gold
+2561 ÿc:经验印章G Greater Signet of Experience
+2562 ÿc0任务物品 Quest Item\nÿc4技艺印章 Signet of Skill
+2563 方块重塑材料\nÿc8牺牲之心 Sacrifical Heart
+2564 方块重塑材料\nÿc8冥想蜡烛 Meditation Candle
+2565 ÿc0方块重塑材料\nÿc8奥术碎片 Arcane Shards (1)
+2566 ÿc0方块重塑材料\nÿc8奥术碎片 Arcane Shards (2)
+2567 ÿc0方块重塑材料\nÿc8奥术碎片 Arcane Shards (3)
+2568 ÿc0方块重塑材料\nÿc8奥术碎片 Arcane Shards (4)
+2569 ÿc0方块重塑材料\nÿc8奥术水晶 Arcane Crystal
+2570 ÿc8奥术簇群 Arcane Cluster
+2571 ÿc4学习催化剂 Catalyst of Learning\nÿc;和绿装/神圣暗金合成分解为学习点
+2572 ÿc4分解催化剂 Catalyst of Disenchantment\nÿc;和任意暗金合成分解为奥术碎片
+2573 ÿc4珠宝锻造催化剂 Catalyst of Jewelcraft
+2574 等级挑战 I\nÿc8阿苏拉卷轴 Scroll of Athulua
+2575 等级挑战 II\nÿc8萨卡兰姆卷轴 Scroll of the Zakarum
+2576 恩奈得挑战\nÿc8库拉斯特卷轴 Scroll of Kurast
+2577 黑暗之路挑战\nÿc8恐惧卷轴 Scroll of Fear
+2578 黑暗之路挑战\nÿc8贪婪卷轴 Scroll of Greed
+2579 黑暗之路挑战\nÿc8悔恨卷轴 Scroll of Contrition
+2580 黑暗之路挑战\nÿc8知识卷轴 Scroll of Knowledge
+2581 黑暗之路挑战\nÿc8鲜血卷轴 Scroll of Blood
+2582 黑暗之路挑战\nÿc8补完卷轴 Scroll of Completion
+2583 小游戏\nÿc8巫师卷轴 Scroll of Witches
+2584 小游戏\nÿc8镜子卷轴 Scroll of Mirrors
+2585 方块重塑材料\nÿc8好运油 Oil of Luck
+2586 方块重塑材料\nÿc8分离油 Oil of Disjunction
+2587 方块重塑材料\nÿc8强化油 Oil of Enhancement
+2588 方块重塑材料\nÿc8翻新油 Oil of Renewal
+2589 方块重塑材料\nÿc8锻造油 Oil of Craft
+2590 FLYING POLAR BUFFALO ERROR
+2591 方块重塑材料\nÿc8咒术油 Oil of Conjuration
+2592 方块重塑材料 Cube Reagent\nÿc8强效好运油 Oil of Greater Luck
+2593 方块重塑材料 Cube Reagent\nÿc8晋级油 Oil of Augmentation
+2594 方块重塑材料 Cube Reagent\nÿc8增强油 Oil of Intensity
+2595 ÿc1好果子 Goodberry
+2596 (仅法师)\nÿc1月之符号 Moon Symbol
+2597 ÿc1灵药 Elixir of Experience (Disabled)
+2598 ÿc1灵药 Elixir of Greed (Disabled)
+2599 ÿc1灵药 Elixir of Wealth (Disabled)
+2600 ÿc1灵药 Elixir of Adrenaline (Disabled)
+2601 ÿc1灵药 Elixir of Concentration (Disabled)
+2602 ÿc1灵药 Elixir of Power (Disabled)
+2603 ÿc1灵药 Elixir of Love (Disabled)
+2604 ÿc1灵药 Elixir of Greater Experience (Disabled)
+2605 ÿc1灵药 Elixir of Greater Greed (Disabled)
+2606 ÿc1灵药 Elixir of Greater Wealth (Disabled)
+2607 ÿc8神秘染料 Mystic Dye
+2608 ÿc8神秘染料 Mystic Dye
+2609 ÿc8神秘染料 Mystic Dye
+2610 ÿc8神秘染料 Mystic Dye
+2611 ÿc8神秘染料 Mystic Dye
+2612 ÿc8神秘染料 Mystic Dye
+2613 ÿc8神秘染料 Mystic Dye
+2614 ÿc8神秘染料 Mystic Dye
+2615 ÿc8神秘染料 Mystic Dye
+2616 ÿc8神秘染料 Mystic Dye
+2617 ÿc8神秘染料 Mystic Dye
+2618 ÿc8神秘染料 Mystic Dye
+2619 ÿc8神秘染料 Mystic Dye
+2620 ÿc8神秘染料 Mystic Dye
+2621 ÿc8神秘染料 Mystic Dye
+2622 ÿc8神秘染料 Mystic Dye
+2623 ÿc8神秘染料 Mystic Dye
+2624 ÿc8神秘染料 Mystic Dye
+2625 ÿc8神秘染料 Mystic Dye
+2626 ÿc8神秘染料 Mystic Dye
+2627 ÿc8神秘染料 Mystic Dye
+2628 ÿc8神秘染料 Mystic Dye
+2629 光学检测器 Optical Detector
+2630 阿兹莫丹的心脏 Azmodan's Heart
+2631 阿卡拉特之视界 Visions of Akarat
+2632 列王卷轴 Scroll of Kings
+2633 激光对焦水晶 Laser Focus Crystal
+2634 屠夫的牙齿 The Butcher's Tooth
+2635 神圣世界之石钥匙 Sacred Worldstone Key
+2636 虚荣神像 Idol of Vanity
+2637 恭喜。你得到它了!\nÿc4天罚之灵 Spirit of Damnation
+2638 霍拉松的聚能环 Horazon's Focus
+2639 ÿc8无光水晶鸟 Sunless Crystal Bird
+2640 六天使包裹 Six Angel Bag
+2641 萨卡兰姆的耳朵 Zakarum's Ear
+2642 灵魂出窍草药 Spirit Trance Herb
+2643 《蜘蛛之月》 Moon of the Spider
+2644 永恒骨堆 Eternal Bone Pile
+2645 ÿc4火焰碎片 Shard of Fire
+2646 ÿc4寒冰碎片 Shard of Ice
+2647 ÿc4雷电碎片 Shard of Thunder
+2648 诸神的太阳石 Sunstone of the Gods
+2649 ÿc4火焰太阳石 Sunstone of Fire
+2650 ÿc4寒冰太阳石 Sunstone of Ice
+2651 ÿc4雷电太阳石 Sunstone of Thunder
+2652 《血之遗产》 Legacy of Blood
+2653 塔安判官之锤 Hammer of the Taan Judges
+2654 神圣太阳石 Sacred Sunstone
+2655 暗影涡流 Shadow Vortex
+2656 世界之石球体 Worldstone Orb
+2657 草·杜拉水果 Caoi Dulra Fruit
+2658 灵魂石碎片 Soulstone Shard
+2659 神力之眼 Eye of Divinity
+2660 枢纽水晶 Nexus Crystal
+2661 水晶烈焰勋章 Crystalline Flame Medallion
+2662 愚者金币 Fool's Gold
+2663 乌雷的银印 Silver Seal of Ureh
+2664 阿斯特洛伽的剧毒蜇针 Astrogha's Venom Stinger
+2665 谎言之书 The Book of Lies
+2666 恶魔之灾 Demonsbane
+2667 冷核聚变简图 Cold Fusion Schematics
+2668 魔电荣耀之书 The Glorious Book of Median
+2669 ÿc4富甲一方 I Am Rich
+2670 卡巴拉克斯之魂 Soul of Kabraxis
+2671 ÿc4双子海的太阳石 Sunstone of the Twin Seas
+2672 ÿc4中立条约 Neutrality Pact
+2673 昂巴鲁宝物 Umbaru Treasure
+2674 长眠 The Sleep
+2675 古老宝典 The Ancient Repositories
+2676 卡扎克斯的幻象 Xazax's Illusion
+2677 腐化虫洞 Corrupted Wormhole
+2678 ÿc0任务物品\nÿc4掌握之书卷 Tome of Possession
+2679 卡兰之书 Books of Kalan
+2680 地精之王 'The Goblin King'\n活动奖励:
+2681 'The Last Man Standing'(坚持就是胜利)\n活动奖励:
+2682 ÿc4谎言之王奖杯 Lord of Lies Trophy
+2683 ÿc4血之遗产奖杯 Legacy of Blood Trophy
+2684 ÿc4审判日奖杯 Judgement Day Trophy
+2685 ÿc4撒瑞圣所奖杯 Yshari Sanctum Trophy
+2686 ÿc4阴影王国奖杯 Kingdom of Shadow Trophy
+2687 ÿc4敦克雷奖杯 Duncraig Trophy
+2688 ÿc4卡扎克斯奖杯 Xazax Trophy
+2689 ÿc4蒙面先知奖杯 The Veiled Prophet Trophy
+2690 ÿc4阿苏拉之城奖杯 Tran Athulua Trophy
+2691 ÿc4阔夫·琴奖杯 Quov Tsin Trophy
+2692 ÿc4阿斯特洛伽奖杯 Astrogha Trophy
+2693 ÿc4罪恶之心奖杯 Heart of Sin Trophy
+2694 ÿc4维兹郡奖杯 Viz-jun Trophy
+2695 ÿc4大主教拉扎鲁斯奖杯 Archbishop Lazarus Trophy
+2696 ÿc4三神教奖杯 The Triune Trophy
+2697 ÿc4奈非天的牺牲奖杯 Nephalem's Sacrifice Trophy
+2698 ÿc4光之放逐者奖杯 Banisher of Light Trophy
+2699 ÿc4旧布雷姆堂的鬼魂奖杯 Ghosts of Old Bremmtown Trophy
+2700 ÿc4虚空奖杯 The Void Trophy
+2701 ÿc4毁灭的前夕奖杯 Eve of Destruction Trophy
+2702 ÿc8谎言之王碎片 Lord of Lies Fragment
+2703 ÿc8血之遗产碎片 Legacy of Blood Fragment
+2704 ÿc8审判日碎片 Judgement Day Fragment
+2705 ÿc8撒瑞圣所碎片 Yshari Sanctum Fragment
+2706 ÿc8阴影王国碎片 Kingdom of Shadow Fragment
+2707 ÿc8敦克雷碎片 Duncraig Fragment
+2708 ÿc8卡扎克斯碎片 Xazax Fragment
+2709 ÿc8蒙面先知碎片 The Veiled Prophet Fragment
+2710 ÿc8阿苏拉之城碎片 Tran Athulua Fragment
+2711 ÿc8阔夫·琴碎片 Quov Tsin Fragment
+2712 ÿc8阿斯特洛伽碎片 Astrogha Fragment
+2713 ÿc8罪恶之心碎片 Heart of Sin Fragment
+2714 ÿc8维兹郡碎片 Viz-jun Fragment
+2715 ÿc8大主教拉扎鲁斯碎片 Archbishop Lazarus Fragment
+2716 ÿc8三神教碎片 The Triune Fragment
+2717 ÿc8奈非天的牺牲碎片 Nephalem's Sacrifice Fragment
+2718 ÿc8光之放逐者碎片 Banisher of Light Fragment
+2719 ÿc8旧布雷姆堂的鬼魂碎片 Ghosts of Old Bremmtown Fragment
+2720 ÿc8虚空碎片 The Void Fragment
+2721 ÿc8毁灭的前夕碎片 Eve of Destruction Fragment
+2722 ÿc0方块重塑材料\nÿc8神明之弓 Deity's Bow
+2723 ÿc0任务物品\nÿc4裂肤者徽记 Skinrender's Sigil
+2724 ÿc0任务物品\nÿc4碎脊者徽记 Spinecracker's Sigil
+2725 ÿc0任务物品\nÿc4挖眼者徽记 Eyegouger's Sigil
+2726 ÿc0任务物品\nÿc4切肉者徽记 Fleshcutter's Sigil
+2727 ÿc0任务物品\nÿc4变骨者徽记 Bonehexer's Sigil
+2728 ÿc0任务物品\nÿc4五人之戒 Ring of the Five
+2729 亚述尔之灾 Assur's Bane
+2730 ÿc:第一脑 Alpha Brain
+2731 ÿc:第二脑 Beta Brain
+2732 ÿc:第三脑 Gamma Brain
+2733 ÿc:第四脑 Delta Brain
+2734 ÿc:第五脑 Epsilon Brain
+2735 ÿc;大颗彩虹石 Great Rainbow Stone
+2736 ÿc;大颗骷髅 Great Skull
+2737 ÿc;大颗黄宝石 Great Topaz
+2738 ÿc;大颗蓝宝石 Great Sapphire
+2739 ÿc;大颗红宝石 Great Ruby
+2740 小瓶上古之血 Vial of Elder Blood
+2741 护符 Amulet
+2742 ÿc8搏动的世界之石碎片 Pulsating Worldstone Shard\nÿc9然后和亚述尔之灾，长眠，德行戒指，中立条约，鬼魂出窍合成\nÿc;请合成到文字不变为止
+2743 ÿc8搏动的世界之石碎片 Pulsating Worldstone Shard\nÿc9然后和亚述尔之灾，长眠，德行戒指，中立条约，鬼魂出窍合成\nÿc;请合成到文字不变为止
+2744 ÿc8搏动的世界之石碎片 Pulsating Worldstone Shard\nÿc9然后和亚述尔之灾，长眠，德行戒指，中立条约，鬼魂出窍合成\nÿc;请合成到文字不变为止
+2745 ÿc8搏动的世界之石碎片 Pulsating Worldstone Shard\nÿc9然后和亚述尔之灾，长眠，德行戒指，中立条约，鬼魂出窍合成\nÿc;请合成到文字不变为止
+2746 ÿc8搏动的世界之石碎片 Pulsating Worldstone Shard\nÿc9然后和亚述尔之灾，长眠，德行戒指，中立条约，鬼魂出窍合成\nÿc;请合成到文字不变为止
+2747 ÿc8搏动的世界之石碎片 Pulsating Worldstone Shard\nÿc9然后和亚述尔之灾，长眠，德行戒指，中立条约，鬼魂出窍合成\nÿc;请合成到文字不变为止
+2748 ÿc8搏动的世界之石水晶 Pulsating Worldstone Crystal
+2749 方块重塑材料\nÿc8黑暗封印 Seal of Darkness
+2750 ÿc;贪婪卷轴 Scroll of Greed
+2751 ÿc;懒惰卷轴 Scroll of Sloth
+2752 ÿc;嫉妒卷轴 Scroll of Envy
+2753 ÿc;愤怒卷轴 Scroll of Wrath
+2754 ÿc;饕餮卷轴 Scroll of Gluttony
+2755 ÿc;欢愉卷轴 Scroll of Lust
+2756 傲慢戒指 Ring of Pride
+2757 致命罪恶徽记 Sigil of Deadly Sins\nÿc;德行戒指
+2758 方块重塑材料\nÿc8强化水晶 Enchanting Crystal
+2759 ÿc0原初符文 Primal Rune\nÿc;符文石 Runestone
+2760 ÿc;大地精华 Earth Essence
+2761 ÿc;魔法精华 Magic Essence
+2762 ÿc;剧毒精华 Venomous Essence
+2763 ÿc;闪电精华 Lightning Essence
+2764 ÿc;寒冰精华 Icy Essence
+2765 ÿc;火焰精华 Fiery Essence
+2766 方块重塑材料\nÿc4凯恩之书 Book of Cain
+2767 方块重塑材料\nÿc8古老书籍 Ancient Book
+2768 奥术封印 Arcane Seal
+2769 项链 Necklace
+2770 ÿc4鬼魂出窍 Ghost Trance
+2771 ÿc0方块重塑材料\nÿc8黑暗之书卷 Dark Tome
+2772 ÿc:利爪风暴邪眼 Evil Eye of the Clawstorm
+2773 ÿc:地皮邪眼 Evil Eye of the Landmass
+2774 ÿc:光斑邪眼 Evil Eye of the Glowing Blob
+2775 ÿc:精灵巫师邪眼 Evil Eye of the Fairy Witch
+2776 ÿc:灾厄猎人邪眼 Evil Eye of the Bane Hunter
+2777 方块重塑材料 (秘密)\nÿc;集齐六个纹章合成凯恩之书或神弓\nÿc8苦难纹章 Emblem of Suffering
+2778 方块重塑材料 (秘密)\nÿc;集齐六个纹章合成凯恩之书或神弓\nÿc8痛苦纹章 Emblem of Pain
+2779 方块重塑材料 (秘密)\nÿc;集齐六个纹章合成凯恩之书或神弓\nÿc8憎恨纹章 Emblem of Hatred
+2780 方块重塑材料 (秘密)\nÿc;集齐六个纹章合成凯恩之书或神弓\nÿc8恐惧纹章 Emblem of Terror
+2781 方块重塑材料 (秘密)\nÿc;集齐六个纹章合成凯恩之书或神弓\nÿc8毁灭纹章 Emblem of Destruction
+2782 方块重塑材料 (秘密)\nÿc;集齐六个纹章合成凯恩之书或神弓\nÿc8谎言纹章 Emblem of Lies
+2783 方块重塑材料\nÿc8格里斯沃尔德的宝物 Griswold's Treasure
+2784 方块重塑材料\nÿc8注入标记 Mark of Infusion
+2785 ÿc5往生之翼 Wings of the Departed
+2786 ÿc8樱桃 Cherry\nÿc;开启隐藏吃豆人关卡\nÿc9jojo，那颗樱桃你还吃吗
+2787 ÿc0任务物品\nÿc4次元连接 Dimensional Link
+2788 ÿc0任务物品\nÿc4谎言之钥 Key of Lies
+2789 ÿc0任务物品\nÿc4罪恶之钥 Key of Sin
+2790 ÿc0任务物品\nÿc4思维扭曲 Mind Warp
+2791 加耶之杖 Gaya Wand
+2792 ÿc4天使包裹 Angel Bag
+2793 FLYING POLAR BUFFALO ERROR
+2794 ÿc4英雄火炬 Heroic Torch\nÿc;单独放在盒子重塑获得职业护符！！
+2795 作者: 梅尔·奥登\n《黑暗之路》 The Black Road
+2796 ÿc8回家樱桃 Home Cherry
+2797 莉莉娅的诅咒 Lylia's Curse
+2798 龙爪 Dragon Claw
+2799 ÿc0任务物品\nÿc4阿斯卡利的呼唤 Askari Call
+2800 天气控制 Weather Control
+2801 创造之魂 Spirit of Creation
+2802 ÿc8小型回环 Small Cycle
+2803 ÿc8小型回环 Small Cycle
+2804 ÿc8小型回环 Small Cycle
+2805 ÿc8小型回环 Small Cycle
+2806 ÿc8中型回环 Medium Cycle
+2807 ÿc8中型回环 Medium Cycle
+2808 ÿc8中型回环 Medium Cycle
+2809 ÿc8中型回环 Medium Cycle
+2810 ÿc8大型回环 Large Cycle
+2811 ÿc8大型回环 Large Cycle
+2812 ÿc8大型回环 Large Cycle
+2813 ÿc8大型回环 Large Cycle
+2814 ÿc8小型回环 Small Cycle
+2815 ÿc8中型回环 Medium Cycle
+2816 ÿc8大型回环 Large Cycle
+2817 ÿc8小型回环 Small Cycle
+2818 ÿc8中型回环 Medium Cycle
+2819 ÿc8大型回环 Large Cycle
+2820 ÿc8小型回环 Small Cycle
+2821 ÿc8中型回环 Medium Cycle
+2822 ÿc8大型回环 Large Cycle
+2823 ÿc8大型回环 Large Cycle
+2824 ÿc8大型回环 Large Cycle
+2825 ÿc8大型回环 Large Cycle
+2826 ÿc8大型回环 Large Cycle
+2827 ÿc8大型回环 Large Cycle
+2828 ÿc8大型回环 Large Cycle
+2829 ÿc8大型回环 Large Cycle
+2830 ÿc8小型回环 Small Cycle
+2831 ÿc8中型回环 Medium Cycle
+2832 ÿc8大型回环 Large Cycle
+2833 ÿc4神秘回环 Mythic Cycle
+2834 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc21ÿc4)
+2835 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc22ÿc4)
+2836 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc23ÿc4)
+2837 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc24ÿc4)
+2838 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc25ÿc4)
+2839 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc81ÿc4)
+2840 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc82ÿc4)
+2841 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc83ÿc4)
+2842 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc84ÿc4)
+2843 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc85ÿc4)
+2844 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc16ÿc4)
+2845 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc17ÿc4)
+2846 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc18ÿc4)
+2847 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc19ÿc4)
+2848 任务物品\nÿc4枯竭的秘境石 Depleted Riftstone (ÿc110ÿc4)
+2849 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc21ÿc4)
+2850 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc22ÿc4)
+2851 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc23ÿc4)
+2852 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc24ÿc4)
+2853 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc25ÿc4)
+2854 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc81ÿc4)
+2855 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc82ÿc4)
+2856 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc83ÿc4)
+2857 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc84ÿc4)
+2858 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc85ÿc4)
+2859 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc16ÿc4)
+2860 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc17ÿc4)
+2861 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc18ÿc4)
+2862 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc19ÿc4)
+2863 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc110ÿc4)
+2864 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc21ÿc4)
+2865 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc22ÿc4)
+2866 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc23ÿc4)
+2867 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc24ÿc4)
+2868 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc25ÿc4)
+2869 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc81ÿc4)
+2870 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc82ÿc4)
+2871 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc83ÿc4)
+2872 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc84ÿc4)
+2873 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc85ÿc4)
+2874 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc16ÿc4)
+2875 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc17ÿc4)
+2876 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc18ÿc4)
+2877 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc19ÿc4)
+2878 任务物品\nÿc4充能的秘境石 Charged Riftstone (ÿc110ÿc4)
+2879 ÿc;(奥能-法伤，猛攻-武器伤害，神授-召唤属性，原基-固有元素)\nÿc4次元之钥 Dimensional Key
+2880 任务物品\nÿc4幻梦碎片 Dream Fragment (1)
+2881 任务物品\nÿc4幻梦碎片 Dream Fragment (2)
+2882 任务物品\nÿc4幻梦碎片 Dream Fragment (3)
+2883 任务物品\nÿc4幻梦碎片 Dream Fragment (4)
+2884 任务物品\nÿc4幻梦碎片 Dream Fragment (5)
+2885 任务物品\nÿc4星象图 Star Chart (1)
+2886 任务物品\nÿc4星象图 Star Chart (2)
+2887 任务物品\nÿc4星象图 Star Chart (3)
+2888 任务物品\nÿc4星象图 Star Chart (4)
+2889 任务物品\nÿc4完整的星象图 Completed Star Chart
+2890 ÿc8玄秘塑像 Occult Effigy\n天界之风 Celestial Wind
+2891 ÿc8玄秘塑像 Occult Effigy\n赦免徽记 Sigil of Absolution
+2892 ÿc8玄秘塑像 Occult Effigy\n野蛮之路 Path of Brutality
+2893 ÿc8玄秘塑像 Occult Effigy\n碧空之触 Empyrean Touch
+2894 ÿc8玄秘塑像 Occult Effigy\n元素之怒 Elemental Ire
+2895 ÿc8玄秘塑像 Occult Effigy\n奇术之息 Breath of Thaumaturgy
+2896 ÿc8玄秘塑像 Occult Effigy\n元素统治 Elemental Dominion
+2897 ÿc8玄秘塑像 Occult Effigy\n奥术饥渴 Arcane Hunger
+2898 ÿc8玄秘塑像 Occult Effigy\n黑暗召唤 Dark Summoning
+2899 ÿc0任务物品 Quest Item\nÿc4异界连接 Otherworldly Link
+2900 ÿc4时空行者之眼 Riftwalker's Eye
+2901 ÿc0方块重塑材料 Cube Reagent\nÿc4上级时空行者精华 Greater Riftwalker Essence
+2902 ÿc0方块重塑材料 Cube Reagent\nÿc4高阶时空行者精华 Ascendant Riftwalker Essence
+2903 物品设计图 Item Design
+2904 物品设计图 Item Design
+2905 物品设计图 Item Design
+2906 物品设计图 Item Design
+2907 物品设计图 Item Design
+2908 物品设计图 Item Design
+2909 物品设计图 Item Design
+2910 物品设计图 Item Design
+2911 物品设计图 Item Design
+2912 物品设计图 Item Design
+2913 物品设计图 Item Design
+2914 ÿc1腐化的宝箱 Corrupted Treasure
+2915 ÿc8(已恢复)\n菲亚克拉·格尔的宝箱 Treasure of Fiacla Gear
+2916 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2917 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2918 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2919 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2920 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2921 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2922 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2923 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2924 ÿc8强化卷轴：头盔 Scroll of Enchantment: Helmet
+2925 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2926 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2927 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2928 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2929 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2930 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2931 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2932 ÿc8强化卷轴：身体护甲 Scroll of Enchantment: Body Armor
+2933 ÿc8强化卷轴：手套 Scroll of Enchantment: Gloves
+2934 ÿc8强化卷轴：手套 Scroll of Enchantment: Gloves
+2935 ÿc8强化卷轴：手套 Scroll of Enchantment: Gloves
+2936 ÿc8强化卷轴：手套 Scroll of Enchantment: Gloves
+2937 ÿc8强化卷轴：手套 Scroll of Enchantment: Gloves
+2938 ÿc8强化卷轴：鞋子 Scroll of Enchantment: Boots
+2939 ÿc8强化卷轴：鞋子 Scroll of Enchantment: Boots
+2940 ÿc8强化卷轴：鞋子 Scroll of Enchantment: Boots
+2941 ÿc8强化卷轴：鞋子 Scroll of Enchantment: Boots
+2942 ÿc8强化卷轴：鞋子 Scroll of Enchantment: Boots
+2943 ÿc8强化卷轴：腰带 Scroll of Enchantment: Belt
+2944 ÿc8强化卷轴：腰带 Scroll of Enchantment: Belt
+2945 ÿc8强化卷轴：腰带 Scroll of Enchantment: Belt
+2946 ÿc8强化卷轴：腰带 Scroll of Enchantment: Belt
+2947 ÿc8强化卷轴：腰带 Scroll of Enchantment: Belt
+2948 ÿc8强化卷轴：腰带 Scroll of Enchantment: Belt
+2949 ÿc8强化卷轴：护符 Scroll of Enchantment: Amulet
+2950 ÿc8强化卷轴：护符 Scroll of Enchantment: Amulet
+2951 ÿc8强化卷轴：护符 Scroll of Enchantment: Amulet
+2952 ÿc8强化卷轴：护符 Scroll of Enchantment: Amulet
+2953 ÿc8强化卷轴：护符 Scroll of Enchantment: Amulet
+2954 ÿc8强化卷轴：护符 Scroll of Enchantment: Amulet
+2955 ÿc8强化卷轴：护符 Scroll of Enchantment: Amulet
+2956 ÿc8强化卷轴：戒指 Scroll of Enchantment: Ring
+2957 ÿc8强化卷轴：戒指 Scroll of Enchantment: Ring
+2958 ÿc8强化卷轴：戒指 Scroll of Enchantment: Ring
+2959 ÿc8强化卷轴：戒指 Scroll of Enchantment: Ring
+2960 ÿc8强化卷轴：戒指 Scroll of Enchantment: Ring
+2961 ÿc8强化卷轴：戒指 Scroll of Enchantment: Ring
+2962 ÿc8强化卷轴：职业神符 Scroll of Enchantment: Class Charm
+2963 ÿc8强化卷轴：职业神符 Scroll of Enchantment: Class Charm
+2964 ÿc8强化卷轴：职业神符 Scroll of Enchantment: Class Charm
+2965 ÿc8强化卷轴：职业神符 Scroll of Enchantment: Class Charm
+2966 ÿc8强化卷轴：职业神符 Scroll of Enchantment: Class Charm
+2967 ÿc8强化卷轴：职业神符 Scroll of Enchantment: Class Charm
+2968 ÿc8强化卷轴：职业神符 Scroll of Enchantment: Class Charm
+2969 ÿc8强化卷轴：长老法杖 Scroll of Enchantment: Elder Staff
+2970 ÿc8强化卷轴：戒指 Scroll of Enchantment: Ring
+2971 ÿc8强化卷轴：手套 Scroll of Enchantment: Gloves
+2972 ÿc8强化卷轴：鞋子 Scroll of Enchantment: Boots
+2973 ÿc8强化卷轴：武器 Scroll of Enchantment: Weapon
+2974 ÿc8强化卷轴：武器 Scroll of Enchantment: Weapon
+2975 ÿc8强化卷轴：武器 Scroll of Enchantment: Weapon
+2976 ÿc8强化卷轴：武器 Scroll of Enchantment: Weapon
+2977 卷轴 1 Scroll
+2978 卷轴 2 Scroll
+2979 卷轴 3 Scroll
+2980 卷轴 4 Scroll
+2981 ÿc0方块重塑材料 Cube Reagent\nÿc8腐化碎片 Corrupted Shards (1)
+2982 ÿc0方块重塑材料 Cube Reagent\nÿc8腐化碎片 Corrupted Shards (2)
+2983 ÿc0方块重塑材料 Cube Reagent\nÿc8腐化碎片 Corrupted Shards (3)
+2984 ÿc0方块重塑材料 Cube Reagent\nÿc8腐化碎片 Corrupted Shards (4)
+2985 ÿc0方块重塑材料 Cube Reagent\nÿc8腐化水晶 Corrupted Crystal
+2986 ÿc8腐化簇群 Corrupted Cluster
+2987 杜拉守护结界 Dulra Aegis
+2988 ÿc0任务物品 Quest Item\nÿc4和谐之理 Tenet of Harmony
+2989 ÿc0任务物品 Quest Item\nÿc4克制之理 Tenet of Restraint
+2990 ÿc0任务物品 Quest Item\nÿc4活力之理 Tenet of Vigor
+2991 ÿc0任务物品 Quest Item\nÿc4智慧之理 Tenet of Wisdom
+2992 ÿc0任务物品 Quest Item\nÿc4审判之理 Tenet of Judgement
+2993 ÿc0任务物品 Quest Item\nÿc4纷争之理 Tenet of Conflict
+2994 ÿc8杜拉之圣果 Dulra Fruit
+2995 ÿc8幻术魔眼 Conjuring Eye\nÿc;集齐11个和结界合成穿越器
+2996 ÿc8现世穿越器 Reality Piercer
+2997 :leek:
+2998 ÿc0任务物品 Quest Item\nÿc4受诅咒者的低语 Whisper of the Damned
+2999 ÿc0任务物品 Quest Item\nÿc4受诅咒者的呼唤 Call of the Damned
+3000 骨钟 Bone Chimes\nÿc;18%毒冰，18%火电，18%物魔，6%MF，8%固有，36%武器物理伤害
+3001 ÿc4遗物宝珠 Relic Orb\nÿc;直接放在盒子里合成获得遗物
+3002 ÿc;(奥能-法伤，猛攻-武器伤害，神授-召唤属性，原基-固有元素)\nÿc4次元之钥 Dimensional Key
+3003 遗物 Relic
+3004 ÿc0方块重塑材料 Cube Reagant\nÿc8正电子脑 Positronic Brain
+3005 ÿc4转换催化剂 Catalyst of Transference
+3006 时间精华 Essence of Time
+3007 任务物品 Quest Item\nÿc4充能的秘境石 Charged Riftstone (ÿc;16ÿc4)
+3008 ÿc;屠夫的牙齿 The Butcher's Tooth [英雄级] (Heroic)
+3009 ÿc;胜利之徽 Mark of Victory
+3010 ÿc5任务物品 Quest Item\nÿc4召唤卷轴 Scroll of Summoning
+3011 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3012 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3013 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3014 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3015 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3016 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3017 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3018 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3019 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3020 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3021 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3022 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3023 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3024 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3025 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3026 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3027 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3028 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3029 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3030 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3031 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3032 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3033 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3034 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3035 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3036 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3037 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3038 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3039 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3040 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3041 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3042 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3043 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3044 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3045 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3046 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3047 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3048 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3049 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3050 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3051 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3052 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3053 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3054 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3055 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3056 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3057 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3058 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3059 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3060 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3061 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3062 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3063 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3064 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3065 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3066 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3067 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3068 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3069 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3070 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3071 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3072 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3073 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3074 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3075 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3076 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3077 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3078 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3079 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3080 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3081 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3082 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3083 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3084 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3085 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3086 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3087 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3088 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3089 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3090 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3091 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3092 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3093 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3094 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3095 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3096 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3097 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3098 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3099 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3100 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3101 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3102 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3103 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3104 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3105 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3106 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3107 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3108 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3109 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3110 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3111 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3112 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3113 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3114 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3115 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3116 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3117 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3118 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3119 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3120 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3121 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3122 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3123 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3124 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3125 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3126 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3127 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3128 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3129 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3130 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3131 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3132 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3133 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3134 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3135 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3136 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3137 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3138 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3139 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3140 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3141 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3142 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3143 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3144 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3145 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3146 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3147 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3148 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3149 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3150 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3151 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3152 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3153 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3154 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3155 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3156 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3157 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3158 与 2 颗〈奥术水晶〉重塑以创造 ÿc2套装物品\nÿc8探索者之秘宝 Explorer's Cache
+3159 ÿc0方块重塑材料 Cube Reagent\nÿc8阴影之镜 Mirror of Shadows
+3160 ÿc0方块重塑材料 Cube Reagent\nÿc8阴影之镜 Mirror of Shadows
+3161 ÿc0方块重塑材料 Cube Reagent\nÿc8阴影之镜 Mirror of Shadows
+3162 ÿc0方块重塑材料 Cube Reagent\nÿc8阴影之镜 Mirror of Shadows
+3163 ÿc0方块重塑材料 Cube Reagent\nÿc8阴影之镜 Mirror of Shadows
+3164 ÿc0方块重塑材料 Cube Reagent\nÿc8阴影之镜 Mirror of Shadows
+3165 ÿc0方块重塑材料 Cube Reagent\nÿc8阴影之镜 Mirror of Shadows
+3166 ÿc;激光对焦水晶 Laser Focus Crystal [英雄级] (Heroic)
+3167 ÿc;胜利之徽 Mark of Victory
+3168 ÿc5任务物品 Quest Item\nÿc4召唤卷轴 Scroll of Summoning
+3169 方块重塑材料 Cube Reagent\nÿc8次级炼金油 Oil of Greater Alchemy(1)
+3170 方块重塑材料 Cube Reagent\nÿc8次级炼金油 Oil of Greater Alchemy (2)
+3171 方块重塑材料 Cube Reagent\nÿc8次级炼金油 Oil of Lesser Alchemy (3)
+3172 方块重塑材料 Cube Reagent\nÿc8强效炼金油 Oil of Greater Alchemy (1)\nÿc;部分词缀获得双倍属性
+3173 方块重塑材料 Cube Reagent\nÿc8强效炼金油 Oil of Greater Alchemy (2)\nÿc;部分词缀获得双倍属性
+3174 方块重塑材料 Cube Reagent\nÿc8强效炼金油 Oil of Greater Alchemy (3)\nÿc;部分词缀获得双倍属性
+3175 ÿc5任务物品 Quest Item\nÿc4召唤卷轴 Scroll of Summoning
+3176 ÿc;胜利之徽 Mark of Victory
+3177 ÿc;光学检测器 Optical Detector [英雄级] (Heroic)
+3178 石全灵魂石 Paragon Soulstone
+3179 '赛季 36: 混沌'\n任务奖励:
+3180 石全灵魂石 Paragon Soulstone
+3181 灵魂熔炉 Soulforge
+3182 ÿc8天堂之魂 Heavenly Soul
+3183 灵魂收纳盒 Crate O' Souls
+3184 ÿc5任务物品 Quest Item\nÿc4召唤卷轴 Scroll of Summoning
+3185 ÿc5任务物品 Quest Item\nÿc4召唤卷轴 Scroll of Summoning
