@@ -15,8 +15,9 @@ const MINIMAP_COLOR_HIDE: u8    = 0xFE;
 struct Stubs {
     ShouldShowUnit: Option<extern "stdcall" fn() -> BOOL>,
     DATATBLS_CompileTxt: Option<extern "stdcall" fn(PVOID, PCSTR, PVOID, &mut i32, usize) -> PVOID>,
-    D2Sigma_Items_GetItemName: Option<extern "stdcall" fn(&D2Unit, PWSTR, u32)>,
+    D2Sigma_Items_GetItemName: Option<extern "stdcall" fn(&D2Unit, PWSTR, u32) -> BOOL>,
     D2Sigma_Items_LootFilterCheckUnit: Option<extern "fastcall" fn(&D2Unit) -> bool>,
+    D2Sigma_ItemText_GetCostHintText: Option<extern "fastcall" fn(ctx: &mut D2Sigma::GetItemPropertiesContext, isGetCost: BOOL, buffer: *mut u16) -> BOOL>,
 }
 
 static mut STUBS: Stubs = Stubs{
@@ -24,6 +25,7 @@ static mut STUBS: Stubs = Stubs{
     DATATBLS_CompileTxt                 : None,
     D2Sigma_Items_GetItemName           : None,
     D2Sigma_Items_LootFilterCheckUnit   : None,
+    D2Sigma_ItemText_GetCostHintText    : None,
 };
 
 #[allow(static_mut_refs)]
@@ -55,13 +57,15 @@ extern "stdcall" fn d2sigma_automap_draw() {
 }
 
 extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, arg3: u32) -> BOOL {
-    get_stubs().D2Sigma_Items_GetItemName.unwrap()(item, buffer, arg3);
+    let success = get_stubs().D2Sigma_Items_GetItemName.unwrap()(item, buffer, arg3);
 
     if D2SigmaEx::Items::is_getting_item_properties() {
-        return FALSE;
+        return success;
     }
 
-    HackMap::unit_color().d2sigma_items_get_item_name(item, buffer)
+    HackMap::unit_color().d2sigma_items_get_item_name(item, buffer);
+
+    success
 }
 
 extern "fastcall" fn should_show_unit(unit: &mut D2Unit) -> BOOL {
@@ -76,6 +80,14 @@ extern "fastcall" fn d2sigma_items_loot_filter_check_unit(unit: &mut D2Unit) -> 
     }
 
     get_stubs().D2Sigma_Items_LootFilterCheckUnit.unwrap()(unit)
+}
+
+extern "fastcall" fn d2sigma_itemtext_get_cost_hint_text(ctx: &mut D2Sigma::GetItemPropertiesContext, isGetCost: BOOL, buffer: *mut u16) -> BOOL {
+    if D2Client::Units::GetHasNpcSelected() == FALSE {
+        return FALSE;
+    }
+
+    get_stubs().D2Sigma_ItemText_GetCostHintText.unwrap()(ctx, isGetCost, buffer)
 }
 
 fn get_stub_should_show_unit() -> usize {
@@ -265,7 +277,15 @@ impl UnitColor {
         let mut show_name = false;
         let mut blob_file: Option<&String>;
 
-        if type_flag.contains(D2MonTypeFlags::SuperUnique) {
+        if type_flag.contains(D2MonTypeFlags::Champion) {
+            color = unit_color_cfg.champion_monster_color;
+            blob_file = unit_color_cfg.monster_blob_file.as_ref();
+
+        } else if type_flag.contains(D2MonTypeFlags::Minion) {
+            color = unit_color_cfg.minion_monster_color;
+            blob_file = unit_color_cfg.monster_blob_file.as_ref();
+
+        } else if type_flag.contains(D2MonTypeFlags::SuperUnique) {
             color = unit_color_cfg.super_unique_color;
             blob_file = unit_color_cfg.boss_blob_file.as_ref();
             show_name = true;
@@ -273,14 +293,6 @@ impl UnitColor {
         } else if type_flag.contains(D2MonTypeFlags::Unique) {
             color = unit_color_cfg.boss_monster_color;
             blob_file = unit_color_cfg.boss_blob_file.as_ref();
-
-        } else if type_flag.contains(D2MonTypeFlags::Champion) {
-            color = unit_color_cfg.champion_monster_color;
-            blob_file = unit_color_cfg.monster_blob_file.as_ref();
-
-        } else if type_flag.contains(D2MonTypeFlags::Minion) {
-            color = unit_color_cfg.minion_monster_color;
-            blob_file = unit_color_cfg.monster_blob_file.as_ref();
 
         } else if self.boss_monster_id.contains_key(&class_Id) {
             color = unit_color_cfg.super_unique_color;
@@ -722,6 +734,10 @@ impl UnitColor {
             inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, d2sigma_automap_draw as usize, None, None)?;
             inline_hook_jmp(0, D2Sigma::AddressTable.Items.GetItemName, d2sigma_items_get_item_name as usize, Some(&mut STUBS.D2Sigma_Items_GetItemName), None)?;
             inline_hook_jmp(0, D2Sigma::AddressTable.Items.LootFilterCheckUnit, d2sigma_items_loot_filter_check_unit as usize, Some(&mut STUBS.D2Sigma_Items_LootFilterCheckUnit), None)?;
+
+            if D2Sigma::AddressTable.ItemText.GetCostHintText != 0 {
+                inline_hook_jmp(0, D2Sigma::AddressTable.ItemText.GetCostHintText, d2sigma_itemtext_get_cost_hint_text as usize, Some(&mut STUBS.D2Sigma_ItemText_GetCostHintText), None)?;
+            }
         }
 
         let input = HackMap::input();

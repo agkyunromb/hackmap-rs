@@ -86,6 +86,7 @@ pub struct ItemTextOffset {
     pub GetName                         : FuncAddress,
     pub GetItemProperties29             : FuncAddress,
     pub AddCtrlPressedHintText          : FuncAddress,
+    pub GetCostHintText                 : FuncAddress,
 }
 
 pub struct UIOffset {
@@ -332,6 +333,7 @@ pub fn init(d2sigma: usize) {
                     GetName                 : vmslide + 0x10088BD0,
                     GetItemProperties29     : vmslide + 0x1008C3C0,
                     AddCtrlPressedHintText  : vmslide + 0x10089590,
+                    GetCostHintText         : 0,
                 },
                 UI: UIOffset{
                     DrawItemProperties                  : vmslide + 0x10082140,   // GetKeyState(VK_CONTROL)
@@ -393,6 +395,7 @@ pub fn init(d2sigma: usize) {
                     GetName                 : vmslide + 0x1008F2A0,
                     GetItemProperties29     : vmslide + 0x10092B00,
                     AddCtrlPressedHintText  : vmslide + 0x1008FC60,
+                    GetCostHintText         : vmslide + 0x100922F0,
                 },
                 UI: UIOffset{
                     DrawItemProperties                  : vmslide + 0x100887A0,   // GetKeyState(VK_CONTROL)

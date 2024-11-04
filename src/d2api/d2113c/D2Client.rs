@@ -54,6 +54,7 @@ pub struct UnitsOffset {
     pub GetClientUnit           : FuncAddress,
     pub gClientPlayer           : FuncAddress,
     pub gClientUnitTypeTable    : FuncAddress,
+    pub gHasNpcSelected         : FuncAddress,
 }
 
 pub struct D2ClientOffset {
@@ -314,6 +315,10 @@ pub mod Units {
         read_at(AddressTable.Units.gClientUnitTypeTable + 4)
     }
 
+    pub fn GetHasNpcSelected() -> BOOL {
+        read_at(AddressTable.Units.gHasNpcSelected)
+    }
+
     pub fn IsCorpse(unit: &D2Unit) -> bool {
         let flags = unit.dwFlags;
 
@@ -396,6 +401,7 @@ pub fn init(d2client: usize) {
             GetClientUnit           : d2client + D2RVA::D2Client(0x6FB55B40),
             gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
             gClientUnitTypeTable    : d2client + D2RVA::D2Client(0x6FBBA608),
+            gHasNpcSelected         : d2client + D2RVA::D2Client(0x6FBC9721),
         },
     });
 }
