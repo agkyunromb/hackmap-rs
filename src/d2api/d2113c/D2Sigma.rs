@@ -39,7 +39,7 @@ impl GetItemPropertiesContext {
 pub struct AutoMapOffset {
     pub RevealMap                       : FuncAddress,
     pub DrawAutoMap                     : FuncAddress,
-    pub DrawAutoMapUnits                : FuncAddress,
+    // pub DrawAutoMapUnits                : FuncAddress,
     pub DrawUnitBlob                    : FuncAddress,
 }
 
@@ -287,7 +287,7 @@ pub fn init(d2sigma: usize) {
                 AutoMap: AutoMapOffset{
                     RevealMap           : vmslide + 0x10091A90,
                     DrawAutoMap         : vmslide + 0x100511D0,
-                    DrawAutoMapUnits    : vmslide + 0x10050CD0,
+                    // DrawAutoMapUnits    : vmslide + 0x10050CD0,
                     DrawUnitBlob        : vmslide + 0x10076890,
                 },
                 Units: UnitsOffset{
@@ -340,62 +340,62 @@ pub fn init(d2sigma: usize) {
             });
         },
 
-        0x6644F17E => {
-            // 2.93
+        0x6724FDBD => {
+            // 2.10
 
             AddressTable.initialize(D2SigmaOffset{
                 AutoMap: AutoMapOffset{
-                    RevealMap           : vmslide + 0x10091C10,
-                    DrawAutoMap         : 0,
-                    DrawAutoMapUnits    : 0,
-                    DrawUnitBlob        : 0,
+                    RevealMap           : vmslide + 0x1009FCD0,
+                    DrawAutoMap         : vmslide + 0x100538C0,
+                    // DrawAutoMapUnits    : vmslide + 0x00000000,
+                    DrawUnitBlob        : vmslide + 0x1007BAC0,
                 },
                 Units: UnitsOffset{
-                    GetName                 : vmslide + 0x100B8D80,
-                    DisplayItemProperties   : 0,
+                    GetName                 : vmslide + 0x100C9BC0,
+                    DisplayItemProperties   : vmslide + 0x10086FC0,
                 },
                 Items: ItemsOffset{
-                    GetItemName             : 0,
-                    GetItemNameColor        : 0,
+                    GetItemName             : vmslide + 0x100872F0,
+                    GetItemNameColor        : vmslide + 0x10087DC0,
                 },
                 ItemText: ItemTextOffset{
-                    GetItemPropertiesInit   : 0,
-                    GetItemProperties1      : 0,
-                    GetItemProperties2      : 0,
-                    GetItemProperties3      : 0,
-                    GetItemProperties4      : 0,
-                    GetItemProperties5      : 0,
-                    GetItemProperties6      : 0,
-                    GetItemProperties7      : 0,
-                    GetItemProperties8      : 0,
-                    GetItemProperties9      : 0,
-                    GetItemProperties10     : 0,
-                    GetItemProperties11     : 0,
-                    GetItemProperties12     : 0,
-                    GetItemProperties13     : 0,
-                    GetItemProperties14     : 0,
-                    GetItemProperties15     : 0,
-                    GetItemProperties16     : 0,
-                    GetItemProperties17     : 0,
-                    GetItemProperties18     : 0,
-                    GetItemProperties19     : 0,
-                    GetItemProperties20     : 0,
-                    GetItemProperties21     : 0,
-                    GetItemProperties22     : 0,
-                    GetItemProperties23     : 0,
-                    GetItemProperties24     : 0,
-                    GetItemProperties25     : 0,
-                    GetItemProperties26     : 0,
-                    GetItemProperties27     : 0,
-                    GetName                 : 0,
-                    GetItemProperties29     : 0,
-                    AddCtrlPressedHintText  : 0,
+                    GetItemPropertiesInit   : vmslide + 0x10086A10,
+                    GetItemProperties1      : vmslide + 0x10092750,
+                    GetItemProperties2      : vmslide + 0x10090E80,
+                    GetItemProperties3      : vmslide + 0x10090BB0,
+                    GetItemProperties4      : vmslide + 0x10091250,
+                    GetItemProperties5      : vmslide + 0x1008E920,
+                    GetItemProperties6      : vmslide + 0x1008F320,
+                    GetItemProperties7      : vmslide + 0x1008F450,
+                    GetItemProperties8      : vmslide + 0x100925E0,
+                    GetItemProperties9      : vmslide + 0x1008E850,
+                    GetItemProperties10     : vmslide + 0x100920C0,
+                    GetItemProperties11     : vmslide + 0x1008E510,
+                    GetItemProperties12     : vmslide + 0x1008FAF0,
+                    GetItemProperties13     : vmslide + 0x10092820,
+                    GetItemProperties14     : vmslide + 0x100913F0,
+                    GetItemProperties15     : vmslide + 0x10092D40,
+                    GetItemProperties16     : vmslide + 0x1008F020,
+                    GetItemProperties17     : vmslide + 0x1008E710,
+                    GetItemProperties18     : vmslide + 0x10090160,
+                    GetItemProperties19     : vmslide + 0x10090700,
+                    GetItemProperties20     : vmslide + 0x10090430,
+                    GetItemProperties21     : vmslide + 0x1008FE60,
+                    GetItemProperties22     : vmslide + 0x1008F960,
+                    GetItemProperties23     : vmslide + 0x100885E0,
+                    GetItemProperties24     : vmslide + 0x10088850,
+                    GetItemProperties25     : vmslide + 0x10092FA0,
+                    GetItemProperties26     : vmslide + 0x1008F7B0,
+                    GetItemProperties27     : vmslide + 0x100909D0,
+                    GetName                 : vmslide + 0x1008F2A0,
+                    GetItemProperties29     : vmslide + 0x10092B00,
+                    AddCtrlPressedHintText  : vmslide + 0x1008FC60,
                 },
                 UI: UIOffset{
-                    DrawItemProperties                  : 0,
-                    BossLifeBar_Call_Units_GetName      : vmslide + 0x1009014B,
-                    MonsterLifeBar_Call_Units_GetName   : vmslide + 0x1008F72C,
-                    CheckIsMonsterShouldDisplayLifeBar  : 0,
+                    DrawItemProperties                  : vmslide + 0x100887A0,   // GetKeyState(VK_CONTROL)
+                    BossLifeBar_Call_Units_GetName      : vmslide + 0x100967AB,   // BossLifebar:BossName
+                    MonsterLifeBar_Call_Units_GetName   : vmslide + 0x10095D98,   // game\\hud\\mon-hp-bar
+                    CheckIsMonsterShouldDisplayLifeBar  : vmslide + 0x10095BE9,   // game\\hud\\mon-hp-bar, test    eax, 201h
                 },
             });
         },

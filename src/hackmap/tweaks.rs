@@ -167,16 +167,17 @@ extern "stdcall" fn MPQLoadFile(fileInfo: *const u8, buffer: *mut u8, bufferSize
     let success = get_stubs().MPQLoadFile.unwrap()(fileInfo, buffer, bufferSize, fileSize, eventInfo, arg6, arg7);
 
     while success != FALSE {
-        // if file_name == "(attributes)" {
-        //     break;
-        // }
+        break;
+        if file_name == "(attributes)" {
+            break;
+        }
 
-        // let dump_path = std::path::Path::new("MPQDumped").join(file_name);
-        // std::fs::create_dir_all(dump_path.parent().unwrap()).unwrap();
+        let dump_path = std::path::Path::new("MPQDumped").join(file_name);
+        std::fs::create_dir_all(dump_path.parent().unwrap()).unwrap();
 
-        // let content = unsafe { std::slice::from_raw_parts(buffer, *fileSize) };
+        let content = unsafe { std::slice::from_raw_parts(buffer, *fileSize) };
 
-        // std::fs::write(dump_path, content).unwrap();
+        std::fs::write(dump_path, content).unwrap();
 
         break;
     }

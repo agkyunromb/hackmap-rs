@@ -10,7 +10,8 @@ use windows_sys::{
     core::PCWSTR,
     Win32::Foundation::{BOOL, FALSE, TRUE, NTSTATUS, UNICODE_STRING},
     Win32::System::{
-        WindowsProgramming::RtlInitUnicodeString,
+        Kernel::STRING as ANSI_STRING,
+        WindowsProgramming::{RtlInitAnsiString, RtlInitUnicodeString},
         SystemServices::{DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH},
         Diagnostics::Debug::IMAGE_NT_HEADERS32,
     },
@@ -20,6 +21,7 @@ use d2api::*;
 
 ::windows_targets::link!("ntdll.dll" "system" fn LdrDisableThreadCalloutsForDll(DllHandle : PVOID) -> NTSTATUS);
 ::windows_targets::link!("ntdll.dll" "system" fn LdrLoadDll(PathToFile: PCWSTR, DllCharacteristics: *mut u32, ModuleFileName: *mut UNICODE_STRING, DllHandle: *mut PVOID) -> NTSTATUS);
+::windows_targets::link!("ntdll.dll" "system" fn LdrGetProcedureAddress(DllHandle: PVOID, ProcedureName: *mut ANSI_STRING, ProcedureNumber: u16, ProcedureAddress: *mut PVOID) -> NTSTATUS);
 
 fn ldr_load_dll(dll_name: &str) -> PVOID {
     let mut module_file: UNICODE_STRING = UNICODE_STRING { Length: 0, MaximumLength: 0, Buffer: null_mut() };
@@ -39,6 +41,25 @@ fn ldr_load_dll(dll_name: &str) -> PVOID {
     dll_base
 }
 
+fn ldr_get_routine(dll_handle: PVOID, name: &str) -> PVOID {
+    let mut routine_name: ANSI_STRING = ANSI_STRING { Length: 0, MaximumLength: 0, Buffer: null_mut() };
+    let mut routine_addr: PVOID = null_mut();
+
+    let name = std::ffi::CString::new(name).unwrap();
+
+    unsafe { RtlInitAnsiString(&mut routine_name, name.as_ptr() as *mut i8) };
+
+    let status = unsafe {
+        LdrGetProcedureAddress(dll_handle, &mut routine_name, 0, &mut routine_addr)
+    };
+
+    if status < 0 {
+        return null_mut();
+    }
+
+    return routine_addr;
+}
+
 fn init(base_address: PVOID) -> BOOL {
     use d2api::d2113c::*;
     use hackmap;
@@ -50,7 +71,8 @@ fn init(base_address: PVOID) -> BOOL {
     let mut d2modules = d2api::types::D2Modules::default();
 
     let dlls: &mut [(&mut Option<usize>, Option<fn(usize)>, &str)]  = &mut [
-        (&mut d2modules.D2Sigma,    Some(D2Sigma::init),    "D2Sigma2.92.dll"),
+        // (&mut d2modules.D2Sigma,    Some(D2Sigma::init),    "D2Sigma2.92.dll"),
+        (&mut d2modules.D2Sigma,    Some(D2Sigma::init),    "D2Sigma_20241101.dll"),
         (&mut d2modules.D2Client,   Some(D2Client::init),   "D2Client.dll"),
         (&mut d2modules.D2Win,      Some(D2Win::init),      "D2Win.dll"),
         (&mut d2modules.D2Common,   Some(D2Common::init),   "D2Common.dll"),
@@ -69,6 +91,15 @@ fn init(base_address: PVOID) -> BOOL {
         }
 
         **dll_base = Some(base as usize);
+
+        let mod_init = ldr_get_routine(base, "_DllModInit@4");
+        if mod_init.is_null() {
+            continue;
+        }
+
+        let mod_init: extern "stdcall" fn (dll_base: PVOID) = unsafe { std::mem::transmute(mod_init) };
+
+        mod_init(base);
     }
 
     for (&mut dll_base, init_func, _) in dlls.iter() {
