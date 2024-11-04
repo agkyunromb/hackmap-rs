@@ -51,6 +51,7 @@ pub struct UnitsOffset {
 pub struct ItemsOffset {
     pub GetItemName                     : FuncAddress,
     pub GetItemNameColor                : FuncAddress,
+    pub LootFilterCheckUnit             : FuncAddress,
 }
 
 pub struct ItemTextOffset {
@@ -297,6 +298,7 @@ pub fn init(d2sigma: usize) {
                 Items: ItemsOffset{
                     GetItemName             : vmslide + 0x100811B0,
                     GetItemNameColor        : vmslide + 0x10081C80,
+                    LootFilterCheckUnit     : 0,
                 },
                 ItemText: ItemTextOffset{
                     GetItemPropertiesInit   : vmslide + 0x10080930,
@@ -357,6 +359,7 @@ pub fn init(d2sigma: usize) {
                 Items: ItemsOffset{
                     GetItemName             : vmslide + 0x100872F0,
                     GetItemNameColor        : vmslide + 0x10087DC0,
+                    LootFilterCheckUnit     : vmslide + 0x1009D680,
                 },
                 ItemText: ItemTextOffset{
                     GetItemPropertiesInit   : vmslide + 0x10086A10,

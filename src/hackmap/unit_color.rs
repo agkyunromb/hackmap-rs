@@ -16,12 +16,14 @@ struct Stubs {
     ShouldShowUnit: Option<extern "stdcall" fn() -> BOOL>,
     DATATBLS_CompileTxt: Option<extern "stdcall" fn(PVOID, PCSTR, PVOID, &mut i32, usize) -> PVOID>,
     D2Sigma_Items_GetItemName: Option<extern "stdcall" fn(&D2Unit, PWSTR, u32)>,
+    D2Sigma_Items_LootFilterCheckUnit: Option<extern "fastcall" fn(&D2Unit) -> bool>,
 }
 
 static mut STUBS: Stubs = Stubs{
-    ShouldShowUnit              : None,
-    DATATBLS_CompileTxt         : None,
-    D2Sigma_Items_GetItemName   : None,
+    ShouldShowUnit                      : None,
+    DATATBLS_CompileTxt                 : None,
+    D2Sigma_Items_GetItemName           : None,
+    D2Sigma_Items_LootFilterCheckUnit   : None,
 };
 
 #[allow(static_mut_refs)]
@@ -52,18 +54,28 @@ extern "stdcall" fn d2sigma_automap_draw() {
     HackMap::unit_color().draw_automap_units();
 }
 
-extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, arg3: u32) {
+extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, arg3: u32) -> BOOL {
     get_stubs().D2Sigma_Items_GetItemName.unwrap()(item, buffer, arg3);
 
     if D2SigmaEx::Items::is_getting_item_properties() {
-        return;
+        return FALSE;
     }
 
-    HackMap::unit_color().d2sigma_items_get_item_name(item, buffer);
+    HackMap::unit_color().d2sigma_items_get_item_name(item, buffer)
 }
 
-extern "fastcall" fn should_show_unit(unit: &mut D2Unit) -> bool {
-    HackMap::unit_color().should_show_unit(unit)
+extern "fastcall" fn should_show_unit(unit: &mut D2Unit) -> BOOL {
+    let ret = HackMap::unit_color().should_show_unit(unit);
+
+    if ret { TRUE } else { FALSE }
+}
+
+extern "fastcall" fn d2sigma_items_loot_filter_check_unit(unit: &mut D2Unit) -> bool {
+    if should_show_unit(unit) == FALSE {
+        return false;
+    }
+
+    get_stubs().D2Sigma_Items_LootFilterCheckUnit.unwrap()(unit)
 }
 
 fn get_stub_should_show_unit() -> usize {
@@ -436,7 +448,7 @@ impl UnitColor {
         }
     }
 
-    fn d2sigma_items_get_item_name(&self, item: &D2Unit, buffer: PWSTR) {
+    fn d2sigma_items_get_item_name(&self, item: &D2Unit, buffer: PWSTR) -> BOOL {
         let mut name = buffer.to_string();
 
         let cfg = self.cfg.borrow();
@@ -488,6 +500,8 @@ impl UnitColor {
         unsafe {
             name.as_ptr().copy_to_nonoverlapping(buffer, name.len());
         }
+
+        TRUE
     }
 
     fn should_show_unit(&mut self, unit: &mut D2Unit) -> bool {
@@ -707,6 +721,7 @@ impl UnitColor {
             inline_hook_jmp(0, D2Common::AddressTable.DataTbls.CompileTxt, DATATBLS_CompileTxt as usize, Some(&mut STUBS.DATATBLS_CompileTxt), None)?;
             inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, d2sigma_automap_draw as usize, None, None)?;
             inline_hook_jmp(0, D2Sigma::AddressTable.Items.GetItemName, d2sigma_items_get_item_name as usize, Some(&mut STUBS.D2Sigma_Items_GetItemName), None)?;
+            inline_hook_jmp(0, D2Sigma::AddressTable.Items.LootFilterCheckUnit, d2sigma_items_loot_filter_check_unit as usize, Some(&mut STUBS.D2Sigma_Items_LootFilterCheckUnit), None)?;
         }
 
         let input = HackMap::input();

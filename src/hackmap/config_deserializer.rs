@@ -9,7 +9,7 @@ use super::config::*;
 lazy_static! {
     static ref VK_MAP: HashMap<&'static str, u16> = [
         ("VK_NULL",                     0x00),
-        (" K_LBUTTON",                  0x01),        // Left mouse button
+        ("VK_LBUTTON",                  0x01),        // Left mouse button
         ("VK_RBUTTON",                  0x02),        // Right mouse button
         ("VK_CANCEL",                   0x03),        // Control-break processing
         ("VK_MBUTTON",                  0x04),        // Middle mouse button
