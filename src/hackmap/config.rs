@@ -24,30 +24,45 @@ pub(super) enum PickupMethod {
     None        = 0,
     Inventory   = 1,
     Cube        = 2,
+    AutoBelt    = 3,
 }
 
 #[derive(Debug, Deserialize)]
 pub(super) struct HotKeyConfig {
+    #[serde(default)]
     pub reload              : VirtualKeyCode,
+
+    #[serde(default)]
     pub hide_items          : VirtualKeyCode,
+
+    #[serde(default)]
     pub perm_show_items     : VirtualKeyCode,
+
+    #[serde(default)]
     pub quick_next_game     : VirtualKeyCode,
+
+    #[serde(default)]
     pub item_extra_info     : VirtualKeyCode,
+
+    #[serde(default)]
     pub show_monster_id     : VirtualKeyCode,
+
+    #[serde(default)]
     pub auto_pickup         : VirtualKeyCode,
 }
 
 #[derive(Debug, Deserialize)]
 pub(super) struct TweaksConfig {
-    #[serde(deserialize_with = "bool_from_int")]
+    #[serde(deserialize_with = "bool_from_int", default)]
     pub perm_show_items: bool,
 
-    #[serde(deserialize_with = "bool_from_int")]
+    #[serde(deserialize_with = "bool_from_int", default)]
     pub show_monster_id: bool,
 
-    #[serde(deserialize_with = "bool_from_int")]
+    #[serde(deserialize_with = "bool_from_int", default)]
     pub continue_attacking_after_target_dead: bool,
 
+    #[serde(default)]
     pub excluded_dc6: HashSet<String>,
 }
 
@@ -82,6 +97,12 @@ pub(super) struct UnitColorConfig {
     pub minion_monster_color        : u8,
     pub champion_monster_color      : u8,
     pub super_unique_color          : u8,
+
+    #[serde(default)]
+    pub player_missile_color        : u8,
+
+    #[serde(default)]
+    pub other_missile_color         : u8,
 
     pub magic_resistant_desc        : Option<String>,
     pub fire_enchanted_desc         : Option<String>,
@@ -247,6 +268,9 @@ impl Config {
                 minion_monster_color            : 0xFF,
                 champion_monster_color          : 0xFF,
                 super_unique_color              : 0xFF,
+
+                player_missile_color            : 0xFF,
+                other_missile_color             : 0xFF,
 
                 physical_immunity_desc          : None,
                 magic_immunity_desc             : None,

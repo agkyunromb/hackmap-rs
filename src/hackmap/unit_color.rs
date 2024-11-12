@@ -3,6 +3,7 @@ use super::config::{DropNotify, PickupMethod, ConfigRef};
 use std::alloc::System;
 use std::ops::Add;
 use std::time::{SystemTime, Duration};
+use std::u32;
 use super::image_loader;
 use super::HackMap;
 use super::item_state_monitor::*;
@@ -208,8 +209,9 @@ impl UnitColor {
             D2UnitTypes::Object => {
                 self.draw_object(unit, x, y);
             },
-
-            D2UnitTypes::Missile => {},
+            D2UnitTypes::Missile => {
+                self.draw_missile(unit, x, y);
+            },
             D2UnitTypes::Item => {
                 self.draw_item(unit, x, y);
             },
@@ -248,6 +250,10 @@ impl UnitColor {
 
         if D2Client::Units::IsCorpse(unit) {
             return None;
+        }
+
+        if D2Common::DataTbls::GetNextHirelingTxtRecordFromClassId(TRUE, class_Id, null_mut()).is_some() {
+            return self.draw_hireling(unit, x, y);
         }
 
         let unit_color_cfg    = &self.cfg.borrow().unit_color;
@@ -398,6 +404,27 @@ impl UnitColor {
         if object_txt.nSubClass.contains(D2ObjectSubClasses::TownPortal) {
             self.draw_default_cross(x, y, 0x6D);
         }
+
+        None
+    }
+
+    fn draw_missile(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
+        if unit.dwFlagEx.contains(D2UnitFlagsEx::Teleported) {
+            return None;
+        }
+
+        let owner_id = match unit.dwOwnerType {
+            D2UnitTypes::Player => unit.dwOwnerGUID,
+            D2UnitTypes::Monster => D2Client::Units::GetMonsterOwnerID(unit),
+            _ => u32::MAX,
+        };
+
+        let cfg = self.cfg.borrow();
+        let unit_color = &cfg.unit_color;
+
+        let color = if owner_id == u32::MAX { unit_color.other_missile_color } else { unit_color.player_missile_color };
+
+        self.draw_cell_by_blob_file(x, y, cfg.unit_color.missile_blob_file.as_ref(), color);
 
         None
     }

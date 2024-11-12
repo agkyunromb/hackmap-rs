@@ -45,7 +45,10 @@ pub struct D2Unit {
     pub pDrlgAct        : *mut D2DrlgAct,       // 0x1C
         _pad_20_60      : [u8; 0x40],           // 0x20
     pub pInventory      : *mut D2Inventory,     // 0x60
-        _pad_64_C4      : [u8; 0x60],           // 0x64
+        _pad_64_94      : [u8; 0x30],           // 0x64
+    pub dwOwnerType     : D2UnitTypes,          // 0x94
+    pub dwOwnerGUID     : u32,                  // 0x98
+        _pad_9C_C4      : [u8; 0x28],           // 0x64
     pub dwFlags         : D2UnitFlags,          // 0xC4
     pub dwFlagEx        : D2UnitFlagsEx,        // 0xC8
         _pad_CC_E8      : [u8; 0x1C],           // 0xCC

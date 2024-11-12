@@ -167,7 +167,10 @@ extern "stdcall" fn MPQLoadFile(fileInfo: *const u8, buffer: *mut u8, bufferSize
     let success = get_stubs().MPQLoadFile.unwrap()(fileInfo, buffer, bufferSize, fileSize, eventInfo, arg6, arg7);
 
     while success != FALSE {
-        break;
+        if true {
+            break;
+        }
+
         if file_name == "(attributes)" {
             break;
         }

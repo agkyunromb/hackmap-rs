@@ -283,6 +283,7 @@ impl<'de> Deserialize<'de> for PickupMethod {
             0 => Ok(Self::None),
             1 => Ok(Self::Inventory),
             2 => Ok(Self::Cube),
+            3 => Ok(Self::AutoBelt),
             _ => Err(serde::de::Error::custom("Unknown PickupMethod value")),
         }
     }
