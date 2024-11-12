@@ -531,11 +531,7 @@ impl UnitColor {
         let should_hide_items = unit_color.hide_items;
 
         if should_auto_pickup {
-            if let Some(pick) = self.should_auto_pickup_item(unit) {
-                should_auto_pickup = pick;
-            } else {
-                should_auto_pickup = false;
-            }
+            should_auto_pickup = self.should_auto_pickup_item(unit).unwrap_or(false);
         }
 
         if should_hide_items == false && should_auto_pickup == false {
@@ -710,6 +706,21 @@ impl UnitColor {
                 D2ClientEx::Net::send_packet(&cmd);
 
                 self.items_to_cube.insert(item.dwUnitId, SystemTime::now().add(Duration::from_secs(5)));
+            },
+
+            PickupMethod::AutoBelt => {
+                let player = D2Client::Units::GetClientPlayer()?;
+
+                if D2Common::Inventory::GetFreeBeltSlot(ptr_to_ref(player.pInventory)?, item).is_some() {
+                    let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
+                        nHeader       : D2ClientCmd::PICKUP_ITEM as u8,
+                        dwUnitType    : D2UnitTypes::Item as u32,
+                        dwUnitGUID    : item.dwUnitId,
+                        bCursor       : 0,
+                    };
+
+                    D2ClientEx::Net::send_packet(&cmd);
+                }
             },
         }
 

@@ -2,6 +2,11 @@ use super::super::super::d2consts::*;
 use std::ptr::addr_of;
 
 #[repr(C, packed(1))]
+pub struct D2HirelingTxt {
+
+}
+
+#[repr(C, packed(1))]
 pub struct D2LevelDefBin {
     pub dwQuestFlag     : u32,              // 0x0000
     pub dwQuestFlagEx   : u32,              // 0x0004

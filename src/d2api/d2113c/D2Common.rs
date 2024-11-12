@@ -15,11 +15,12 @@ pub struct StatListOffset {
 }
 
 pub struct DataTblsOffset {
-    pub CompileTxt              : FuncAddress,
-    pub GetLevelDefRecord       : FuncAddress,
-    pub GetObjectsTxtRecord     : FuncAddress,
-    pub GetItemDataTables       : FuncAddress,
-    pub sgptDataTables          : FuncAddress,
+    pub CompileTxt                          : FuncAddress,
+    pub GetLevelDefRecord                   : FuncAddress,
+    pub GetObjectsTxtRecord                 : FuncAddress,
+    pub GetItemDataTables                   : FuncAddress,
+    pub GetNextHirelingTxtRecordFromClassId : FuncAddress,
+    pub sgptDataTables                      : FuncAddress,
 }
 
 pub struct UnitsOffset {
@@ -48,6 +49,7 @@ pub struct InventoryOffset {
     pub GetNextItem             : FuncAddress,
     pub GetCursorItem           : FuncAddress,
     pub GetFreePosition         : FuncAddress,
+    pub GetFreeBeltSlot         : FuncAddress,
 }
 
 pub struct DrlgDrlgOffset {
@@ -179,6 +181,12 @@ pub mod DataTbls {
         ptr_to_ref_mut(addr_to_stdcall(_GetItemDataTables, AddressTable.DataTbls.GetItemDataTables)())
     }
 
+    fn _GetNextHirelingTxtRecordFromClassId(_bExpansion: BOOL, _nClass: u32, _pOldRecord: PVOID) -> *mut D2HirelingTxt { null_mut() }
+
+    pub fn GetNextHirelingTxtRecordFromClassId(expansion: BOOL, classId: u32, oldRecord: PVOID) -> Option<&'static mut D2HirelingTxt> {
+        ptr_to_ref_mut(addr_to_stdcall(_GetNextHirelingTxtRecordFromClassId, AddressTable.DataTbls.GetNextHirelingTxtRecordFromClassId)(expansion, classId, oldRecord))
+    }
+
     pub fn CompileTxt(archive: PVOID, name: *const u8, tbl: PVOID, recordCount: &mut i32, recordSize: usize) -> PVOID {
         addr_to_stdcall(CompileTxt, AddressTable.DataTbls.CompileTxt)(archive, name, tbl, recordCount, recordSize)
     }
@@ -291,6 +299,19 @@ pub mod Inventory {
 
         Some((x, y))
     }
+
+    fn _GetFreeBeltSlot(_inventory: &D2Inventory, _item: &D2Unit, _freeSlotId: *mut i32) -> BOOL { FALSE }
+
+    pub fn GetFreeBeltSlot(inventory: &D2Inventory, item: &D2Unit) -> Option<i32> {
+        let mut freeSlotId: i32 = 0;
+
+        if addr_to_stdcall(_GetFreeBeltSlot, AddressTable.Inventory.GetFreeBeltSlot)(inventory, item, &mut freeSlotId) == FALSE {
+            return None;
+        }
+
+        Some(freeSlotId)
+    }
+
 }
 
 pub mod DrlgDrlg {
@@ -400,60 +421,62 @@ pub mod DrlgPreset {
 pub fn init(d2common: usize) {
     AddressTable.initialize(D2CommonOffset{
         DataTbls: DataTblsOffset{
-            CompileTxt                      : d2common + D2RVA::D2Common(0x6FDAEF40),
-            GetLevelDefRecord               : d2common + D2RVA::D2Common(0x6FDBCB20),
-            GetObjectsTxtRecord             : d2common + D2RVA::D2Common(0x6FD8E980),
-            GetItemDataTables               : d2common + D2RVA::D2Common(0x6FDC1A40),
-            sgptDataTables                  : d2common + D2RVA::D2Common(0x6FDE9E1C),
+            CompileTxt                          : d2common + D2RVA::D2Common(0x6FDAEF40),
+            GetLevelDefRecord                   : d2common + D2RVA::D2Common(0x6FDBCB20),
+            GetObjectsTxtRecord                 : d2common + D2RVA::D2Common(0x6FD8E980),
+            GetItemDataTables                   : d2common + D2RVA::D2Common(0x6FDC1A40),
+            GetNextHirelingTxtRecordFromClassId : d2common + D2RVA::D2Common(0x6FDA3190),
+            sgptDataTables                      : d2common + D2RVA::D2Common(0x6FDE9E1C),
         },
         StatList: StatListOffset{
-            GetUnitBaseStat                 : d2common + D2RVA::D2Common(0x6FD88B70),
-            GetStatListFromUnitStateAndFlag : d2common + D2RVA::D2Common(0x6FD87EC0),
+            GetUnitBaseStat                     : d2common + D2RVA::D2Common(0x6FD88B70),
+            GetStatListFromUnitStateAndFlag     : d2common + D2RVA::D2Common(0x6FD87EC0),
         },
         Units: UnitsOffset{
-            TestCollisionWithUnit           : d2common + D2RVA::D2Common(0x6FD814A0),
-            GetRoom                         : d2common + D2RVA::D2Common(0x6FD7FE10),
-            GetNearestTestedUnit            : d2common + D2RVA::D2Common(0x6FD62330),
-            GetClientCoordX                 : d2common + D2RVA::D2Common(0x6FD80290),
-            GetClientCoordY                 : d2common + D2RVA::D2Common(0x6FD80240),
-            GetDistanceToCoordinates        : d2common + D2RVA::D2Common(0x6FDCF5E0),
-            GetCoords                       : d2common + D2RVA::D2Common(0x6FD80050),
-            GetInventoryRecordId            : d2common + D2RVA::D2Common(0x6FD7FB60),
+            TestCollisionWithUnit               : d2common + D2RVA::D2Common(0x6FD814A0),
+            GetRoom                             : d2common + D2RVA::D2Common(0x6FD7FE10),
+            GetNearestTestedUnit                : d2common + D2RVA::D2Common(0x6FD62330),
+            GetClientCoordX                     : d2common + D2RVA::D2Common(0x6FD80290),
+            GetClientCoordY                     : d2common + D2RVA::D2Common(0x6FD80240),
+            GetDistanceToCoordinates            : d2common + D2RVA::D2Common(0x6FDCF5E0),
+            GetCoords                           : d2common + D2RVA::D2Common(0x6FD80050),
+            GetInventoryRecordId                : d2common + D2RVA::D2Common(0x6FD7FB60),
         },
         Items: ItemsOffset{
-            GetItemType                     : d2common + D2RVA::D2Common(0x6FD730F0),
-            GetItemQuality                  : d2common + D2RVA::D2Common(0x6FD73B40),
-            GetInvPage                      : d2common + D2RVA::D2Common(0x6FD737C0),
-            GetBaseCode                     : d2common + D2RVA::D2Common(0x6FD73290),
-            CheckItemTypeId                 : d2common + D2RVA::D2Common(0x6FD74430),
-            CheckItemFlag                   : d2common + D2RVA::D2Common(0x6FD73940),
+            GetItemType                         : d2common + D2RVA::D2Common(0x6FD730F0),
+            GetItemQuality                      : d2common + D2RVA::D2Common(0x6FD73B40),
+            GetInvPage                          : d2common + D2RVA::D2Common(0x6FD737C0),
+            GetBaseCode                         : d2common + D2RVA::D2Common(0x6FD73290),
+            CheckItemTypeId                     : d2common + D2RVA::D2Common(0x6FD74430),
+            CheckItemFlag                       : d2common + D2RVA::D2Common(0x6FD73940),
         },
         Inventory: InventoryOffset{
-            UnitIsItem                      : d2common + D2RVA::D2Common(0x6FD6E400),
-            GetFirstItem                    : d2common + D2RVA::D2Common(0x6FD6E190),
-            GetNextItem                     : d2common + D2RVA::D2Common(0x6FD6E8F0),
-            GetCursorItem                   : d2common + D2RVA::D2Common(0x6FD6DFB0),
-            GetFreePosition                 : d2common + D2RVA::D2Common(0x6FD708E0),
+            UnitIsItem                          : d2common + D2RVA::D2Common(0x6FD6E400),
+            GetFirstItem                        : d2common + D2RVA::D2Common(0x6FD6E190),
+            GetNextItem                         : d2common + D2RVA::D2Common(0x6FD6E8F0),
+            GetCursorItem                       : d2common + D2RVA::D2Common(0x6FD6DFB0),
+            GetFreePosition                     : d2common + D2RVA::D2Common(0x6FD708E0),
+            GetFreeBeltSlot                     : d2common + D2RVA::D2Common(0x6FD700D0),
         },
         DrlgDrlg: DrlgDrlgOffset{
-            GetActNoFromLevelId             : d2common + D2RVA::D2Common(0x6FD7D2C0),
-            GetLevel                        : d2common + D2RVA::D2Common(0x6FD7DD80),
+            GetActNoFromLevelId                 : d2common + D2RVA::D2Common(0x6FD7D2C0),
+            GetLevel                            : d2common + D2RVA::D2Common(0x6FD7DD80),
         },
         DrlgRoom: DrlgRoomOffset{
-            GetPresetUnits                  : d2common + D2RVA::D2Common(0x6FD94460),
-            GetLevelId                      : d2common + D2RVA::D2Common(0x6FD94690),
+            GetPresetUnits                      : d2common + D2RVA::D2Common(0x6FD94460),
+            GetLevelId                          : d2common + D2RVA::D2Common(0x6FD94690),
         },
         DrlgPreset: DrlgPresetOffset{
-            GetLevelPrestIdFromRoomEx       : d2common + D2RVA::D2Common(0x6FD59C20),
+            GetLevelPrestIdFromRoomEx           : d2common + D2RVA::D2Common(0x6FD59C20),
         },
         Dungeon: DungeonOffset{
-            GetDrlgFromAct                  : d2common + D2RVA::D2Common(0x6FD8B270),
-            IsTownLevelId                   : d2common + D2RVA::D2Common(0x6FD8B230),
-            IsRoomInTown                    : d2common + D2RVA::D2Common(0x6FD8C390),
-            GetHoradricStaffTombLevelId     : d2common + D2RVA::D2Common(0x6FD8B080),
-            GetRoomFromAct                  : d2common + D2RVA::D2Common(0x6FD8B550),
-            GetAdjacentRoomsListFromRoom    : d2common + D2RVA::D2Common(0x6FD8BA20),
-            GetLevelIdFromRoom              : d2common + D2RVA::D2Common(0x6FD8C000),
+            GetDrlgFromAct                      : d2common + D2RVA::D2Common(0x6FD8B270),
+            IsTownLevelId                       : d2common + D2RVA::D2Common(0x6FD8B230),
+            IsRoomInTown                        : d2common + D2RVA::D2Common(0x6FD8C390),
+            GetHoradricStaffTombLevelId         : d2common + D2RVA::D2Common(0x6FD8B080),
+            GetRoomFromAct                      : d2common + D2RVA::D2Common(0x6FD8B550),
+            GetAdjacentRoomsListFromRoom        : d2common + D2RVA::D2Common(0x6FD8BA20),
+            GetLevelIdFromRoom                  : d2common + D2RVA::D2Common(0x6FD8C000),
         },
     });
 }
