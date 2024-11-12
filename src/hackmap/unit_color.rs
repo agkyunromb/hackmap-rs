@@ -229,6 +229,15 @@ impl UnitColor {
         None
     }
 
+    fn draw_hireling(&self, _unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
+        let unit_color_config = &self.cfg.borrow().unit_color;
+        let color = unit_color_config.party_blob_color;
+
+        self.draw_cell_by_blob_file(x, y, unit_color_config.player_blob_file.as_ref(), color);
+
+        None
+    }
+
     fn draw_monster(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         let class_Id = unit.dwClassId;
 
