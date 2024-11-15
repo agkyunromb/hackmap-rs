@@ -62,6 +62,9 @@ pub(super) struct TweaksConfig {
     #[serde(deserialize_with = "bool_from_int", default)]
     pub continue_attacking_after_target_dead: bool,
 
+    #[serde(deserialize_with = "bool_from_int", default)]
+    pub remove_shadow: bool,
+
     #[serde(default)]
     pub excluded_dc6: HashSet<String>,
 }
@@ -81,6 +84,7 @@ pub(super) struct UnitColorConfig {
     pub auto_pickup                 : bool,
 
     pub player_blob_file            : Option<String>,
+    pub player_pet_blob_file        : Option<String>,
     pub monster_blob_file           : Option<String>,
     pub object_blob_file            : Option<String>,
     pub missile_blob_file           : Option<String>,
@@ -88,10 +92,13 @@ pub(super) struct UnitColorConfig {
     pub boss_blob_file              : Option<String>,
     pub npc_blob_file               : Option<String>,
     pub my_blob_file                : Option<String>,
+    pub my_pet_blob_file            : Option<String>,
     pub corpse_blob_file            : Option<String>,
 
     pub my_blob_color               : u8,
+    pub my_pet_blob_color           : u8,
     pub party_blob_color            : u8,
+    pub party_pet_blob_color        : u8,
     pub normal_monster_color        : u8,
     pub boss_monster_color          : u8,
     pub minion_monster_color        : u8,
@@ -236,6 +243,7 @@ impl Config {
                 perm_show_items                     : true,
                 show_monster_id                     : false,
                 continue_attacking_after_target_dead: true,
+                remove_shadow                       : true,
                 excluded_dc6                        : HashSet::new(),
             },
 
@@ -246,6 +254,7 @@ impl Config {
                 auto_pickup                     : false,
 
                 player_blob_file                : None,
+                player_pet_blob_file            : None,
                 monster_blob_file               : None,
                 object_blob_file                : None,
                 missile_blob_file               : None,
@@ -253,6 +262,7 @@ impl Config {
                 boss_blob_file                  : None,
                 npc_blob_file                   : None,
                 my_blob_file                    : None,
+                my_pet_blob_file                : None,
                 corpse_blob_file                : None,
 
                 magic_resistant_desc            : None,
@@ -261,8 +271,10 @@ impl Config {
                 cold_enchanted_desc             : None,
                 mana_burn_desc                  : None,
 
-                my_blob_color                   : 0x68,
+                my_blob_color                   : 0x81,
+                my_pet_blob_color               : 0x7F,
                 party_blob_color                : 0x68,
+                party_pet_blob_color            : 0x68,
                 normal_monster_color            : 0xFF,
                 boss_monster_color              : 0xFF,
                 minion_monster_color            : 0xFF,

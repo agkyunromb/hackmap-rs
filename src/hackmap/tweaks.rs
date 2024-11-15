@@ -252,7 +252,9 @@ impl Tweaks {
             }
 
             // 去除阴影
-            inline_hook_jmp::<()>(D2Client, D2RVA::D2Client(0x6FB59A20), MISC_CalculateShadowRGBA as usize, None, None)?;
+            if HackMap::config().borrow().tweaks.remove_shadow {
+                inline_hook_jmp::<()>(D2Client, D2RVA::D2Client(0x6FB59A20), MISC_CalculateShadowRGBA as usize, None, None)?;
+            }
 
             // 透视
             inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;

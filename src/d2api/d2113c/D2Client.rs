@@ -281,8 +281,8 @@ pub mod Units {
     use super::AddressTable;
     use super::super::D2Common::D2Unit;
 
-    pub fn GetMonsterOwnerID(unit: &D2Unit) -> u32 {
-        addr_to_fastcall(GetMonsterOwnerID, AddressTable.Units.GetMonsterOwnerID)(unit)
+    pub fn GetMonsterOwnerID(unitId: u32) -> u32 {
+        addr_to_fastcall(GetMonsterOwnerID, AddressTable.Units.GetMonsterOwnerID)(unitId)
     }
 
     pub fn GetName(unit: *const D2Unit) -> PCWSTR {

@@ -233,7 +233,7 @@ impl UnitColor {
 
     fn draw_hireling(&self, _unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         let unit_color_config = &self.cfg.borrow().unit_color;
-        let color = unit_color_config.party_blob_color;
+        let color = unit_color_config.my_blob_color;
 
         self.draw_cell_by_blob_file(x, y, unit_color_config.player_blob_file.as_ref(), color);
 
@@ -281,18 +281,21 @@ impl UnitColor {
             }
         }
 
-        if D2Client::Units::GetMonsterOwnerID(unit) != u32::MAX {
-            return None;
-        }
-
-        // println!("class_id: {}", class_Id);
-
         let type_flag = monster_data.nTypeFlag;
         let mut color: u8;
         let mut show_name = false;
         let mut blob_file: Option<&String>;
+        let owner_id = D2Client::Units::GetMonsterOwnerID(unit.dwUnitId);
 
-        if type_flag.contains(D2MonTypeFlags::Champion) {
+        if owner_id == D2Client::Units::GetClientPlayer()?.dwUnitId {
+            color = unit_color_cfg.my_pet_blob_color;
+            blob_file = unit_color_cfg.my_pet_blob_file.as_ref();
+
+        } else if owner_id != u32::MAX {
+            color = unit_color_cfg.party_pet_blob_color;
+            blob_file = unit_color_cfg.player_pet_blob_file.as_ref();
+
+        } else if type_flag.contains(D2MonTypeFlags::Champion) {
             color = unit_color_cfg.champion_monster_color;
             blob_file = unit_color_cfg.monster_blob_file.as_ref();
 
@@ -415,7 +418,7 @@ impl UnitColor {
 
         let owner_id = match unit.dwOwnerType {
             D2UnitTypes::Player => unit.dwOwnerGUID,
-            D2UnitTypes::Monster => D2Client::Units::GetMonsterOwnerID(unit),
+            D2UnitTypes::Monster => D2Client::Units::GetMonsterOwnerID(unit.dwUnitId),
             _ => u32::MAX,
         };
 
