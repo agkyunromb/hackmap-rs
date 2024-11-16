@@ -124,6 +124,10 @@ impl HackMap {
     pub fn unit_color() -> &'static mut unit_color::UnitColor {
         &mut Self::get().unit_color
     }
+
+    pub fn helper_bot() -> &'static mut helper_bot::HelperBot {
+        &mut Self::get().helper_bot
+    }
 }
 
 pub fn init(modules: &D2Modules) {

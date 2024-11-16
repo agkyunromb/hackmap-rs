@@ -13,9 +13,13 @@ enum GameEvent {
 }
 
 struct NetInfo {
+    pre_send_callbacks      : Vec<Box<dyn FnMut(D2ClientCmd, *mut u8)>>,
+    post_send_callbacks     : Vec<Box<dyn FnMut(D2ClientCmd, *mut u8)>>,
     pre_recv_callbacks      : Vec<Box<dyn FnMut(D2GSCmd, *mut u8)>>,
     post_recv_callbacks     : Vec<Box<dyn FnMut(D2GSCmd, *mut u8)>>,
     send_callbacks          : Vec<Box<dyn FnMut(D2GSCmd, *mut u8)>>,
+
+    stub_send_packet        : Option<extern "stdcall" fn(u32, u32, *const u8) -> usize>,
 }
 
 struct GameInfo {
@@ -39,9 +43,13 @@ impl D2ClientEx {
                 stub_d2_sound_cleanup   : None,
             },
             net: NetInfo{
+                pre_send_callbacks      : vec![],
+                post_send_callbacks     : vec![],
                 pre_recv_callbacks      : vec![],
                 post_recv_callbacks     : vec![],
                 send_callbacks          : vec![],
+
+                stub_send_packet        : None,
             },
         }
     }
@@ -61,12 +69,36 @@ pub mod Net {
     use D2Client::Net::D2GSHandler;
 
     impl NetInfo {
+        fn on_pre_send<F: FnMut(D2ClientCmd, *mut u8) + 'static>(&mut self, cb: F) {
+            self.pre_send_callbacks.push(Box::new(cb));
+        }
+
+        fn on_post_send<F: FnMut(D2ClientCmd, *mut u8) + 'static>(&mut self, cb: F) {
+            self.post_send_callbacks.push(Box::new(cb));
+        }
+
         fn on_pre_recv<F: FnMut(D2GSCmd, *mut u8) + 'static>(&mut self, cb: F) {
             self.pre_recv_callbacks.push(Box::new(cb));
         }
 
         fn on_post_recv<F: FnMut(D2GSCmd, *mut u8) + 'static>(&mut self, cb: F) {
             self.post_recv_callbacks.push(Box::new(cb));
+        }
+
+        pub fn on_send_packet(&mut self, size: u32, arg2: u32, payload: *mut u8) -> usize {
+            let cmd: D2ClientCmd = read_at(payload as usize);
+
+            for cb in self.pre_send_callbacks.iter_mut() {
+                cb(cmd , payload);
+            }
+
+            let ret = self.stub_send_packet.unwrap()(size, arg2, payload);
+
+            for cb in self.post_send_callbacks.iter_mut() {
+                cb(cmd , payload);
+            }
+
+            ret
         }
 
         fn call_gscmd_handler(&mut self, handler: D2GSHandler, payload: *mut u8) {
@@ -98,6 +130,10 @@ pub mod Net {
         };
 
         D2Client::Net::SendPacket(slice.as_ptr(), slice.len())
+    }
+
+    pub extern "stdcall" fn on_send_packet(size: u32, arg2: u32, payload: *mut u8) -> usize {
+        D2ClientEx::get().net.on_send_packet(size, arg2, payload)
     }
 
     #[cfg(feature = "113c")]
@@ -232,6 +268,26 @@ pub mod Utils {
     use D2Common::D2Unit;
     use crate::D2CommonEx;
 
+    pub fn send_pickup_item(item: &D2Unit, to_cursor: bool) {
+        let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
+            nHeader       : D2ClientCmd::PICKUP_ITEM as u8,
+            dwUnitType    : D2UnitTypes::Item as u32,
+            dwUnitGUID    : item.dwUnitId,
+            bCursor       : if to_cursor { 1 } else { 0 },
+        };
+
+        super::Net::send_packet(&cmd);
+    }
+
+    pub fn send_drop_item(item: &D2Unit) {
+        let cmd = D2Common::SCMD_PACKET_17_DROP_CURSOR_ITEM{
+            nHeader       : D2ClientCmd::DROP_ITEM as u8,
+            dwItemGUID    : item.dwUnitId,
+        };
+
+        super::Net::send_packet(&cmd);
+    }
+
     pub fn send_cursor_item_to_cube(cursor_item: &D2Unit, cube: &D2Unit) {
         let payload = D2Common::SCMD_PACKET_2A_ITEM_TO_CUBE{
             nHeader     : D2ClientCmd::ITEM_TO_CUBE as u8,
@@ -240,6 +296,15 @@ pub mod Utils {
         };
 
         super::Net::send_packet(&payload);
+    }
+
+    pub fn send_item_to_belt(item: &D2Unit) {
+        let cmd = D2Common::SCMD_PACKET_63_ITEM_TO_BELT{
+            nHeader       : D2ClientCmd::ITEM_TO_BELT as u8,
+            dwItemGUID    : item.dwUnitId,
+        };
+
+        super::Net::send_packet(&cmd);
     }
 
     pub fn cursor_item_to_cube() -> Option<()> {
@@ -288,6 +353,7 @@ pub(super) fn init(_modules: &D2Modules) -> Result<(), HookError> {
     inline_hook_call::<()>(0, D2Client::AddressTable.Game.Call_D2GFX_GetWindow, Game::run_game_loop as usize, None, None)?;
     inline_hook_call(0, D2Client::AddressTable.Game.Call_D2SoundCleanup, Game::d2_sound_cleanup as usize, Some(&mut cli.game.stub_d2_sound_cleanup), None)?;
     inline_hook_call::<()>(0, D2Client::AddressTable.Net.Call_GSCmdHandler, Net::call_gscmd_handler as usize, None, None)?;
+    inline_hook_jmp(0, D2Client::AddressTable.Net.DoSendPacket, Net::on_send_packet as usize, Some(&mut cli.net.stub_send_packet), None)?;
 
     Net::on_pre_recv(move |cmd, payload| {
         cli.game.join_game_pre_recv_callback(cmd, payload);

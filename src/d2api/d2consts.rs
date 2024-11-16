@@ -693,7 +693,7 @@ pub enum D2ClientCmd {
     USE_ITEM                  = 0x20,
     STACKI_TEM                = 0x21,
     REMOVE_STACK_ITEM         = 0x22,
-    ITEM_TO_BELT              = 0x23,
+    ITEM_TO_BELT_LOCATION     = 0x23,
     REMOVE_BELT_ITEM          = 0x24,
     SWITCH_BELT_ITEM          = 0x25,
     USE_BELT_ITEM             = 0x26,
@@ -740,7 +740,7 @@ pub enum D2ClientCmd {
     SWAP_WEAPON               = 0x60,
     MERC_ITEM                 = 0x61,
     MERC_RESSURECT            = 0x62,
-    ITEM_TOBELT               = 0x63,
+    ITEM_TO_BELT              = 0x63,
     WARDEN                    = 0x66,
     GAME_LOGON_SP             = 0x67,
     GAME_LOGON_MULTI          = 0x68,
@@ -1026,6 +1026,16 @@ pub enum D2ItemInvPage {
     Stash               = 4,
     Belt                = 5,
     Null                = 255,
+}
+
+#[repr(i32)]
+#[derive(PartialEq, PartialOrd, Copy, Clone, Debug)]
+pub enum D2UnitAlignment {
+    Evil                = 0,
+    Neutral             = 1,
+    Good                = 2,
+    Max                 = 3,
+    UnAssigned          = 4,
 }
 
 pub struct D2ItemCodes {}

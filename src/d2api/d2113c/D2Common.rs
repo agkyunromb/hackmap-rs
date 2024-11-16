@@ -12,6 +12,7 @@ pub use packet::*;
 pub struct StatListOffset {
     pub GetUnitBaseStat                 : FuncAddress,
     pub GetStatListFromUnitStateAndFlag : FuncAddress,
+    pub GetUnitAlignment                : FuncAddress,
 }
 
 pub struct DataTblsOffset {
@@ -99,6 +100,10 @@ pub mod StatList {
 
     pub fn GetStatListFromUnitStateAndFlag(unit: &D2Unit, state: i32, flag: u32) -> usize {
         addr_to_stdcall(GetStatListFromUnitStateAndFlag, AddressTable.StatList.GetStatListFromUnitStateAndFlag)(unit, state, flag)
+    }
+
+    pub fn GetUnitAlignment(unit: &D2Unit) -> D2UnitAlignment {
+        addr_to_stdcall(GetUnitAlignment, AddressTable.StatList.GetUnitAlignment)(unit)
     }
 }
 
@@ -431,6 +436,7 @@ pub fn init(d2common: usize) {
         StatList: StatListOffset{
             GetUnitBaseStat                     : d2common + D2RVA::D2Common(0x6FD88B70),
             GetStatListFromUnitStateAndFlag     : d2common + D2RVA::D2Common(0x6FD87EC0),
+            GetUnitAlignment                    : d2common + D2RVA::D2Common(0x6FD891F0),
         },
         Units: UnitsOffset{
             TestCollisionWithUnit               : d2common + D2RVA::D2Common(0x6FD814A0),

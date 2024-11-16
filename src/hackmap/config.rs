@@ -49,6 +49,15 @@ pub(super) struct HotKeyConfig {
 
     #[serde(default)]
     pub auto_pickup         : VirtualKeyCode,
+
+    #[serde(default)]
+    pub auto_item_to_belt   : VirtualKeyCode,
+
+    #[serde(default)]
+    pub fast_drop           : VirtualKeyCode,
+
+    #[serde(default)]
+    pub fast_transmute      : VirtualKeyCode,
 }
 
 #[derive(Debug, Deserialize)]
@@ -60,10 +69,13 @@ pub(super) struct TweaksConfig {
     pub show_monster_id: bool,
 
     #[serde(deserialize_with = "bool_from_int", default)]
-    pub continue_attacking_after_target_dead: bool,
+    pub remove_shadow: bool,
 
     #[serde(deserialize_with = "bool_from_int", default)]
-    pub remove_shadow: bool,
+    pub auto_item_to_belt: bool,
+
+    #[serde(deserialize_with = "bool_from_int", default)]
+    pub continue_attacking_after_target_dead: bool,
 
     #[serde(default)]
     pub excluded_dc6: HashSet<String>,
@@ -237,13 +249,17 @@ impl Config {
                 item_extra_info     : Default::default(),
                 show_monster_id     : Default::default(),
                 auto_pickup         : Default::default(),
+                auto_item_to_belt   : Default::default(),
+                fast_drop           : Default::default(),
+                fast_transmute      : Default::default(),
             },
 
             tweaks: TweaksConfig{
                 perm_show_items                     : true,
                 show_monster_id                     : false,
-                continue_attacking_after_target_dead: true,
                 remove_shadow                       : true,
+                auto_item_to_belt                   : false,
+                continue_attacking_after_target_dead: true,
                 excluded_dc6                        : HashSet::new(),
             },
 

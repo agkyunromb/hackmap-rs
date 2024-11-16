@@ -8,6 +8,8 @@ pub(super) struct ItemStateMonitor {
     pub cursor_to_storage   : bool,
     pub ground_to_cursor    : bool,
     pub add_to_ground       : bool,
+    pub put_in_belt         : bool,
+    pub remove_from_belt    : bool,
 }
 
 impl ItemStateMonitor {
@@ -18,16 +20,21 @@ impl ItemStateMonitor {
             cursor_to_ground    : false,
             cursor_to_storage   : false,
             ground_to_cursor    : false,
+            put_in_belt         : false,
+            remove_from_belt    : false,
             add_to_ground       : false,
         }
     }
 
     pub fn reset(&mut self, unit_id: u32) {
-        self.unit_id              = unit_id;
-        self.storage_to_cursor    = false;
-        self.cursor_to_ground     = false;
-        self.cursor_to_storage    = false;
-        self.ground_to_cursor     = false;
+        self.unit_id            = unit_id;
+        self.storage_to_cursor  = false;
+        self.cursor_to_ground   = false;
+        self.cursor_to_storage  = false;
+        self.ground_to_cursor   = false;
+        self.put_in_belt        = false;
+        self.remove_from_belt   = false;
+        self.add_to_ground      = false;
     }
 
     pub fn on_scmd(&mut self, cmd: D2GSCmd, payload: *const u8) {
@@ -64,6 +71,14 @@ impl ItemStateMonitor {
 
             D2ItemActionType::PutInContainer => {
                 self.cursor_to_storage = true;
+            },
+
+            D2ItemActionType::PutInBelt => {
+                self.put_in_belt = true;
+            },
+
+            D2ItemActionType::RemoveFromBelt => {
+                self.remove_from_belt = true;
             },
 
             _ => {},

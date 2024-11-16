@@ -281,17 +281,17 @@ impl UnitColor {
             }
         }
 
+        let owner_id = D2Client::Units::GetMonsterOwnerID(unit.dwUnitId);
         let type_flag = monster_data.nTypeFlag;
         let mut color: u8;
         let mut show_name = false;
         let mut blob_file: Option<&String>;
-        let owner_id = D2Client::Units::GetMonsterOwnerID(unit.dwUnitId);
 
         if owner_id == D2Client::Units::GetClientPlayer()?.dwUnitId {
             color = unit_color_cfg.my_pet_blob_color;
             blob_file = unit_color_cfg.my_pet_blob_file.as_ref();
 
-        } else if owner_id != u32::MAX {
+        } else if owner_id != u32::MAX || D2Common::StatList::GetUnitAlignment(unit) == D2UnitAlignment::Good {
             color = unit_color_cfg.party_pet_blob_color;
             blob_file = unit_color_cfg.player_pet_blob_file.as_ref();
 
@@ -722,27 +722,12 @@ impl UnitColor {
             PickupMethod::None => return None,
 
             PickupMethod::Inventory => {
-                let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
-                    nHeader       : D2ClientCmd::PICKUP_ITEM as u8,
-                    dwUnitType    : D2UnitTypes::Item as u32,
-                    dwUnitGUID    : item.dwUnitId,
-                    bCursor       : 0,
-                };
-
-                D2ClientEx::Net::send_packet(&cmd);
+                D2ClientEx::Utils::send_pickup_item(item, false);
             },
 
             PickupMethod::Cube => {
                 D2ClientEx::Inventory::get_free_position_for_item(item, D2ItemInvPage::Cube)?;
-
-                let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
-                    nHeader       : D2ClientCmd::PICKUP_ITEM as u8,
-                    dwUnitType    : D2UnitTypes::Item as u32,
-                    dwUnitGUID    : item.dwUnitId,
-                    bCursor       : 1,
-                };
-
-                D2ClientEx::Net::send_packet(&cmd);
+                D2ClientEx::Utils::send_pickup_item(item, true);
 
                 self.items_to_cube.insert(item.dwUnitId, SystemTime::now().add(Duration::from_secs(5)));
             },
@@ -751,14 +736,7 @@ impl UnitColor {
                 let player = D2Client::Units::GetClientPlayer()?;
 
                 if D2Common::Inventory::GetFreeBeltSlot(ptr_to_ref(player.pInventory)?, item).is_some() {
-                    let cmd = D2Common::SCMD_PACKET_16_PIKCUP_ITEM{
-                        nHeader       : D2ClientCmd::PICKUP_ITEM as u8,
-                        dwUnitType    : D2UnitTypes::Item as u32,
-                        dwUnitGUID    : item.dwUnitId,
-                        bCursor       : 0,
-                    };
-
-                    D2ClientEx::Net::send_packet(&cmd);
+                    D2ClientEx::Utils::send_pickup_item(item, false);
                 }
             },
         }

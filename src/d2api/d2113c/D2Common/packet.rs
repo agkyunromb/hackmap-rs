@@ -52,6 +52,22 @@ pub struct SCMD_PACKET_2A_ITEM_TO_CUBE {
 }
 
 #[repr(C, packed(1))]
+pub struct SCMD_PACKET_3F_USE_STACKABLE_ITEM {
+    // size: 0x0009
+    pub nHeader                 : u8,                   // 0x0000
+    pub nSpellIcon              : u8,                   // 0x0001
+    pub dwItemId                : u32,                  // 0x0002
+    pub nSkillId                : u32,                  // 0x0006
+}
+
+#[repr(C, packed(1))]
+pub struct SCMD_PACKET_63_ITEM_TO_BELT {
+    // size: 0x0005
+    pub nHeader                 : u8,                   // 0x0000
+    pub dwItemGUID              : u32,                  // 0x0001
+}
+
+#[repr(C, packed(1))]
 pub struct SCMD_PACKET_9C_ITEMACTION {
     // size: 0x00fc
     pub nHeader                 : u8,                   // 0x0000

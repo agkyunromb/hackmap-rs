@@ -2,6 +2,7 @@ use super::common::*;
 
 pub struct NetOffset {
     pub SendPacket          : FuncAddress,
+    pub DoSendPacket        : FuncAddress,
     pub Call_GSCmdHandler   : FuncAddress,
     pub gD2GSHandlers       : FuncAddress,
 }
@@ -365,6 +366,7 @@ pub fn init(d2client: usize) {
         },
         Net: NetOffset{
             SendPacket              : d2client + D2RVA::D2Client(0x6FAC43E0),
+            DoSendPacket            : d2client + D2RVA::D2Client(0x6FABD252),
             Call_GSCmdHandler       : d2client + D2RVA::D2Client(0x6FB5CFAF),
             gD2GSHandlers           : d2client + D2RVA::D2Client(0x6FB8DE60),
         },
