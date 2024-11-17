@@ -44,6 +44,15 @@ pub struct SCMD_PACKET_17_DROP_CURSOR_ITEM {
 }
 
 #[repr(C, packed(1))]
+pub struct SCMD_PACKET_20_USE_ITEM {
+    // size: 0x000D
+    pub nHeader                 : u8,                   // 0x0000
+    pub nItemGUID               : u32,                  // 0x0001
+    pub nPosX                   : i32,                  // 0x0005
+    pub nPosY                   : i32,                  // 0x0009
+}
+
+#[repr(C, packed(1))]
 pub struct SCMD_PACKET_2A_ITEM_TO_CUBE {
     // size: 0x0009
     pub nHeader                 : u8,                   // 0x0000
@@ -53,7 +62,7 @@ pub struct SCMD_PACKET_2A_ITEM_TO_CUBE {
 
 #[repr(C, packed(1))]
 pub struct SCMD_PACKET_3F_USE_STACKABLE_ITEM {
-    // size: 0x0009
+    // size: 0x000A
     pub nHeader                 : u8,                   // 0x0000
     pub nSpellIcon              : u8,                   // 0x0001
     pub dwItemId                : u32,                  // 0x0002

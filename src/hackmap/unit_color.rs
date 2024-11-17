@@ -411,21 +411,31 @@ impl UnitColor {
         None
     }
 
-    fn draw_missile(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
-        if unit.dwFlagEx.contains(D2UnitFlagsEx::Teleported) {
+    fn draw_missile(&self, missile: &mut D2Unit, x: i32, y: i32) -> Option<()> {
+        if missile.dwFlagEx.contains(D2UnitFlagsEx::Teleported) {
             return None;
         }
 
-        let owner_id = match unit.dwOwnerType {
-            D2UnitTypes::Player => unit.dwOwnerGUID,
-            D2UnitTypes::Monster => D2Client::Units::GetMonsterOwnerID(unit.dwUnitId),
+        let owner_id = match missile.dwOwnerType {
+            D2UnitTypes::Player => missile.dwOwnerGUID,
+            D2UnitTypes::Monster => D2Client::Units::GetMonsterOwnerID(missile.dwOwnerGUID),
             _ => u32::MAX,
         };
+
+        let player = D2Client::Units::GetClientPlayer()?;
 
         let cfg = self.cfg.borrow();
         let unit_color = &cfg.unit_color;
 
-        let color = if owner_id == u32::MAX { unit_color.other_missile_color } else { unit_color.player_missile_color };
+        let color = if owner_id == u32::MAX {
+            unit_color.other_missile_color
+
+        } else if owner_id == player.dwUnitId {
+            unit_color.player_missile_color
+
+        } else {
+            unit_color.party_pet_blob_color
+        };
 
         self.draw_cell_by_blob_file(x, y, cfg.unit_color.missile_blob_file.as_ref(), color);
 

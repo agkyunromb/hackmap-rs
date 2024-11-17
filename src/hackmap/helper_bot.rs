@@ -102,6 +102,11 @@ impl HelperBot {
             return;
         }
 
+        if HackMap::config().borrow().tweaks.auto_item_to_belt == false {
+            self.belt_free_slots = 0;
+            return;
+        }
+
         let current_timestamp = get_current_timestamp();
 
         if self.next_fill_belt_timestamp > current_timestamp {
@@ -126,6 +131,10 @@ impl HelperBot {
         self.belt_free_slots -= 1;
 
         D2CommonEx::Inventory::iter_inventory(player, |inventory, item| {
+            if D2Common::Inventory::UnitIsItem(item) == FALSE {
+                return false;
+            }
+
             if D2Common::Items::GetInvPage(item) != D2ItemInvPage::Inventory {
                 return false;
             }
@@ -205,10 +214,14 @@ impl HelperBot {
         None
     }
 
-    fn on_fast_transmute(&mut self) {
+    fn on_fast_transmute(&mut self) -> Option<()> {
         if D2Client::UI::GetUIVar(D2UIvars::Cube) != 0 {
-            return;
+            return None;
         }
+
+        D2ClientEx::Utils::use_item(D2Client::Units::GetClientPlayer()?, D2ClientEx::Utils::get_cube_from_inv()?);
+
+        None
     }
 
     pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {
@@ -256,6 +269,19 @@ impl HelperBot {
             }
 
             HackMap::helper_bot().on_fast_drop();
+
+            false
+        });
+
+        HackMap::input().on_key_down(|vk| {
+            let cfg = HackMap::config();
+            let cfg = cfg.borrow();
+
+            if vk != cfg.hotkey.fast_transmute {
+                return false;
+            }
+
+            HackMap::helper_bot().on_fast_transmute();
 
             false
         });

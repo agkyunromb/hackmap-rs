@@ -12,6 +12,7 @@ pub struct UIOffset {
     pub HandleUIVars            : FuncAddress,
     pub DisplayGlobalMessage    : FuncAddress,
     pub DisplayQuickMessage     : FuncAddress,
+    pub PlaySound               : FuncAddress,
 
     pub CallHandleUIVars        : FuncAddress,
 
@@ -19,6 +20,7 @@ pub struct UIOffset {
     pub gUIOpenMode             : FuncAddress,
     pub gAttackWithLeftButton   : FuncAddress,
     pub gAttackWithRightButton  : FuncAddress,
+    pub gIsStashOpened          : FuncAddress,
 }
 
 pub struct GameOffset {
@@ -53,6 +55,9 @@ pub struct UnitsOffset {
     pub GetName                 : FuncAddress,
     pub ShouldShowUnit          : FuncAddress,
     pub GetClientUnit           : FuncAddress,
+    pub SetUnitUninterruptable  : FuncAddress,
+    pub GetItemUseSound         : FuncAddress,
+    pub TryUseItemAtPos         : FuncAddress,
     pub gClientPlayer           : FuncAddress,
     pub gClientUnitTypeTable    : FuncAddress,
     pub gHasNpcSelected         : FuncAddress,
@@ -146,6 +151,14 @@ pub mod UI {
         write_at(AddressTable.UI.gAttackWithRightButton, v);
     }
 
+    pub fn GetIsStashOpened() -> u32 {
+        read_at(AddressTable.UI.gIsStashOpened)
+    }
+
+    pub fn SetIsStashOpened(v: u32) {
+        write_at(AddressTable.UI.gIsStashOpened, v);
+    }
+
     pub fn HandleUIVars(this: PVOID) {
         addr_to_stdcall(HandleUIVars, AddressTable.UI.HandleUIVars)(this)
     }
@@ -158,6 +171,20 @@ pub mod UI {
 
     pub fn DisplayQuickMessage(text: &str, color: D2StringColorCodes) {
         addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayQuickMessage)(text.to_utf16().as_ptr(), color)
+    }
+
+    pub fn PlaySound(soundId: i32) {
+        unsafe {
+            asm!(
+                "push 0",
+                "push 0",
+                "push 0",
+                "push 0",
+                "call {0}",
+                in(reg) AddressTable.UI.PlaySound,
+                in("ebx") soundId,
+            );
+        }
     }
 }
 
@@ -278,6 +305,8 @@ pub mod AutoMap {
 pub mod Units {
     use std::ptr::addr_of_mut;
 
+    use crate::d2113c::D2Common::D2Inventory;
+
     use super::super::common::*;
     use super::AddressTable;
     use super::super::D2Common::D2Unit;
@@ -347,6 +376,56 @@ pub mod Units {
 
         false
     }
+
+    pub fn SetUnitUninterruptable(unit: &D2Unit) {
+        unsafe {
+            asm!(
+                "call {0}",
+                in(reg) AddressTable.Units.SetUnitUninterruptable,
+                in("eax") unit,
+            );
+        }
+    }
+
+    pub fn GetItemUseSound(unit: &D2Unit) -> i32 {
+        let mut sound_id: i32;
+
+        unsafe {
+            asm!(
+                "push esi",
+                "mov  esi, {1}",
+                "call {0}",
+                "pop  esi",
+                in(reg) AddressTable.Units.GetItemUseSound,
+                in(reg) unit,
+                lateout("eax") sound_id,
+            );
+        }
+
+        sound_id
+    }
+
+    pub fn TryUseItemAtPos(item: &D2Unit, inventory: &D2Inventory, x: i32, y: i32, invPage: D2ItemInvPage) -> i32 {
+        let mut success: i32;
+
+        unsafe {
+            asm!(
+                "push {2}",
+                "push {1}",
+                "call {0}",
+                in(reg) AddressTable.Units.TryUseItemAtPos,
+                in(reg) item,
+                in(reg) inventory,
+                in("eax") invPage as u32,
+                in("ecx") y,
+                in("edx") x,
+                lateout("eax") success,
+            );
+        }
+
+        success
+    }
+
 }
 
 pub fn init(d2client: usize) {
@@ -356,6 +435,7 @@ pub fn init(d2client: usize) {
             HandleUIVars            : d2client + D2RVA::D2Client(0x6FB739E0),
             DisplayGlobalMessage    : d2client + D2RVA::D2Client(0x6FB2D850),
             DisplayQuickMessage     : d2client + D2RVA::D2Client(0x6FB2D610),
+            PlaySound               : d2client + D2RVA::D2Client(0x6FB38A70),
 
             CallHandleUIVars        : d2client + D2RVA::D2Client(0x6FAF437B),
 
@@ -363,6 +443,7 @@ pub fn init(d2client: usize) {
             gUIOpenMode             : d2client + D2RVA::D2Client(0x6FBCC414),
             gAttackWithLeftButton   : d2client + D2RVA::D2Client(0x6FBCC3DC),
             gAttackWithRightButton  : d2client + D2RVA::D2Client(0x6FBCC3E0),
+            gIsStashOpened          : d2client + D2RVA::D2Client(0x6FBCBC98),
         },
         Net: NetOffset{
             SendPacket              : d2client + D2RVA::D2Client(0x6FAC43E0),
@@ -401,6 +482,9 @@ pub fn init(d2client: usize) {
             GetName                 : d2client + D2RVA::D2Client(0x6FB55D90),
             ShouldShowUnit          : d2client + D2RVA::D2Client(0x6FB16620),
             GetClientUnit           : d2client + D2RVA::D2Client(0x6FB55B40),
+            SetUnitUninterruptable  : d2client + D2RVA::D2Client(0x6FB31CE0),
+            GetItemUseSound         : d2client + D2RVA::D2Client(0x6FB31D70),
+            TryUseItemAtPos         : d2client + D2RVA::D2Client(0x6FB48B60),
             gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
             gClientUnitTypeTable    : d2client + D2RVA::D2Client(0x6FBBA608),
             gHasNpcSelected         : d2client + D2RVA::D2Client(0x6FBC9721),

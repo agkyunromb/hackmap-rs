@@ -288,6 +288,19 @@ pub mod Utils {
         super::Net::send_packet(&cmd);
     }
 
+    pub fn send_use_item(player: &D2Unit, item: &D2Unit) {
+        let coord = D2Common::Units::GetCoords(player);
+
+        let cmd = D2Common::SCMD_PACKET_20_USE_ITEM{
+            nHeader     : D2ClientCmd::USE_ITEM as u8,
+            nItemGUID   : item.dwUnitId,
+            nPosX       : coord.nX,
+            nPosY       : coord.nY,
+        };
+
+        super::Net::send_packet(&cmd);
+    }
+
     pub fn send_cursor_item_to_cube(cursor_item: &D2Unit, cube: &D2Unit) {
         let payload = D2Common::SCMD_PACKET_2A_ITEM_TO_CUBE{
             nHeader     : D2ClientCmd::ITEM_TO_CUBE as u8,
@@ -318,32 +331,59 @@ pub mod Utils {
         None
     }
 
-    pub fn get_cube_from_inv() -> Option<&'static D2Unit> {
-        let player = D2Client::Units::GetClientPlayer()?;
-
-        let mut opt_item = D2Common::Inventory::GetFirstItem(ptr_to_ref(player.pInventory)?);
-
-        while let Some(item) = opt_item {
-            loop {
-                if D2Common::Inventory::UnitIsItem(item) == FALSE {
-                    break;
-                }
-
-                match D2Common::Items::GetInvPage(item) {
-                    D2ItemInvPage::Inventory | D2ItemInvPage::Stash => {},
-                    _ => break,
-                }
-
-                if D2Common::Items::GetBaseCode(item) != D2ItemCodes::Cube {
-                    break;
-                }
-
-                return Some(item);
-            }
-            opt_item = D2Common::Inventory::GetNextItem(item);
+    pub fn use_item(player: &D2Unit, item: &D2Unit) {
+        if D2Common::Items::GetBaseCode(item) == D2ItemCodes::Cube {
+            D2Client::UI::SetIsStashOpened(1);
         }
 
-        None
+        send_use_item(player, item);
+        D2Client::Units::SetUnitUninterruptable(item);
+        D2Client::UI::PlaySound(D2Client::Units::GetItemUseSound(item));
+    }
+
+    pub fn get_cube_from_inv() -> Option<&'static mut D2Unit> {
+        let player = D2Client::Units::GetClientPlayer()?;
+
+        return D2CommonEx::Inventory::iter_inventory(player, |_inventory, item| {
+            if D2Common::Inventory::UnitIsItem(item) == FALSE {
+                return false;
+            }
+
+            match D2Common::Items::GetInvPage(item) {
+                D2ItemInvPage::Inventory | D2ItemInvPage::Stash => {},
+                _ => return false,
+            }
+
+            if D2Common::Items::GetBaseCode(item) != D2ItemCodes::Cube {
+                return false;
+            }
+
+            true
+        });
+
+        // let mut opt_item = D2Common::Inventory::GetFirstItem(ptr_to_ref(player.pInventory)?);
+
+        // while let Some(item) = opt_item {
+        //     loop {
+        //         if D2Common::Inventory::UnitIsItem(item) == FALSE {
+        //             break;
+        //         }
+
+        //         match D2Common::Items::GetInvPage(item) {
+        //             D2ItemInvPage::Inventory | D2ItemInvPage::Stash => {},
+        //             _ => break,
+        //         }
+
+        //         if D2Common::Items::GetBaseCode(item) != D2ItemCodes::Cube {
+        //             break;
+        //         }
+
+        //         return Some(item);
+        //     }
+        //     opt_item = D2Common::Inventory::GetNextItem(item);
+        // }
+
+        // None
     }
 }
 
