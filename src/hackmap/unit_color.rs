@@ -672,7 +672,10 @@ impl UnitColor {
             return;
         }
 
-        let name_color = D2Sigma::Items::GetItemNameColor(item).to_str_code();
+        let name_color = match item_color.text_color {
+            Some(c) => c.to_str_code(),
+            None => D2Sigma::Items::GetItemNameColor(item).to_str_code(),
+        };
 
         if let Some(notify_text) = item_color.notify_text.as_ref() {
             D2Client::UI::DisplayGlobalMessage(&format!("{name_color} - {notify_text}"), D2StringColorCodes::Invalid);
@@ -680,7 +683,7 @@ impl UnitColor {
         }
 
         let quality = D2Common::Items::GetItemQuality(item);
-        let name = D2SigmaEx::Items::get_item_name(item);
+        let name = D2SigmaEx::Items::get_item_name(item, true);
 
         let mut name: Vec<&str> = name.split('\n').collect();
         let name_line_count = name.len();
@@ -698,7 +701,8 @@ impl UnitColor {
             name.join(" - ")
 
         } else if notify == DropNotify::Name || quality == D2ItemQualities::Unique {
-            name[1..].join(" - ")
+            let start_index = if name.len() == 1 { 0 } else { 1 };
+            name[start_index..].join(" - ")
 
         } else {
             name.join(" - ")

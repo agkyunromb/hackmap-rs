@@ -117,8 +117,8 @@ impl D2SigmaEx {
 pub mod Items {
     use super::*;
 
-    pub fn get_item_name(unit: &D2Unit) -> String {
-        D2SigmaEx::get().get_item_properties(unit, true, false)
+    pub fn get_item_name(unit: &D2Unit, strip_color_code: bool) -> String {
+        D2SigmaEx::get().get_item_properties(unit, true, strip_color_code)
     }
 
     pub fn get_item_properties(unit: &D2Unit, strip_color_code: bool) -> String {

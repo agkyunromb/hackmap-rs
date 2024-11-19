@@ -185,7 +185,7 @@ impl UnitColorConfig {
         let is_eth = D2Common::Items::CheckItemFlag(item, D2ItemFlags::Ethereal) != FALSE;
 
         let item_prop = D2SigmaEx::Items::get_item_properties(item, false);
-        let item_name = D2SigmaEx::Items::get_item_name(item);
+        let item_name = D2SigmaEx::Items::get_item_name(item, true);
 
         for entry in self.item_colors.iter().rev() {
             let match_name = entry.match_name.unwrap_or(false);
