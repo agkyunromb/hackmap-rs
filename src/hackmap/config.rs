@@ -87,6 +87,9 @@ pub(super) struct UnitColorConfig {
     pub show_socket_number          : bool,
 
     #[serde(deserialize_with = "bool_from_int", default)]
+    pub show_eth                    : bool,
+
+    #[serde(deserialize_with = "bool_from_int", default)]
     pub hide_items                  : bool,
 
     #[serde(deserialize_with = "bool_from_int", default)]
@@ -265,6 +268,7 @@ impl Config {
 
             unit_color: UnitColorConfig{
                 show_socket_number              : true,
+                show_eth                        : true,
                 hide_items                      : true,
                 item_extra_info                 : false,
                 auto_pickup                     : false,

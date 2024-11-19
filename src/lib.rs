@@ -1,4 +1,4 @@
-#![allow(non_snake_case, non_camel_case_types, dead_code, non_upper_case_globals, unused_imports)]
+#![allow(non_snake_case, non_camel_case_types, dead_code, non_upper_case_globals, unused_imports, static_mut_refs)]
 #![feature(reentrant_lock)]
 
 mod d2api;

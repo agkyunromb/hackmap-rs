@@ -130,6 +130,8 @@ impl HelperBot {
 
         self.belt_free_slots -= 1;
 
+        let mut last_item_id = 0u32;
+
         D2CommonEx::Inventory::iter_inventory(player, |inventory, item| {
             if D2Common::Inventory::UnitIsItem(item) == FALSE {
                 return false;
@@ -145,13 +147,24 @@ impl HelperBot {
 
             match D2Common::Inventory::GetFreeBeltSlot(inventory, item) {
                 Some(_) => {
-                    D2ClientEx::Utils::send_item_to_belt(item);
-                    self.items_removing.insert(item.dwUnitId, current_timestamp + 1000 * 5);
-                    true
+                    last_item_id = item.dwUnitId;
+                    false
                 },
                 None => false,
-            }
+            };
+
+            false
         });
+
+        if last_item_id != 0 {
+            let item = match D2Client::Units::GetClientUnit(last_item_id, D2UnitTypes::Item) {
+                Some(p) => p,
+                None => return,
+            };
+
+            D2ClientEx::Utils::send_item_to_belt(item);
+            self.items_removing.insert(item.dwUnitId, current_timestamp + 1000 * 5);
+        }
     }
 
     fn on_use_stackable_item(&mut self, cmd: D2GSCmd, payload: *const u8) {
@@ -172,40 +185,11 @@ impl HelperBot {
             return;
         }
 
-        // let player = match D2Client::Units::GetClientPlayer() {
-        //     Some(p) => p,
-        //     None => return,
-        // };
-
         if D2CommonEx::Inventory::get_player_cursor_item().is_some() {
             return;
         }
 
         self.belt_free_slots += 1;
-
-        // let current_timestamp = get_current_timestamp();
-
-        // self.items_removing.retain(|_, &mut ts| ts < current_timestamp);
-
-        // D2CommonEx::Inventory::iter_inventory(player, |inventory, item| {
-        //     if D2Common::Items::GetInvPage(item) != D2ItemInvPage::Inventory {
-        //         return false;
-        //     }
-
-        //     if self.items_removing.contains_key(&item.dwUnitId) {
-        //         return false;
-        //     }
-
-        //     match D2Common::Inventory::GetFreeBeltSlot(inventory, item) {
-        //         Some(_) => {
-        //             D2ClientEx::Utils::send_item_to_belt(item);
-        //             println!("item to belt: {}", item.dwUnitId);
-        //             self.items_removing.insert(item.dwUnitId, current_timestamp + 15);
-        //             true
-        //         },
-        //         None => false,
-        //     }
-        // });
 
     }
 

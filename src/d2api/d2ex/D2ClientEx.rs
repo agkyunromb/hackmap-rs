@@ -332,7 +332,7 @@ pub mod Utils {
     }
 
     pub fn use_item(player: &D2Unit, item: &D2Unit) {
-        if D2Common::Items::GetBaseCode(item) == D2ItemCodes::Cube {
+        if D2Common::Items::GetBaseCode(item) == D2ItemCodes::Cube && D2Client::UI::GetUIVar(D2UIvars::Stash) != 0 {
             D2Client::UI::SetIsStashOpened(1);
         }
 

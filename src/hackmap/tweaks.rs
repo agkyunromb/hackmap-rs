@@ -45,7 +45,7 @@ extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(_unit1: PVOID, _unit2: 
     // if hide { TRUE } else { FALSE }
 }
 
-extern "fastcall" fn D2Sigma_Units_GetName(unit: &D2Unit) -> PCWSTR {
+fn D2Sigma_Units_GetName(unit: &D2Unit, is_boss: bool) -> PCWSTR {
     let name = D2Sigma::Units::GetName(unit).to_string();
 
     let dr = D2Common::StatList::GetUnitBaseStat(unit, D2ItemStats::DamageResist, 0) as i32;
@@ -63,14 +63,27 @@ extern "fastcall" fn D2Sigma_Units_GetName(unit: &D2Unit) -> PCWSTR {
 
     let monster_name = if cfg.tweaks.show_monster_id {
         format!("{name}({class_id}, 0x{class_id:X}) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
+
+    } else if is_boss {
+        let percent = (hp * 100.0 / max_hp) as usize;
+        format!("{name}({percent}%) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
+
     } else {
         let percent = (hp * 100.0 / max_hp) as usize;
         format!("{name}({percent}%%) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
     };
 
-    let hm = HackMap::tweaks();
-    hm.current_monster_name = monster_name.to_utf16();
-    hm.current_monster_name.as_ptr()
+    let tweaks = HackMap::tweaks();
+    tweaks.current_monster_name = monster_name.to_utf16();
+    tweaks.current_monster_name.as_ptr()
+}
+
+extern "fastcall" fn D2Sigma_Units_GetNameForMonster(unit: &D2Unit) -> PCWSTR {
+    D2Sigma_Units_GetName(unit, false)
+}
+
+extern "fastcall" fn D2Sigma_Units_GetNameForBoss(unit: &D2Unit) -> PCWSTR {
+    D2Sigma_Units_GetName(unit, true)
 }
 
 extern "C" fn is_player_in_town() -> bool {
@@ -248,6 +261,10 @@ impl Tweaks {
                     patch_memory_value(modules.glide3x.unwrap(), 0x55F2E, 0x80, 1)?;
                 },
 
+                0x6727FC35 => {
+                    patch_memory_value(modules.glide3x.unwrap(), 0x54EC9, 0xEB, 1)?;
+                },
+
                 _ => {},
             }
 
@@ -265,8 +282,8 @@ impl Tweaks {
 
             // 显示抗性
             if D2Sigma::initialized() {
-                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
-                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName, D2Sigma_Units_GetName as usize, None, None)?;
+                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_Units_GetName, D2Sigma_Units_GetNameForBoss as usize, None, None)?;
+                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName, D2Sigma_Units_GetNameForMonster as usize, None, None)?;
                 patch_memory_value(0, D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar, 0x80, 1)?;
             }
 

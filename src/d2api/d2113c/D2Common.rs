@@ -33,6 +33,7 @@ pub struct UnitsOffset {
     pub GetDistanceToCoordinates: FuncAddress,
     pub GetCoords               : FuncAddress,
     pub GetInventoryRecordId    : FuncAddress,
+    pub GetPlayerName           : FuncAddress,
 }
 
 pub struct ItemsOffset {
@@ -231,6 +232,18 @@ pub mod Units {
 
     pub fn GetInventoryRecordId(unit: &D2Unit, invPage: D2ItemInvPage, isLod: BOOL) -> i32 {
         addr_to_stdcall(GetInventoryRecordId, AddressTable.Units.GetInventoryRecordId)(unit, invPage, isLod)
+    }
+
+    fn _GetPlayerName(_unit: &D2Unit) -> PCSTR { null_mut() }
+
+    pub fn GetPlayerName(unit: &D2Unit) -> Option<String> {
+        let name = addr_to_stdcall(_GetPlayerName, AddressTable.Units.GetPlayerName)(unit);
+
+        if name.is_null() {
+            return None;
+        }
+
+        Some(name.to_str().to_string())
     }
 
 }
@@ -447,6 +460,7 @@ pub fn init(d2common: usize) {
             GetDistanceToCoordinates            : d2common + D2RVA::D2Common(0x6FDCF5E0),
             GetCoords                           : d2common + D2RVA::D2Common(0x6FD80050),
             GetInventoryRecordId                : d2common + D2RVA::D2Common(0x6FD7FB60),
+            GetPlayerName                       : d2common + D2RVA::D2Common(0x6FD7EBB0),
         },
         Items: ItemsOffset{
             GetItemType                         : d2common + D2RVA::D2Common(0x6FD730F0),

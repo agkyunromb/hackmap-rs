@@ -228,6 +228,16 @@ impl UnitColor {
         self.draw_cell_by_blob_file(x, y, unit_color_config.my_blob_file.as_ref(), color);
         // self.draw_default_cross(x, y, if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
 
+        if unit.dwUnitId != player.dwUnitId {
+            let name = D2Common::Units::GetPlayerName(unit);
+            match name {
+                Some(n) => {
+                    D2WinEx::Text::draw_text(n.to_utf16().as_ptr(), x, y - 8, D2Font::Font6, D2StringColorCodes::LightGreen);
+                },
+                _ => (),
+            }
+        }
+
         None
     }
 
@@ -522,6 +532,10 @@ impl UnitColor {
             }
         }
 
+        if cfg.unit_color.show_eth && D2Common::Items::CheckItemFlag(item, D2ItemFlags::Ethereal) != FALSE {
+            name += &format!("(eth)");
+        }
+
         if cfg.unit_color.item_extra_info {
             let quality = D2Common::Items::GetItemQuality(item);
             let unit_id = item.dwUnitId;
@@ -632,6 +646,7 @@ impl UnitColor {
 
         if state.add_to_ground || state.cursor_to_ground {
             self.handle_dropped_item(item);
+
         } else if state.ground_to_cursor {
             self.handle_auto_pickup_cube(item);
         }
