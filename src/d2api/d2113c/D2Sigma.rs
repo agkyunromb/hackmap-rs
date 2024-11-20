@@ -405,7 +405,66 @@ pub fn init(d2sigma: usize) {
                 },
             });
         },
-
+        1730847471 => {
+            // 2.10.2
+            AddressTable.initialize(D2SigmaOffset{
+                AutoMap: AutoMapOffset{
+                    RevealMap           : vmslide + 0x100A58C0,
+                    DrawAutoMap         : vmslide + 0x100594A0,
+                    // DrawAutoMapUnits    : vmslide + 0x00000000,
+                    DrawUnitBlob        : vmslide + 0x100816A0,
+                },
+                Units: UnitsOffset{
+                    GetName                 : vmslide + 0x100CF840,
+                    DisplayItemProperties   : vmslide + 0x1008CBA0,
+                },
+                Items: ItemsOffset{
+                    GetItemName             : vmslide + 0x1008CED0,
+                    GetItemNameColor        : vmslide + 0x1008D9A0,
+                    LootFilterCheckUnit     : vmslide + 0x100A3260,
+                },
+                ItemText: ItemTextOffset{
+                    GetItemPropertiesInit   : vmslide + 0x1008C5F0,
+                    GetItemProperties1      : vmslide + 0x10098340,
+                    GetItemProperties2      : vmslide + 0x10096A70,
+                    GetItemProperties3      : vmslide + 0x100967A0,
+                    GetItemProperties4      : vmslide + 0x10096E40,
+                    GetItemProperties5      : vmslide + 0x10094510,
+                    GetItemProperties6      : vmslide + 0x10094F10,
+                    GetItemProperties7      : vmslide + 0x10095040,
+                    GetItemProperties8      : vmslide + 0x100981D0,
+                    GetItemProperties9      : vmslide + 0x10094440,
+                    GetItemProperties10     : vmslide + 0x10097CB0,
+                    GetItemProperties11     : vmslide + 0x10094100,
+                    GetItemProperties12     : vmslide + 0x100956E0,
+                    GetItemProperties13     : vmslide + 0x10098410,
+                    GetItemProperties14     : vmslide + 0x10096FE0,
+                    GetItemProperties15     : vmslide + 0x10098930,
+                    GetItemProperties16     : vmslide + 0x10094C10,
+                    GetItemProperties17     : vmslide + 0x10094300,
+                    GetItemProperties18     : vmslide + 0x10095D50,
+                    GetItemProperties19     : vmslide + 0x100962F0,
+                    GetItemProperties20     : vmslide + 0x10096020,
+                    GetItemProperties21     : vmslide + 0x10095A50,
+                    GetItemProperties22     : vmslide + 0x10095550,
+                    GetItemProperties23     : vmslide + 0x1008E1C0,
+                    GetItemProperties24     : vmslide + 0x1008E430,
+                    GetItemProperties25     : vmslide + 0x10098B90,
+                    GetItemProperties26     : vmslide + 0x100953A0,
+                    GetItemProperties27     : vmslide + 0x100965C0,
+                    GetName                 : vmslide + 0x10094E90,
+                    GetItemProperties29     : vmslide + 0x100986F0,
+                    AddCtrlPressedHintText  : vmslide + 0x10095850,
+                    GetCostHintText         : vmslide + 0x10097EE0,
+                },
+                UI: UIOffset{
+                    DrawItemProperties                  : vmslide + 0x1008E380,   // GetKeyState(VK_CONTROL)
+                    BossLifeBar_Call_Units_GetName      : vmslide + 0x1009C38B,   // BossLifebar:BossName 
+                    MonsterLifeBar_Call_Units_GetName   : vmslide + 0x1009B978,   // game\\hud\\mon-hp-bar 
+                    CheckIsMonsterShouldDisplayLifeBar  : vmslide + 0x1009B7C9,   // game\\hud\\mon-hp-bar, test    eax, 201h
+                },
+            });
+        },
         _ => {},
     }
 }
