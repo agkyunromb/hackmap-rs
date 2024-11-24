@@ -672,9 +672,9 @@ impl UnitColor {
             return;
         }
 
-        let name_color = match item_color.text_color {
-            Some(c) => c.to_str_code(),
-            None => D2Sigma::Items::GetItemNameColor(item).to_str_code(),
+        let (has_color, name_color) = match item_color.text_color {
+            Some(c) => (true, c.to_str_code()),
+            None => (false, D2Sigma::Items::GetItemNameColor(item).to_str_code()),
         };
 
         if let Some(notify_text) = item_color.notify_text.as_ref() {
@@ -683,7 +683,7 @@ impl UnitColor {
         }
 
         let quality = D2Common::Items::GetItemQuality(item);
-        let name = D2SigmaEx::Items::get_item_name(item, true);
+        let name = D2SigmaEx::Items::get_item_name(item, false);
 
         let mut name: Vec<&str> = name.split('\n').collect();
         let name_line_count = name.len();
@@ -697,7 +697,7 @@ impl UnitColor {
         let is_weapon_or_armor = (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount;
         let is_misc = !is_weapon_or_armor;
 
-        let name = if is_misc {
+        let mut name = if is_misc {
             name.join(" - ")
 
         } else if notify == DropNotify::Name || quality == D2ItemQualities::Unique {
@@ -707,6 +707,10 @@ impl UnitColor {
         } else {
             name.join(" - ")
         };
+
+        if has_color {
+            name = D2CommonEx::Items::strip_all_color_codes(&name);
+        }
 
         D2Client::UI::DisplayGlobalMessage(&format!("{name_color} - {name}"), D2StringColorCodes::Invalid);
 

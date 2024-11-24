@@ -7,6 +7,8 @@ use D2Common::D2Unit;
 use crate::d2api::d2ex::common::*;
 use crate::d2api::d2consts::*;
 
+use super::D2CommonEx;
+
 #[repr(C, packed(4))]
 struct FormatItemPropertiesContext {
     pub buf1                    : [u8; 0x100],          // 0x0000
@@ -95,21 +97,7 @@ impl D2SigmaEx {
             return text;
         }
 
-        let chars: Vec<char> = text.chars().collect();
-        let mut new_text = String::new();
-        let mut i = 0;
-
-        while i < chars.len() {
-            let ch = chars[i];
-            if ch == 'ÿ' && i + 1 < chars.len() && chars[i + 1] == 'c' {
-                i += 3;
-            } else {
-                new_text.push(ch);
-                i += 1;
-            }
-        }
-
-        return new_text;
+        D2CommonEx::Items::strip_all_color_codes(&text)
     }
 
 }

@@ -3,6 +3,8 @@ use crate::d2api::d2consts::*;
 use D2Common::{D2Unit, D2Inventory};
 
 pub mod Inventory {
+    use std::u32;
+
     use super::*;
 
     pub fn get_player_cursor_item() -> Option<&'static mut D2Unit> {
@@ -23,6 +25,32 @@ pub mod Inventory {
         }
 
         None
+    }
+}
+
+pub mod Items {
+    pub fn strip_all_color_codes(s: &str) -> String {
+        strip_color_code(s, u32::MAX)
+    }
+
+    pub fn strip_color_code(s: &str, n: u32) -> String {
+        let chars: Vec<char> = s.chars().collect();
+        let mut ss = String::new();
+        let mut i = 0;
+        let mut n = n;
+
+        while i < chars.len() {
+            let ch = chars[i];
+            if n != 0 && ch == 'ÿ' && i + 1 < chars.len() && chars[i + 1] == 'c' {
+                i += 3;
+                n -= 1;
+            } else {
+                ss.push(ch);
+                i += 1;
+            }
+        }
+
+        return ss;
     }
 }
 
