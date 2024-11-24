@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::time::{SystemTime, Duration, UNIX_EPOCH};
+use std::ops::Add;
 use super::common::*;
 use super::item_state_monitor::ItemStateMonitor;
 use super::HackMap;
@@ -82,8 +83,8 @@ extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
 pub(super) struct HelperBot {
     pub cfg: super::config::ConfigRef,
 
-    items_removing              : HashMap<u32, u64>,
-    next_fill_belt_timestamp    : u64,
+    items_removing              : HashMap<u32, SystemTime>,
+    next_fill_belt_timestamp    : SystemTime,
     belt_free_slots             : u32,
 }
 
@@ -92,7 +93,7 @@ impl HelperBot {
         Self {
             cfg,
             items_removing          : HashMap::new(),
-            next_fill_belt_timestamp: 0,
+            next_fill_belt_timestamp: SystemTime::now(),
             belt_free_slots         : 0,
         }
     }
@@ -107,15 +108,13 @@ impl HelperBot {
             return;
         }
 
-        let current_timestamp = get_current_timestamp();
+        let now = SystemTime::now();
 
-        if self.next_fill_belt_timestamp > current_timestamp {
+        if self.next_fill_belt_timestamp > now {
             return;
         }
 
-        const AutoFillInterval: u64 = 500;
-
-        self.next_fill_belt_timestamp = current_timestamp + AutoFillInterval;
+        self.next_fill_belt_timestamp = now.add(Duration::from_millis(500));
 
         if D2CommonEx::Inventory::get_player_cursor_item().is_some() {
             return;
@@ -126,7 +125,7 @@ impl HelperBot {
             None => return,
         };
 
-        self.items_removing.retain(|_, &mut ts| ts < current_timestamp);
+        self.items_removing.retain(|_, &mut expire_time| expire_time < now);
 
         self.belt_free_slots -= 1;
 
@@ -163,7 +162,7 @@ impl HelperBot {
             };
 
             D2ClientEx::Utils::send_item_to_belt(item);
-            self.items_removing.insert(item.dwUnitId, current_timestamp + 1000 * 5);
+            self.items_removing.insert(item.dwUnitId, now.add(Duration::from_secs(5)));
         }
     }
 
