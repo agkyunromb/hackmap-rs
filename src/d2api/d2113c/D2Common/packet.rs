@@ -61,6 +61,13 @@ pub struct SCMD_PACKET_2A_ITEM_TO_CUBE {
 }
 
 #[repr(C, packed(1))]
+pub struct SCMD_PACKET_3B_ADD_SKILL {
+    // size: 0x0003
+    pub nHeader                 : u8,                   // 0x0000
+    pub nSkillID                : u16,                  // 0x0001
+}
+
+#[repr(C, packed(1))]
 pub struct SCMD_PACKET_3F_USE_STACKABLE_ITEM {
     // size: 0x000A
     pub nHeader                 : u8,                   // 0x0000

@@ -71,7 +71,6 @@ fn init(base_address: PVOID) -> BOOL {
     let mut d2modules = d2api::types::D2Modules::default();
 
     let dlls: &mut [(&mut Option<usize>, Option<fn(usize)>, &str)]  = &mut [
-        // (&mut d2modules.D2Sigma,    Some(D2Sigma::init),    "D2Sigma2.92.dll"),
         (&mut d2modules.D2Sigma,    Some(D2Sigma::init),    "D2Sigma_20241121.dll"),
         (&mut d2modules.D2Client,   Some(D2Client::init),   "D2Client.dll"),
         (&mut d2modules.D2Win,      Some(D2Win::init),      "D2Win.dll"),

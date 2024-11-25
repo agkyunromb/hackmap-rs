@@ -311,6 +311,15 @@ pub mod Utils {
         super::Net::send_packet(&payload);
     }
 
+    pub fn send_add_skill(skill_id: u16) {
+        let payload = D2Common::SCMD_PACKET_3B_ADD_SKILL{
+            nHeader     : D2ClientCmd::ADD_SKILL as u8,
+            nSkillID    : skill_id,
+        };
+
+        super::Net::send_packet(&payload);
+    }
+
     pub fn send_item_to_belt(item: &D2Unit) {
         let cmd = D2Common::SCMD_PACKET_63_ITEM_TO_BELT{
             nHeader       : D2ClientCmd::ITEM_TO_BELT as u8,
