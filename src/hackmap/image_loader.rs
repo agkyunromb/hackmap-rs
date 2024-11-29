@@ -1,10 +1,10 @@
 use super::common::*;
-use super::HackMap;
 use super::config::ConfigRef;
+use super::HackMap;
+use anyhow::Result;
+use std::collections::HashMap;
 use std::io::Read;
 use std::path::Path;
-use std::collections::HashMap;
-use anyhow::Result;
 use D2Gfx::D2CellFileHeader;
 
 pub struct DC6Buffer(Vec<u8>);
@@ -25,17 +25,17 @@ impl std::ops::Deref for DC6Buffer {
 
 impl Drop for DC6Buffer {
     fn drop(&mut self) {
-        D2CMP::CelFileFreeHardware(&self.d2_cell_file_header());
+        D2CMP::CelFileFreeHardware(self.d2_cell_file_header());
     }
 }
 
 pub(super) struct ImageLoader {
-    cfg     : ConfigRef,
-    cache   : HashMap<String, DC6BufferRef>,
+    cfg: ConfigRef,
+    cache: HashMap<String, DC6BufferRef>,
 }
 
 impl ImageLoader {
-    pub fn new(cfg: ConfigRef) -> Self{
+    pub fn new(cfg: ConfigRef) -> Self {
         Self {
             cfg,
             cache: HashMap::new(),
@@ -79,11 +79,10 @@ impl ImageLoader {
         let key = self.get_key(image_name);
         let buf = self.cache.get(&key);
 
-        buf.map(|x| Rc::clone(x))
+        buf.map(Rc::clone)
     }
 
     fn get_key<T: AsRef<Path>>(&self, image_name: T) -> String {
         image_name.as_ref().to_string_lossy().into_owned()
     }
-
 }

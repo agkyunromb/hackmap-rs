@@ -1,12 +1,12 @@
-pub use std::ptr::{addr_of, addr_of_mut, null_mut};
+pub use super::super::d2consts::*;
 pub use super::types::*;
 pub use super::D2RVA;
 pub use std::arch::asm;
-pub use super::super::d2consts::*;
+pub use std::ptr::{addr_of, addr_of_mut, null_mut};
 
 pub use windows_sys::{
     core::{PCSTR, PCWSTR},
-    Win32::Foundation::{BOOL, HWND, RECT, FALSE, TRUE},
+    Win32::Foundation::{BOOL, FALSE, HWND, RECT, TRUE},
     Win32::System::Diagnostics::Debug::IMAGE_NT_HEADERS32,
 };
 

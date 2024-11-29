@@ -1,32 +1,38 @@
 use super::common::*;
-use super::config::{DropNotify, PickupMethod, ConfigRef};
+use super::config::{ConfigRef, DropNotify, PickupMethod};
+use super::image_loader;
+use super::item_state_monitor::*;
+use super::HackMap;
 use std::alloc::System;
 use std::ops::Add;
-use std::time::{SystemTime, Duration};
+use std::time::{Duration, SystemTime};
 use std::u32;
-use super::image_loader;
-use super::HackMap;
-use super::item_state_monitor::*;
 use D2Client::D2ClientOffset;
 use D2Common::D2Unit;
 
 const MINIMAP_COLOR_DEFAULT: u8 = 0xFF;
-const MINIMAP_COLOR_HIDE: u8    = 0xFE;
+const MINIMAP_COLOR_HIDE: u8 = 0xFE;
 
 struct Stubs {
     ShouldShowUnit: Option<extern "stdcall" fn() -> BOOL>,
     DATATBLS_CompileTxt: Option<extern "stdcall" fn(PVOID, PCSTR, PVOID, &mut i32, usize) -> PVOID>,
     D2Sigma_Items_GetItemName: Option<extern "stdcall" fn(&D2Unit, PWSTR, u32) -> BOOL>,
     D2Sigma_Items_LootFilterCheckUnit: Option<extern "fastcall" fn(&D2Unit) -> bool>,
-    D2Sigma_ItemText_GetCostHintText: Option<extern "fastcall" fn(ctx: &mut D2Sigma::GetItemPropertiesContext, isGetCost: BOOL, buffer: *mut u16) -> BOOL>,
+    D2Sigma_ItemText_GetCostHintText: Option<
+        extern "fastcall" fn(
+            ctx: &mut D2Sigma::GetItemPropertiesContext,
+            isGetCost: BOOL,
+            buffer: *mut u16,
+        ) -> BOOL,
+    >,
 }
 
-static mut STUBS: Stubs = Stubs{
-    ShouldShowUnit                      : None,
-    DATATBLS_CompileTxt                 : None,
-    D2Sigma_Items_GetItemName           : None,
-    D2Sigma_Items_LootFilterCheckUnit   : None,
-    D2Sigma_ItemText_GetCostHintText    : None,
+static mut STUBS: Stubs = Stubs {
+    ShouldShowUnit: None,
+    DATATBLS_CompileTxt: None,
+    D2Sigma_Items_GetItemName: None,
+    D2Sigma_Items_LootFilterCheckUnit: None,
+    D2Sigma_ItemText_GetCostHintText: None,
 };
 
 #[allow(static_mut_refs)]
@@ -34,10 +40,17 @@ fn get_stubs() -> &'static Stubs {
     unsafe { &STUBS }
 }
 
-extern "stdcall" fn DATATBLS_CompileTxt(archive: PVOID, name: PCSTR, tbl: PVOID, recordCount: &mut i32, recordSize: usize) -> PVOID {
-    let data = get_stubs().DATATBLS_CompileTxt.unwrap()(archive, name, tbl, recordCount, recordSize);
+extern "stdcall" fn DATATBLS_CompileTxt(
+    archive: PVOID,
+    name: PCSTR,
+    tbl: PVOID,
+    recordCount: &mut i32,
+    recordSize: usize,
+) -> PVOID {
+    let data =
+        get_stubs().DATATBLS_CompileTxt.unwrap()(archive, name, tbl, recordCount, recordSize);
 
-    if data.is_null() == false && name.to_str() == "Monstats3" {
+    if !data.is_null() && name.to_str() == "Monstats3" {
         HackMap::unit_color().init_automap_monster_colors(data, *recordCount as usize, recordSize);
     }
 
@@ -45,7 +58,9 @@ extern "stdcall" fn DATATBLS_CompileTxt(archive: PVOID, name: PCSTR, tbl: PVOID,
 }
 
 extern "stdcall" fn d2sigma_automap_draw() {
-    if D2Client::UI::GetUIVar(D2UIvars::EscMenu) != 0 || D2Client::UI::GetUIVar(D2UIvars::Config) != 0 {
+    if D2Client::UI::GetUIVar(D2UIvars::EscMenu) != 0
+        || D2Client::UI::GetUIVar(D2UIvars::Config) != 0
+    {
         return;
     }
 
@@ -72,7 +87,11 @@ extern "stdcall" fn d2sigma_items_get_item_name(item: &D2Unit, buffer: PWSTR, ar
 extern "fastcall" fn should_show_unit(unit: &mut D2Unit) -> BOOL {
     let ret = HackMap::unit_color().should_show_unit(unit);
 
-    if ret { TRUE } else { FALSE }
+    if ret {
+        TRUE
+    } else {
+        FALSE
+    }
 }
 
 extern "fastcall" fn d2sigma_items_loot_filter_check_unit(unit: &mut D2Unit) -> bool {
@@ -83,7 +102,11 @@ extern "fastcall" fn d2sigma_items_loot_filter_check_unit(unit: &mut D2Unit) -> 
     get_stubs().D2Sigma_Items_LootFilterCheckUnit.unwrap()(unit)
 }
 
-extern "fastcall" fn d2sigma_itemtext_get_cost_hint_text(ctx: &mut D2Sigma::GetItemPropertiesContext, isGetCost: BOOL, buffer: *mut u16) -> BOOL {
+extern "fastcall" fn d2sigma_itemtext_get_cost_hint_text(
+    ctx: &mut D2Sigma::GetItemPropertiesContext,
+    isGetCost: BOOL,
+    buffer: *mut u16,
+) -> BOOL {
     if D2Client::Units::GetHasNpcSelected() == FALSE {
         return FALSE;
     }
@@ -120,28 +143,30 @@ extern "C" {
 }
 
 pub(super) struct UnitColor {
-    pub cfg                 : ConfigRef,
-    pub boss_monster_id     : HashMap<u32, u32>,
-    pub glide3x_is_d2sigma  : *mut u8,
-    pub items_to_cube       : HashMap<u32, SystemTime>,
+    pub cfg: ConfigRef,
+    pub boss_monster_id: HashMap<u32, u32>,
+    pub glide3x_is_d2sigma: *mut u8,
+    pub items_to_cube: HashMap<u32, SystemTime>,
 }
 
 impl UnitColor {
-    pub fn new(cfg: ConfigRef) -> Self{
-        Self{
+    pub fn new(cfg: ConfigRef) -> Self {
+        Self {
             cfg,
-            boss_monster_id     : HashMap::new(),
-            glide3x_is_d2sigma  : null_mut(),
-            items_to_cube       : HashMap::new(),
+            boss_monster_id: HashMap::new(),
+            glide3x_is_d2sigma: null_mut(),
+            items_to_cube: HashMap::new(),
         }
     }
 
     fn init_automap_monster_colors(&mut self, data: PVOID, recordCount: usize, recordSize: usize) {
-        let mut mon_stats_3 = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, recordSize * recordCount) };
+        let mut mon_stats_3 =
+            unsafe { std::slice::from_raw_parts_mut(data as *mut u8, recordSize * recordCount) };
 
         // let data_tables = D2Common::DataTbls::sgptDataTables();
         // let mon_stats_txt = data_tables.mon_stats_txt();
-        let mon_stats_txt_record_count = D2Common::DataTbls::sgptDataTables().mon_stats_txt_record_count();
+        let mon_stats_txt_record_count =
+            D2Common::DataTbls::sgptDataTables().mon_stats_txt_record_count();
 
         for i in 0..mon_stats_txt_record_count {
             // let mon_stats_flags = mon_stats_txt[i].dwMonStatsFlags;
@@ -202,39 +227,46 @@ impl UnitColor {
         match unit.dwUnitType {
             D2UnitTypes::Player => {
                 self.draw_player(unit, x, y);
-            },
+            }
             D2UnitTypes::Monster => {
                 self.draw_monster(unit, x, y);
-            },
+            }
             D2UnitTypes::Object => {
                 self.draw_object(unit, x, y);
-            },
+            }
             D2UnitTypes::Missile => {
                 self.draw_missile(unit, x, y);
-            },
+            }
             D2UnitTypes::Item => {
                 self.draw_item(unit, x, y);
-            },
+            }
 
-            _ => {},
+            _ => {}
         }
     }
 
     fn draw_player(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         let unit_color_config = &self.cfg.borrow().unit_color;
         let player = D2Client::Units::GetClientPlayer()?;
-        let color = if player.dwUnitId == unit.dwUnitId { unit_color_config.my_blob_color } else { unit_color_config.party_blob_color };
+        let color = if player.dwUnitId == unit.dwUnitId {
+            unit_color_config.my_blob_color
+        } else {
+            unit_color_config.party_blob_color
+        };
 
         self.draw_cell_by_blob_file(x, y, unit_color_config.my_blob_file.as_ref(), color);
         // self.draw_default_cross(x, y, if player.dwUnitId == unit.dwUnitId { 0x97 } else { 0x81 });
 
         if unit.dwUnitId != player.dwUnitId {
             let name = D2Common::Units::GetPlayerName(unit);
-            match name {
-                Some(n) => {
-                    D2WinEx::Text::draw_text(n.to_utf16().as_ptr(), x, y - 8, D2Font::Font6, D2StringColorCodes::LightGreen);
-                },
-                _ => (),
+            if let Some(n) = name {
+                D2WinEx::Text::draw_text(
+                    n.to_utf16().as_ptr(),
+                    x,
+                    y - 8,
+                    D2Font::Font6,
+                    D2StringColorCodes::LightGreen,
+                );
             }
         }
 
@@ -253,27 +285,36 @@ impl UnitColor {
     fn draw_monster(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         let class_Id = unit.dwClassId;
 
-        match class_Id {
-            179 => return None,   // A1 红牛
-            _ => {},
+        if class_Id == 179 {
+            return None;
         }
 
         if D2Client::Units::IsCorpse(unit) {
             return None;
         }
 
-        if D2Common::DataTbls::GetNextHirelingTxtRecordFromClassId(TRUE, class_Id, null_mut()).is_some() {
+        if D2Common::DataTbls::GetNextHirelingTxtRecordFromClassId(TRUE, class_Id, null_mut())
+            .is_some()
+        {
             return self.draw_hireling(unit, x, y);
         }
 
-        let unit_color_cfg    = &self.cfg.borrow().unit_color;
-        let data_tables       = D2Common::DataTbls::sgptDataTables();
-        let monster_data      = unit.get_monster_data()?;
-        let mon_stats_txt     = monster_data.get_mon_stats_txt()?;
-        let mon_stats_flags   = mon_stats_txt.dwMonStatsFlags;
+        let unit_color_cfg = &self.cfg.borrow().unit_color;
+        let data_tables = D2Common::DataTbls::sgptDataTables();
+        let monster_data = unit.get_monster_data()?;
+        let mon_stats_txt = monster_data.get_mon_stats_txt()?;
+        let mon_stats_flags = mon_stats_txt.dwMonStatsFlags;
 
-        if mon_stats_flags & (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact) == (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact) {
-            D2WinEx::Text::draw_text(D2Client::Units::GetName(unit), x, y - 8, D2Font::Font6, D2StringColorCodes::DarkGold);
+        if mon_stats_flags & (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact)
+            == (D2MonStatsTxtFlags::Npc | D2MonStatsTxtFlags::Interact)
+        {
+            D2WinEx::Text::draw_text(
+                D2Client::Units::GetName(unit),
+                x,
+                y - 8,
+                D2Font::Font6,
+                D2StringColorCodes::DarkGold,
+            );
             self.draw_cell_by_blob_file(x, y, unit_color_cfg.npc_blob_file.as_ref(), 0xFF);
             return None;
         }
@@ -283,7 +324,8 @@ impl UnitColor {
         }
 
         let room = D2Common::Units::GetRoom(unit)?;
-        let level_txt = data_tables.get_levels_txt_record(D2Common::Dungeon::GetLevelIdFromRoom(room))?;
+        let level_txt =
+            data_tables.get_levels_txt_record(D2Common::Dungeon::GetLevelIdFromRoom(room))?;
 
         for cmon in level_txt.wCMon {
             if cmon == class_Id as u16 {
@@ -300,37 +342,31 @@ impl UnitColor {
         if owner_id == D2Client::Units::GetClientPlayer()?.dwUnitId {
             color = unit_color_cfg.my_pet_blob_color;
             blob_file = unit_color_cfg.my_pet_blob_file.as_ref();
-
-        } else if owner_id != u32::MAX || D2Common::StatList::GetUnitAlignment(unit) == D2UnitAlignment::Good {
+        } else if owner_id != u32::MAX
+            || D2Common::StatList::GetUnitAlignment(unit) == D2UnitAlignment::Good
+        {
             color = unit_color_cfg.party_pet_blob_color;
             blob_file = unit_color_cfg.player_pet_blob_file.as_ref();
-
         } else if type_flag.contains(D2MonTypeFlags::Champion) {
             color = unit_color_cfg.champion_monster_color;
             blob_file = unit_color_cfg.monster_blob_file.as_ref();
-
         } else if type_flag.contains(D2MonTypeFlags::Minion) {
             color = unit_color_cfg.minion_monster_color;
             blob_file = unit_color_cfg.monster_blob_file.as_ref();
-
         } else if type_flag.contains(D2MonTypeFlags::SuperUnique) {
             color = unit_color_cfg.super_unique_color;
             blob_file = unit_color_cfg.boss_blob_file.as_ref();
             show_name = true;
-
         } else if type_flag.contains(D2MonTypeFlags::Unique) {
             color = unit_color_cfg.boss_monster_color;
             blob_file = unit_color_cfg.boss_blob_file.as_ref();
-
         } else if self.boss_monster_id.contains_key(&class_Id) {
             color = unit_color_cfg.super_unique_color;
             blob_file = unit_color_cfg.boss_blob_file.as_ref();
             show_name = true;
-
         } else if mon_stats_flags.contains(D2MonStatsTxtFlags::Boss) {
             color = unit_color_cfg.champion_monster_color;
             blob_file = unit_color_cfg.monster_blob_file.as_ref();
-
         } else {
             color = unit_color_cfg.normal_monster_color;
             blob_file = unit_color_cfg.monster_blob_file.as_ref();
@@ -340,7 +376,7 @@ impl UnitColor {
             match *c {
                 MINIMAP_COLOR_DEFAULT => {
                     return None;
-                },
+                }
 
                 MINIMAP_COLOR_HIDE => {
                     color = unit_color_cfg.super_unique_color;
@@ -350,18 +386,22 @@ impl UnitColor {
 
                 _ => {
                     color = *c;
-                },
+                }
             }
         }
 
         self.draw_cell_by_blob_file(x, y, blob_file, color);
 
-        let mut desc = format!("ÿc1");
+        let mut desc = "ÿc1".to_string();
 
         if show_name || (type_flag & D2MonTypeFlags::SuperUnique == D2MonTypeFlags::SuperUnique) {
             desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
-
-        } else if type_flag == D2MonTypeFlags::Unique && mon_stats_txt.dwMonStatsFlags.contains(D2MonStatsTxtFlags::Boss) && monster_data.wBossHcIdx == 0 {
+        } else if type_flag == D2MonTypeFlags::Unique
+            && mon_stats_txt
+                .dwMonStatsFlags
+                .contains(D2MonStatsTxtFlags::Boss)
+            && monster_data.wBossHcIdx == 0
+        {
             desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
         }
 
@@ -370,23 +410,57 @@ impl UnitColor {
             for umod in monster_data.nMonUmod {
                 match umod {
                     D2MonUMods::None => break,
-                    D2MonUMods::MagicResistant  => desc += unit_color_cfg.magic_resistant_desc.as_ref().unwrap_or(&empty_str),
-                    D2MonUMods::FireChant       => desc += unit_color_cfg.fire_enchanted_desc.as_ref().unwrap_or(&empty_str),
-                    D2MonUMods::LightChant      => desc += unit_color_cfg.lightning_enchanted_desc.as_ref().unwrap_or(&empty_str),
-                    D2MonUMods::ColdChant       => desc += unit_color_cfg.cold_enchanted_desc.as_ref().unwrap_or(&empty_str),
-                    D2MonUMods::ManaBurn        => desc += unit_color_cfg.mana_burn_desc.as_ref().unwrap_or(&empty_str),
-                    _ => {},
+                    D2MonUMods::MagicResistant => {
+                        desc += unit_color_cfg
+                            .magic_resistant_desc
+                            .as_ref()
+                            .unwrap_or(&empty_str)
+                    }
+                    D2MonUMods::FireChant => {
+                        desc += unit_color_cfg
+                            .fire_enchanted_desc
+                            .as_ref()
+                            .unwrap_or(&empty_str)
+                    }
+                    D2MonUMods::LightChant => {
+                        desc += unit_color_cfg
+                            .lightning_enchanted_desc
+                            .as_ref()
+                            .unwrap_or(&empty_str)
+                    }
+                    D2MonUMods::ColdChant => {
+                        desc += unit_color_cfg
+                            .cold_enchanted_desc
+                            .as_ref()
+                            .unwrap_or(&empty_str)
+                    }
+                    D2MonUMods::ManaBurn => {
+                        desc += unit_color_cfg.mana_burn_desc.as_ref().unwrap_or(&empty_str)
+                    }
+                    _ => {}
                 }
             }
         }
 
         for (stat_id, stat_desc) in [
-            (D2ItemStats::DamageResist, &unit_color_cfg.physical_immunity_desc),
-            (D2ItemStats::MagicResist,  &unit_color_cfg.magic_immunity_desc),
-            (D2ItemStats::FireResist,   &unit_color_cfg.fire_immunity_desc),
-            (D2ItemStats::LightResist,  &unit_color_cfg.lightning_immunity_desc),
-            (D2ItemStats::ColdResist,   &unit_color_cfg.cold_immunity_desc),
-            (D2ItemStats::PoisonResist, &unit_color_cfg.poison_immunity_desc),
+            (
+                D2ItemStats::DamageResist,
+                &unit_color_cfg.physical_immunity_desc,
+            ),
+            (
+                D2ItemStats::MagicResist,
+                &unit_color_cfg.magic_immunity_desc,
+            ),
+            (D2ItemStats::FireResist, &unit_color_cfg.fire_immunity_desc),
+            (
+                D2ItemStats::LightResist,
+                &unit_color_cfg.lightning_immunity_desc,
+            ),
+            (D2ItemStats::ColdResist, &unit_color_cfg.cold_immunity_desc),
+            (
+                D2ItemStats::PoisonResist,
+                &unit_color_cfg.poison_immunity_desc,
+            ),
         ] {
             let stat_desc = match stat_desc {
                 None => continue,
@@ -404,8 +478,14 @@ impl UnitColor {
             desc += stat_desc;
         }
 
-        if desc.is_empty() == false {
-            D2WinEx::Text::draw_text(desc.to_utf16().as_ptr(), x, y - 10, D2Font::Font16, D2StringColorCodes::White);
+        if !desc.is_empty() {
+            D2WinEx::Text::draw_text(
+                desc.to_utf16().as_ptr(),
+                x,
+                y - 10,
+                D2Font::Font16,
+                D2StringColorCodes::White,
+            );
         }
 
         None
@@ -414,7 +494,10 @@ impl UnitColor {
     fn draw_object(&self, unit: &mut D2Unit, x: i32, y: i32) -> Option<()> {
         let object_txt = D2Common::DataTbls::GetObjectsTxtRecord(unit.dwClassId)?;
 
-        if object_txt.nSubClass.contains(D2ObjectSubClasses::TownPortal) {
+        if object_txt
+            .nSubClass
+            .contains(D2ObjectSubClasses::TownPortal)
+        {
             self.draw_default_cross(x, y, 0x6D);
         }
 
@@ -439,10 +522,8 @@ impl UnitColor {
 
         let color = if owner_id == u32::MAX {
             unit_color.other_missile_color
-
         } else if owner_id == player.dwUnitId {
             unit_color.player_missile_color
-
         } else {
             unit_color.party_pet_blob_color
         };
@@ -476,39 +557,43 @@ impl UnitColor {
                     None => self.draw_default_cross(x, y, color),
                     Some(cell) => {
                         self.draw_cell(x, y, cell, color);
-                    },
+                    }
                 }
-            },
+            }
         }
     }
 
     fn draw_cell(&self, x: i32, y: i32, cell: image_loader::DC6BufferRef, color: u8) {
-        if self.glide3x_is_d2sigma.is_null() == false {
-            unsafe { self.glide3x_is_d2sigma.write(0); }
+        if !self.glide3x_is_d2sigma.is_null() {
+            unsafe {
+                self.glide3x_is_d2sigma.write(0);
+            }
         }
 
         D2GfxEx::Texture::draw_dell(x, y, cell.d2_cell_file_header(), color);
 
-        if self.glide3x_is_d2sigma.is_null() == false {
-            unsafe { self.glide3x_is_d2sigma.write(1); }
+        if !self.glide3x_is_d2sigma.is_null() {
+            unsafe {
+                self.glide3x_is_d2sigma.write(1);
+            }
         }
     }
 
     fn draw_default_cross(&self, x: i32, y: i32, color: u8) {
         static DefaultUnitShape: &[[i32; 2]] = &[
-            [ 0, -2],
-            [ 4, -4],
-            [ 8, -2],
-            [ 4,  0],
-            [ 8,  2],
-            [ 4,  4],
-            [ 0,  2],
-            [-4,  4],
-            [-8,  2],
-            [-4,  0],
+            [0, -2],
+            [4, -4],
+            [8, -2],
+            [4, 0],
+            [8, 2],
+            [4, 4],
+            [0, 2],
+            [-4, 4],
+            [-8, 2],
+            [-4, 0],
             [-8, -2],
             [-4, -4],
-            [ 0, -2],
+            [0, -2],
         ];
 
         for i in 0..DefaultUnitShape.len() - 1 {
@@ -525,15 +610,18 @@ impl UnitColor {
         let cfg = self.cfg.borrow();
 
         if cfg.unit_color.show_socket_number {
-            let socks_num = D2Common::StatList::GetUnitBaseStat(item, D2ItemStats::Item_NumSockets, 0);
+            let socks_num =
+                D2Common::StatList::GetUnitBaseStat(item, D2ItemStats::Item_NumSockets, 0);
 
             if socks_num != 0 {
                 name += &format!("({socks_num}s)");
             }
         }
 
-        if cfg.unit_color.show_eth && D2Common::Items::CheckItemFlag(item, D2ItemFlags::Ethereal) != FALSE {
-            name += &format!("(eth)");
+        if cfg.unit_color.show_eth
+            && D2Common::Items::CheckItemFlag(item, D2ItemFlags::Ethereal) != FALSE
+        {
+            name += "(eth)";
         }
 
         if cfg.unit_color.item_extra_info {
@@ -541,22 +629,26 @@ impl UnitColor {
             let unit_id = item.dwUnitId;
             let class_id = item.dwClassId;
 
-            name = format!("UID:0x{unit_id:X} Q:{quality:?} CID:{class_id}<0x{class_id:X}>\n{name}");
+            name =
+                format!("UID:0x{unit_id:X} Q:{quality:?} CID:{class_id}<0x{class_id:X}>\n{name}");
         }
 
-        let _: Option<()> = cfg.unit_color.get_color_from_unit(item).and_then(|item_color| {
-            item_color.text_color.and_then(|text_color| {
-                if text_color != D2StringColorCodes::Invalid {
-                    while name.starts_with("ÿc") {
-                        name = name.trim_start_matches("ÿc")[1..].to_string();
+        let _: Option<()> = cfg
+            .unit_color
+            .get_color_from_unit(item)
+            .and_then(|item_color| {
+                item_color.text_color.and_then(|text_color| {
+                    if text_color != D2StringColorCodes::Invalid {
+                        while name.starts_with("ÿc") {
+                            name = name.trim_start_matches("ÿc")[1..].to_string();
+                        }
+
+                        name.insert_str(0, text_color.to_str_code());
                     }
 
-                    name.insert_str(0, text_color.to_str_code());
-                }
-
-                None
-            })
-        });
+                    None
+                })
+            });
 
         // if let Some(item_color) = cfg.unit_color.get_color_from_unit(item) {
         //     if let Some(text_color) = item_color.text_color {
@@ -582,7 +674,7 @@ impl UnitColor {
     fn should_show_unit(&mut self, unit: &mut D2Unit) -> bool {
         let is_unit_item = D2Common::Inventory::UnitIsItem(unit) != FALSE;
 
-        if is_unit_item == false {
+        if !is_unit_item {
             return true;
         }
 
@@ -597,7 +689,7 @@ impl UnitColor {
             should_auto_pickup = self.should_auto_pickup_item(unit).unwrap_or(false);
         }
 
-        if should_hide_items == false && should_auto_pickup == false {
+        if !should_hide_items && !should_auto_pickup {
             return true;
         }
 
@@ -610,7 +702,7 @@ impl UnitColor {
             self.handle_auto_pickup(unit, item_cfg);
         }
 
-        if should_hide_items == false {
+        if !should_hide_items {
             return true;
         }
 
@@ -638,7 +730,7 @@ impl UnitColor {
 
         state.on_scmd(cmd, payload);
 
-        if state.add_to_ground == false && state.cursor_to_ground == false && state.ground_to_cursor == false {
+        if !state.add_to_ground && !state.cursor_to_ground && !state.ground_to_cursor {
             return None;
         }
 
@@ -646,7 +738,6 @@ impl UnitColor {
 
         if state.add_to_ground || state.cursor_to_ground {
             self.handle_dropped_item(item);
-
         } else if state.ground_to_cursor {
             self.handle_auto_pickup_cube(item);
         }
@@ -678,7 +769,10 @@ impl UnitColor {
         };
 
         if let Some(notify_text) = item_color.notify_text.as_ref() {
-            D2Client::UI::DisplayGlobalMessage(&format!("{name_color} - {notify_text}"), D2StringColorCodes::Invalid);
+            D2Client::UI::DisplayGlobalMessage(
+                &format!("{name_color} - {notify_text}"),
+                D2StringColorCodes::Invalid,
+            );
             return;
         }
 
@@ -694,16 +788,15 @@ impl UnitColor {
 
         name.reverse();
 
-        let is_weapon_or_armor = (item.dwClassId as usize) < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount;
+        let is_weapon_or_armor = (item.dwClassId as usize)
+            < item_data_tables.nWeaponsTxtRecordCount + item_data_tables.nArmorTxtRecordCount;
         let is_misc = !is_weapon_or_armor;
 
         let mut name = if is_misc {
             name.join(" - ")
-
         } else if notify == DropNotify::Name || quality == D2ItemQualities::Unique {
             let start_index = if name.len() == 1 { 0 } else { 1 };
             name[start_index..].join(" - ")
-
         } else {
             name.join(" - ")
         };
@@ -712,7 +805,10 @@ impl UnitColor {
             name = D2CommonEx::Items::strip_all_color_codes(&name);
         }
 
-        D2Client::UI::DisplayGlobalMessage(&format!("{name_color} - {name}"), D2StringColorCodes::Invalid);
+        D2Client::UI::DisplayGlobalMessage(
+            &format!("{name_color} - {name}"),
+            D2StringColorCodes::Invalid,
+        );
 
         if notify == DropNotify::Name {
             return;
@@ -722,14 +818,18 @@ impl UnitColor {
         let prop_lines: Vec<&str> = prop.split("\n").collect();
 
         for line in prop_lines.iter().skip(name_line_count) {
-            D2Client::UI::DisplayGlobalMessage(&format!("    {}", line), D2StringColorCodes::Invalid);
+            D2Client::UI::DisplayGlobalMessage(
+                &format!("    {}", line),
+                D2StringColorCodes::Invalid,
+            );
         }
     }
 
     fn should_auto_pickup_item(&self, item: &D2Unit) -> Option<bool> {
         let player = D2Client::Units::GetClientPlayer()?;
         let item_coord = D2Common::Units::GetCoords(item);
-        let distance = D2Common::Units::GetDistanceToCoordinates(player, item_coord.nX, item_coord.nY);
+        let distance =
+            D2Common::Units::GetDistanceToCoordinates(player, item_coord.nX, item_coord.nY);
 
         if distance > 5 {
             return Some(false);
@@ -748,7 +848,11 @@ impl UnitColor {
         None
     }
 
-    fn handle_auto_pickup(&mut self, item: &D2Unit, item_cfg: &super::config::ItemColor) -> Option<()> {
+    fn handle_auto_pickup(
+        &mut self,
+        item: &D2Unit,
+        item_cfg: &super::config::ItemColor,
+    ) -> Option<()> {
         let pickup = item_cfg.pickup?;
 
         match pickup {
@@ -756,22 +860,25 @@ impl UnitColor {
 
             PickupMethod::Inventory => {
                 D2ClientEx::Utils::send_pickup_item(item, false);
-            },
+            }
 
             PickupMethod::Cube => {
                 D2ClientEx::Inventory::get_free_position_for_item(item, D2ItemInvPage::Cube)?;
                 D2ClientEx::Utils::send_pickup_item(item, true);
 
-                self.items_to_cube.insert(item.dwUnitId, SystemTime::now().add(Duration::from_secs(5)));
-            },
+                self.items_to_cube
+                    .insert(item.dwUnitId, SystemTime::now().add(Duration::from_secs(5)));
+            }
 
             PickupMethod::AutoBelt => {
                 let player = D2Client::Units::GetClientPlayer()?;
 
-                if D2Common::Inventory::GetFreeBeltSlot(ptr_to_ref(player.pInventory)?, item).is_some() {
+                if D2Common::Inventory::GetFreeBeltSlot(ptr_to_ref(player.pInventory)?, item)
+                    .is_some()
+                {
                     D2ClientEx::Utils::send_pickup_item(item, false);
                 }
-            },
+            }
         }
 
         None
@@ -781,23 +888,60 @@ impl UnitColor {
         unsafe {
             let glide3x = modules.glide3x.unwrap();
 
-            match (&*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID)).FileHeader.TimeDateStamp {
-                0x6606E04D => {
-                    // drawImageHooked
-                    HackMap::unit_color().glide3x_is_d2sigma = (glide3x + 0x5BFF3135 - 0x5BD50000) as *mut u8;
-                },
-
-                _ => {},
+            if (*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID))
+                .FileHeader
+                .TimeDateStamp
+                == 0x6606E04D
+            {
+                // drawImageHooked
+                HackMap::unit_color().glide3x_is_d2sigma =
+                    (glide3x + 0x5BFF3135 - 0x5BD50000) as *mut u8;
             }
 
-            inline_hook_jmp(0, D2Client::AddressTable.Units.ShouldShowUnit, naked_should_show_unit as usize, Some(&mut STUBS.ShouldShowUnit), None)?;
-            inline_hook_jmp(0, D2Common::AddressTable.DataTbls.CompileTxt, DATATBLS_CompileTxt as usize, Some(&mut STUBS.DATATBLS_CompileTxt), None)?;
-            inline_hook_jmp::<()>(0, D2Sigma::AddressTable.AutoMap.DrawAutoMap, d2sigma_automap_draw as usize, None, None)?;
-            inline_hook_jmp(0, D2Sigma::AddressTable.Items.GetItemName, d2sigma_items_get_item_name as usize, Some(&mut STUBS.D2Sigma_Items_GetItemName), None)?;
-            inline_hook_jmp(0, D2Sigma::AddressTable.Items.LootFilterCheckUnit, d2sigma_items_loot_filter_check_unit as usize, Some(&mut STUBS.D2Sigma_Items_LootFilterCheckUnit), None)?;
+            inline_hook_jmp(
+                0,
+                D2Client::AddressTable.Units.ShouldShowUnit,
+                naked_should_show_unit as usize,
+                Some(&mut STUBS.ShouldShowUnit),
+                None,
+            )?;
+            inline_hook_jmp(
+                0,
+                D2Common::AddressTable.DataTbls.CompileTxt,
+                DATATBLS_CompileTxt as usize,
+                Some(&mut STUBS.DATATBLS_CompileTxt),
+                None,
+            )?;
+            inline_hook_jmp::<()>(
+                0,
+                D2Sigma::AddressTable.AutoMap.DrawAutoMap,
+                d2sigma_automap_draw as usize,
+                None,
+                None,
+            )?;
+            inline_hook_jmp(
+                0,
+                D2Sigma::AddressTable.Items.GetItemName,
+                d2sigma_items_get_item_name as usize,
+                Some(&mut STUBS.D2Sigma_Items_GetItemName),
+                None,
+            )?;
+            inline_hook_jmp(
+                0,
+                D2Sigma::AddressTable.Items.LootFilterCheckUnit,
+                d2sigma_items_loot_filter_check_unit as usize,
+                Some(&mut STUBS.D2Sigma_Items_LootFilterCheckUnit),
+                None,
+            )?;
 
             if D2Sigma::AddressTable.ItemText.GetCostHintText != 0 {
-                inline_hook_jmp(0, D2Sigma::AddressTable.ItemText.GetCostHintText, d2sigma_itemtext_get_cost_hint_text as usize, Some(&mut STUBS.D2Sigma_ItemText_GetCostHintText), None)?;
+                inline_hook_jmp(
+                    0,
+                    D2Sigma::AddressTable.ItemText.GetCostHintText,
+                    d2sigma_itemtext_get_cost_hint_text as usize,
+                    Some(&mut STUBS.D2Sigma_ItemText_GetCostHintText),
+                    None,
+                )?;
             }
         }
 
@@ -821,7 +965,7 @@ impl UnitColor {
 
             if vk == cfg.hotkey.item_extra_info {
                 cfg.unit_color.item_extra_info = !cfg.unit_color.item_extra_info;
-                return (true, cfg.unit_color.item_extra_info)
+                return (true, cfg.unit_color.item_extra_info);
             }
 
             (false, false)
@@ -833,7 +977,7 @@ impl UnitColor {
 
             if vk == cfg.hotkey.auto_pickup {
                 cfg.unit_color.auto_pickup = !cfg.unit_color.auto_pickup;
-                return (true, cfg.unit_color.auto_pickup)
+                return (true, cfg.unit_color.auto_pickup);
             }
 
             (false, false)
@@ -849,5 +993,4 @@ impl UnitColor {
 
         Ok(())
     }
-
 }

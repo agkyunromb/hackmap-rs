@@ -1,67 +1,67 @@
 use super::common::*;
-mod drlg;
-mod units;
 mod datatbls;
+mod drlg;
 mod packet;
+mod units;
 
-pub use units::*;
 pub use datatbls::*;
 pub use drlg::*;
 pub use packet::*;
+pub use units::*;
 
 pub struct StatListOffset {
-    pub GetUnitBaseStat                 : FuncAddress,
-    pub GetStatListFromUnitStateAndFlag : FuncAddress,
-    pub GetUnitAlignment                : FuncAddress,
+    pub GetUnitBaseStat: FuncAddress,
+    pub GetStatListFromUnitStateAndFlag: FuncAddress,
+    pub GetUnitAlignment: FuncAddress,
 }
 
 pub struct DataTblsOffset {
-    pub CompileTxt                          : FuncAddress,
-    pub GetLevelDefRecord                   : FuncAddress,
-    pub GetObjectsTxtRecord                 : FuncAddress,
-    pub GetItemDataTables                   : FuncAddress,
-    pub GetNextHirelingTxtRecordFromClassId : FuncAddress,
-    pub sgptDataTables                      : FuncAddress,
+    pub CompileTxt: FuncAddress,
+    pub GetLevelDefRecord: FuncAddress,
+    pub GetObjectsTxtRecord: FuncAddress,
+    pub GetItemDataTables: FuncAddress,
+    pub GetNextHirelingTxtRecordFromClassId: FuncAddress,
+    pub sgptDataTables: FuncAddress,
 }
 
 pub struct UnitsOffset {
-    pub TestCollisionWithUnit   : FuncAddress,
-    pub GetRoom                 : FuncAddress,
-    pub GetNearestTestedUnit    : FuncAddress,
-    pub GetClientCoordX         : FuncAddress,
-    pub GetClientCoordY         : FuncAddress,
+    pub TestCollisionWithUnit: FuncAddress,
+    pub GetRoom: FuncAddress,
+    pub GetNearestTestedUnit: FuncAddress,
+    pub GetClientCoordX: FuncAddress,
+    pub GetClientCoordY: FuncAddress,
     pub GetDistanceToCoordinates: FuncAddress,
-    pub GetCoords               : FuncAddress,
-    pub GetInventoryRecordId    : FuncAddress,
-    pub GetPlayerName           : FuncAddress,
+    pub GetCoords: FuncAddress,
+    pub GetInventoryRecordId: FuncAddress,
+    pub GetPlayerName: FuncAddress,
 }
 
 pub struct ItemsOffset {
-    pub GetItemType             : FuncAddress,
-    pub GetItemQuality          : FuncAddress,
-    pub GetInvPage              : FuncAddress,
-    pub GetBaseCode             : FuncAddress,
-    pub CheckItemTypeId         : FuncAddress,
-    pub CheckItemFlag           : FuncAddress,
+    pub GetItemType: FuncAddress,
+    pub GetItemQuality: FuncAddress,
+    pub GetInvPage: FuncAddress,
+    pub GetBaseCode: FuncAddress,
+    pub CheckItemTypeId: FuncAddress,
+    pub CheckItemFlag: FuncAddress,
 }
 
 pub struct InventoryOffset {
-    pub UnitIsItem              : FuncAddress,
-    pub GetFirstItem            : FuncAddress,
-    pub GetNextItem             : FuncAddress,
-    pub GetCursorItem           : FuncAddress,
-    pub GetFreePosition         : FuncAddress,
-    pub GetFreeBeltSlot         : FuncAddress,
+    pub UnitIsItem: FuncAddress,
+    pub GetFirstItem: FuncAddress,
+    pub GetNextItem: FuncAddress,
+    pub GetCursorItem: FuncAddress,
+    pub GetFreePosition: FuncAddress,
+    pub GetFreeBeltSlot: FuncAddress,
 }
 
 pub struct DrlgDrlgOffset {
-    pub GetActNoFromLevelId     : FuncAddress,
-    pub GetLevel                : FuncAddress,
+    pub GetActNoFromLevelId: FuncAddress,
+    pub GetLevel: FuncAddress,
 }
 
 pub struct DrlgRoomOffset {
-    pub GetPresetUnits          : FuncAddress,
-    pub GetLevelId              : FuncAddress,
+    pub GetPresetUnits: FuncAddress,
+    pub GetLevelId: FuncAddress,
 }
 
 pub struct DrlgPresetOffset {
@@ -69,25 +69,25 @@ pub struct DrlgPresetOffset {
 }
 
 pub struct DungeonOffset {
-    pub GetDrlgFromAct                  : FuncAddress,
-    pub IsTownLevelId                   : FuncAddress,
-    pub IsRoomInTown                    : FuncAddress,
-    pub GetHoradricStaffTombLevelId     : FuncAddress,
-    pub GetRoomFromAct                  : FuncAddress,
-    pub GetAdjacentRoomsListFromRoom    : FuncAddress,
-    pub GetLevelIdFromRoom              : FuncAddress,
+    pub GetDrlgFromAct: FuncAddress,
+    pub IsTownLevelId: FuncAddress,
+    pub IsRoomInTown: FuncAddress,
+    pub GetHoradricStaffTombLevelId: FuncAddress,
+    pub GetRoomFromAct: FuncAddress,
+    pub GetAdjacentRoomsListFromRoom: FuncAddress,
+    pub GetLevelIdFromRoom: FuncAddress,
 }
 
 pub struct D2CommonOffset {
-    pub DataTbls        : DataTblsOffset,
-    pub StatList        : StatListOffset,
-    pub Units           : UnitsOffset,
-    pub Items           : ItemsOffset,
-    pub Inventory       : InventoryOffset,
-    pub DrlgDrlg        : DrlgDrlgOffset,
-    pub DrlgRoom        : DrlgRoomOffset,
-    pub DrlgPreset      : DrlgPresetOffset,
-    pub Dungeon         : DungeonOffset,
+    pub DataTbls: DataTblsOffset,
+    pub StatList: StatListOffset,
+    pub Units: UnitsOffset,
+    pub Items: ItemsOffset,
+    pub Inventory: InventoryOffset,
+    pub DrlgDrlg: DrlgDrlgOffset,
+    pub DrlgRoom: DrlgRoomOffset,
+    pub DrlgPreset: DrlgPresetOffset,
+    pub Dungeon: DungeonOffset,
 }
 
 pub static AddressTable: OnceHolder<D2CommonOffset> = OnceHolder::new();
@@ -100,7 +100,10 @@ pub mod StatList {
     }
 
     pub fn GetStatListFromUnitStateAndFlag(unit: &D2Unit, state: i32, flag: u32) -> usize {
-        addr_to_stdcall(GetStatListFromUnitStateAndFlag, AddressTable.StatList.GetStatListFromUnitStateAndFlag)(unit, state, flag)
+        addr_to_stdcall(
+            GetStatListFromUnitStateAndFlag,
+            AddressTable.StatList.GetStatListFromUnitStateAndFlag,
+        )(unit, state, flag)
     }
 
     pub fn GetUnitAlignment(unit: &D2Unit) -> D2UnitAlignment {
@@ -109,8 +112,8 @@ pub mod StatList {
 }
 
 pub mod DataTbls {
-    use std::ptr::null_mut;
     use super::*;
+    use std::ptr::null_mut;
 
     pub struct DataTable(usize);
 
@@ -118,14 +121,15 @@ pub mod DataTbls {
         pub fn mon_stats_txt(&self) -> &mut [D2MonStatsTxt] {
             unsafe {
                 let addr = (self.0 + 0xA78) as *const usize;
-                std::slice::from_raw_parts_mut(addr.read() as *mut D2MonStatsTxt, self.mon_stats_txt_record_count())
+                std::slice::from_raw_parts_mut(
+                    addr.read() as *mut D2MonStatsTxt,
+                    self.mon_stats_txt_record_count(),
+                )
             }
         }
 
         pub fn mon_stats_txt_record_count(&self) -> usize {
-            unsafe {
-                ((self.0 + 0xA80) as *const usize).read()
-            }
+            unsafe { ((self.0 + 0xA80) as *const usize).read() }
         }
 
         pub fn get_levels_txt_record(&self, level_id: D2LevelId) -> Option<&D2LevelsTxt> {
@@ -140,7 +144,7 @@ pub mod DataTbls {
             let levels_txt: *const D2LevelsTxt = read_at(self.0 + 0xC58);
             let levels_txt = unsafe { std::slice::from_raw_parts(levels_txt, count) };
 
-            return Some(&levels_txt[level_id])
+            Some(&levels_txt[level_id])
         }
 
         pub fn levels_txt_record_count(&self) -> D2LevelId {
@@ -156,7 +160,9 @@ pub mod DataTbls {
         DataTable(read_at(AddressTable.DataTbls.sgptDataTables))
     }
 
-    fn _GetLevelDefRecord(_levelId: D2LevelId) -> *mut D2LevelDefBin { null_mut() }
+    fn _GetLevelDefRecord(_levelId: D2LevelId) -> *mut D2LevelDefBin {
+        null_mut()
+    }
 
     pub fn GetLevelDefRecord(levelId: D2LevelId) -> Option<&'static mut D2LevelDefBin> {
         let max_level_id = sgptDataTables().levels_txt_record_count();
@@ -166,35 +172,73 @@ pub mod DataTbls {
         }
 
         unsafe {
-            Some(&mut *addr_to_fastcall(_GetLevelDefRecord, AddressTable.DataTbls.GetLevelDefRecord)(levelId))
+            Some(&mut *addr_to_fastcall(
+                _GetLevelDefRecord,
+                AddressTable.DataTbls.GetLevelDefRecord,
+            )(levelId))
         }
     }
 
-    fn _GetObjectsTxtRecord(_objectId: u32) -> *mut D2ObjectsTxt { null_mut() }
+    fn _GetObjectsTxtRecord(_objectId: u32) -> *mut D2ObjectsTxt {
+        null_mut()
+    }
 
     pub fn GetObjectsTxtRecord(objectId: u32) -> Option<&'static mut D2ObjectsTxt> {
         if objectId as usize >= sgptDataTables().objects_txt_record_count() {
             return None;
         }
 
-        let object_txt = addr_to_stdcall(_GetObjectsTxtRecord, AddressTable.DataTbls.GetObjectsTxtRecord)(objectId);
+        let object_txt = addr_to_stdcall(
+            _GetObjectsTxtRecord,
+            AddressTable.DataTbls.GetObjectsTxtRecord,
+        )(objectId);
         ptr_to_ref_mut(object_txt)
     }
 
-    fn _GetItemDataTables() -> *mut D2ItemDataTbl { null_mut() }
+    fn _GetItemDataTables() -> *mut D2ItemDataTbl {
+        null_mut()
+    }
 
     pub fn GetItemDataTables() -> Option<&'static mut D2ItemDataTbl> {
-        ptr_to_ref_mut(addr_to_stdcall(_GetItemDataTables, AddressTable.DataTbls.GetItemDataTables)())
+        ptr_to_ref_mut(addr_to_stdcall(
+            _GetItemDataTables,
+            AddressTable.DataTbls.GetItemDataTables,
+        )())
     }
 
-    fn _GetNextHirelingTxtRecordFromClassId(_bExpansion: BOOL, _nClass: u32, _pOldRecord: PVOID) -> *mut D2HirelingTxt { null_mut() }
-
-    pub fn GetNextHirelingTxtRecordFromClassId(expansion: BOOL, classId: u32, oldRecord: PVOID) -> Option<&'static mut D2HirelingTxt> {
-        ptr_to_ref_mut(addr_to_stdcall(_GetNextHirelingTxtRecordFromClassId, AddressTable.DataTbls.GetNextHirelingTxtRecordFromClassId)(expansion, classId, oldRecord))
+    fn _GetNextHirelingTxtRecordFromClassId(
+        _bExpansion: BOOL,
+        _nClass: u32,
+        _pOldRecord: PVOID,
+    ) -> *mut D2HirelingTxt {
+        null_mut()
     }
 
-    pub fn CompileTxt(archive: PVOID, name: *const u8, tbl: PVOID, recordCount: &mut i32, recordSize: usize) -> PVOID {
-        addr_to_stdcall(CompileTxt, AddressTable.DataTbls.CompileTxt)(archive, name, tbl, recordCount, recordSize)
+    pub fn GetNextHirelingTxtRecordFromClassId(
+        expansion: BOOL,
+        classId: u32,
+        oldRecord: PVOID,
+    ) -> Option<&'static mut D2HirelingTxt> {
+        ptr_to_ref_mut(addr_to_stdcall(
+            _GetNextHirelingTxtRecordFromClassId,
+            AddressTable.DataTbls.GetNextHirelingTxtRecordFromClassId,
+        )(expansion, classId, oldRecord))
+    }
+
+    pub fn CompileTxt(
+        archive: PVOID,
+        name: *const u8,
+        tbl: PVOID,
+        recordCount: &mut i32,
+        recordSize: usize,
+    ) -> PVOID {
+        addr_to_stdcall(CompileTxt, AddressTable.DataTbls.CompileTxt)(
+            archive,
+            name,
+            tbl,
+            recordCount,
+            recordSize,
+        )
     }
 }
 
@@ -202,10 +246,15 @@ pub mod Units {
     use super::*;
 
     pub fn TestCollisionWithUnit(unit1: PVOID, unit2: PVOID, collision_mask: i32) -> BOOL {
-        addr_to_stdcall(TestCollisionWithUnit, AddressTable.Units.TestCollisionWithUnit)(unit1, unit2, collision_mask)
+        addr_to_stdcall(
+            TestCollisionWithUnit,
+            AddressTable.Units.TestCollisionWithUnit,
+        )(unit1, unit2, collision_mask)
     }
 
-    fn _GetRoom(_unit: &D2Unit) -> *mut D2ActiveRoom { null_mut() }
+    fn _GetRoom(_unit: &D2Unit) -> *mut D2ActiveRoom {
+        null_mut()
+    }
     pub fn GetRoom(unit: &D2Unit) -> Option<&mut D2ActiveRoom> {
         ptr_to_ref_mut(addr_to_stdcall(_GetRoom, AddressTable.Units.GetRoom)(unit))
     }
@@ -219,22 +268,30 @@ pub mod Units {
     }
 
     pub fn GetDistanceToCoordinates(unit: &D2Unit, x: i32, y: i32) -> i32 {
-        addr_to_stdcall(GetDistanceToCoordinates, AddressTable.Units.GetDistanceToCoordinates)(unit, x, y)
+        addr_to_stdcall(
+            GetDistanceToCoordinates,
+            AddressTable.Units.GetDistanceToCoordinates,
+        )(unit, x, y)
     }
 
     fn _GetCoords(_unit: &D2Unit, _coord: &mut D2Coord) {}
 
     pub fn GetCoords(unit: &D2Unit) -> D2Coord {
-        let mut coord =  D2Coord { nX: 0, nY: 0 };
+        let mut coord = D2Coord { nX: 0, nY: 0 };
         addr_to_stdcall(_GetCoords, AddressTable.Units.GetCoords)(unit, &mut coord);
         coord
     }
 
     pub fn GetInventoryRecordId(unit: &D2Unit, invPage: D2ItemInvPage, isLod: BOOL) -> i32 {
-        addr_to_stdcall(GetInventoryRecordId, AddressTable.Units.GetInventoryRecordId)(unit, invPage, isLod)
+        addr_to_stdcall(
+            GetInventoryRecordId,
+            AddressTable.Units.GetInventoryRecordId,
+        )(unit, invPage, isLod)
     }
 
-    fn _GetPlayerName(_unit: &D2Unit) -> PCSTR { null_mut() }
+    fn _GetPlayerName(_unit: &D2Unit) -> PCSTR {
+        null_mut()
+    }
 
     pub fn GetPlayerName(unit: &D2Unit) -> Option<String> {
         let name = addr_to_stdcall(_GetPlayerName, AddressTable.Units.GetPlayerName)(unit);
@@ -245,7 +302,6 @@ pub mod Units {
 
         Some(name.to_str().to_string())
     }
-
 }
 
 pub mod Items {
@@ -271,7 +327,9 @@ pub mod Items {
         addr_to_stdcall(CheckItemTypeId, AddressTable.Items.CheckItemTypeId)(item, itemType)
     }
 
-    fn _CheckItemFlag(_item: &D2Unit, _flags: D2ItemFlags, _line: usize, _file: usize) -> BOOL { FALSE }
+    fn _CheckItemFlag(_item: &D2Unit, _flags: D2ItemFlags, _line: usize, _file: usize) -> BOOL {
+        FALSE
+    }
 
     pub fn CheckItemFlag(item: &D2Unit, flags: D2ItemFlags) -> BOOL {
         addr_to_stdcall(_CheckItemFlag, AddressTable.Items.CheckItemFlag)(item, flags, 0, 0)
@@ -281,65 +339,119 @@ pub mod Items {
 pub mod Inventory {
     use super::*;
 
-    fn _UnitIsItem(_unit: &D2Unit) -> *mut D2Unit { null_mut() }
+    fn _UnitIsItem(_unit: &D2Unit) -> *mut D2Unit {
+        null_mut()
+    }
 
     pub fn UnitIsItem(unit: &D2Unit) -> BOOL {
-        if addr_to_stdcall(_UnitIsItem, AddressTable.Inventory.UnitIsItem)(unit).is_null() { FALSE } else { TRUE }
+        if addr_to_stdcall(_UnitIsItem, AddressTable.Inventory.UnitIsItem)(unit).is_null() {
+            FALSE
+        } else {
+            TRUE
+        }
     }
 
-    fn _GetFirstItem(_inventory: &D2Inventory) -> *mut D2Unit { null_mut() }
+    fn _GetFirstItem(_inventory: &D2Inventory) -> *mut D2Unit {
+        null_mut()
+    }
 
     pub fn GetFirstItem(inventory: &D2Inventory) -> Option<&mut D2Unit> {
-        ptr_to_ref_mut(addr_to_stdcall(_GetFirstItem, AddressTable.Inventory.GetFirstItem)(inventory))
+        ptr_to_ref_mut(addr_to_stdcall(
+            _GetFirstItem,
+            AddressTable.Inventory.GetFirstItem,
+        )(inventory))
     }
 
-    fn _GetNextItem(_item: &D2Unit) -> *mut D2Unit { null_mut() }
+    fn _GetNextItem(_item: &D2Unit) -> *mut D2Unit {
+        null_mut()
+    }
 
     pub fn GetNextItem(item: &D2Unit) -> Option<&mut D2Unit> {
-        ptr_to_ref_mut(addr_to_stdcall(_GetNextItem, AddressTable.Inventory.GetNextItem)(item))
+        ptr_to_ref_mut(addr_to_stdcall(
+            _GetNextItem,
+            AddressTable.Inventory.GetNextItem,
+        )(item))
     }
 
-    fn _GetCursorItem(_inventory: &D2Inventory) -> *mut D2Unit { null_mut() }
+    fn _GetCursorItem(_inventory: &D2Inventory) -> *mut D2Unit {
+        null_mut()
+    }
 
     pub fn GetCursorItem(inventory: &D2Inventory) -> Option<&mut D2Unit> {
-        ptr_to_ref_mut(addr_to_stdcall(_GetCursorItem, AddressTable.Inventory.GetCursorItem)(inventory))
+        ptr_to_ref_mut(addr_to_stdcall(
+            _GetCursorItem,
+            AddressTable.Inventory.GetCursorItem,
+        )(inventory))
     }
 
-    fn _GetFreePosition(_inventory: &D2Inventory, _item: &D2Unit, _inventoryRecordId: i32, _x: *mut i32, _y: *mut i32, _page: D2ItemInvPage) -> BOOL { FALSE }
+    fn _GetFreePosition(
+        _inventory: &D2Inventory,
+        _item: &D2Unit,
+        _inventoryRecordId: i32,
+        _x: *mut i32,
+        _y: *mut i32,
+        _page: D2ItemInvPage,
+    ) -> BOOL {
+        FALSE
+    }
 
-    pub fn GetFreePosition(inventory: &D2Inventory, item: &D2Unit, inventoryRecordId: i32, page: D2ItemInvPage) -> Option<(i32, i32)> {
+    pub fn GetFreePosition(
+        inventory: &D2Inventory,
+        item: &D2Unit,
+        inventoryRecordId: i32,
+        page: D2ItemInvPage,
+    ) -> Option<(i32, i32)> {
         let mut x = 0;
         let mut y = 0;
 
-        if addr_to_stdcall(_GetFreePosition, AddressTable.Inventory.GetFreePosition)(inventory, item, inventoryRecordId, &mut x, &mut y, page) == FALSE {
+        if addr_to_stdcall(_GetFreePosition, AddressTable.Inventory.GetFreePosition)(
+            inventory,
+            item,
+            inventoryRecordId,
+            &mut x,
+            &mut y,
+            page,
+        ) == FALSE
+        {
             return None;
         }
 
         Some((x, y))
     }
 
-    fn _GetFreeBeltSlot(_inventory: &D2Inventory, _item: &D2Unit, _freeSlotId: *mut i32) -> BOOL { FALSE }
+    fn _GetFreeBeltSlot(_inventory: &D2Inventory, _item: &D2Unit, _freeSlotId: *mut i32) -> BOOL {
+        FALSE
+    }
 
     pub fn GetFreeBeltSlot(inventory: &D2Inventory, item: &D2Unit) -> Option<i32> {
         let mut freeSlotId: i32 = 0;
 
-        if addr_to_stdcall(_GetFreeBeltSlot, AddressTable.Inventory.GetFreeBeltSlot)(inventory, item, &mut freeSlotId) == FALSE {
+        if addr_to_stdcall(_GetFreeBeltSlot, AddressTable.Inventory.GetFreeBeltSlot)(
+            inventory,
+            item,
+            &mut freeSlotId,
+        ) == FALSE
+        {
             return None;
         }
 
         Some(freeSlotId)
     }
-
 }
 
 pub mod DrlgDrlg {
     use super::*;
 
     pub fn GetActNoFromLevelId(levelId: D2LevelId) -> u8 {
-        addr_to_stdcall(GetActNoFromLevelId, AddressTable.DrlgDrlg.GetActNoFromLevelId)(levelId)
+        addr_to_stdcall(
+            GetActNoFromLevelId,
+            AddressTable.DrlgDrlg.GetActNoFromLevelId,
+        )(levelId)
     }
 
-    fn _GetLevel(_drlg: &D2Drlg, _levelId: D2LevelId) -> *mut D2DrlgLevel { null_mut() }
+    fn _GetLevel(_drlg: &D2Drlg, _levelId: D2LevelId) -> *mut D2DrlgLevel {
+        null_mut()
+    }
 
     pub fn GetLevel(drlg: &D2Drlg, levelId: D2LevelId) -> Option<&mut D2DrlgLevel> {
         let drlg_level = addr_to_stdcall(_GetLevel, AddressTable.DrlgDrlg.GetLevel)(drlg, levelId);
@@ -350,10 +462,15 @@ pub mod DrlgDrlg {
 pub mod DrlgRoom {
     use super::*;
 
-    fn _GetPresetUnits(_drlgRoom: &D2DrlgRoom) -> *mut D2PresetUnit { null_mut() }
+    fn _GetPresetUnits(_drlgRoom: &D2DrlgRoom) -> *mut D2PresetUnit {
+        null_mut()
+    }
 
     pub fn GetPresetUnits(drlgRoom: &D2DrlgRoom) -> Option<&'static mut D2PresetUnit> {
-        ptr_to_ref_mut(addr_to_fastcall(_GetPresetUnits, AddressTable.DrlgRoom.GetPresetUnits)(drlgRoom))
+        ptr_to_ref_mut(addr_to_fastcall(
+            _GetPresetUnits,
+            AddressTable.DrlgRoom.GetPresetUnits,
+        )(drlgRoom))
     }
 
     pub fn GetLevelId(drlgRoom: *const D2DrlgRoom) -> D2LevelId {
@@ -375,10 +492,12 @@ pub mod DrlgRoom {
 pub mod Dungeon {
     use super::super::common::*;
     use super::datatbls::D2LevelDefBin;
-    use super::AddressTable;
     pub use super::drlg::*;
+    use super::AddressTable;
 
-    fn _GetDrlgFromAct(_act: &D2DrlgAct) -> *mut D2Drlg { null_mut() }
+    fn _GetDrlgFromAct(_act: &D2DrlgAct) -> *mut D2Drlg {
+        null_mut()
+    }
 
     pub fn GetDrlgFromAct(act: &D2DrlgAct) -> Option<&mut D2Drlg> {
         let drlg = addr_to_stdcall(_GetDrlgFromAct, AddressTable.Dungeon.GetDrlgFromAct)(act);
@@ -394,20 +513,31 @@ pub mod Dungeon {
     }
 
     pub fn GetHoradricStaffTombLevelId(drlgAct: &D2DrlgAct) -> D2LevelId {
-        addr_to_stdcall(GetHoradricStaffTombLevelId, AddressTable.Dungeon.GetHoradricStaffTombLevelId)(drlgAct)
+        addr_to_stdcall(
+            GetHoradricStaffTombLevelId,
+            AddressTable.Dungeon.GetHoradricStaffTombLevelId,
+        )(drlgAct)
     }
 
     pub fn GetRoomFromAct(drlgAct: &D2DrlgAct) -> Option<&mut D2ActiveRoom> {
         addr_to_stdcall(GetRoomFromAct, AddressTable.Dungeon.GetRoomFromAct)(drlgAct)
     }
 
-    fn _GetAdjacentRoomsListFromRoom(_activeRoom: &D2ActiveRoom, _roomList: *mut *mut *mut D2ActiveRoom, _roomCount: *mut usize) {}
+    fn _GetAdjacentRoomsListFromRoom(
+        _activeRoom: &D2ActiveRoom,
+        _roomList: *mut *mut *mut D2ActiveRoom,
+        _roomCount: *mut usize,
+    ) {
+    }
 
     pub fn GetAdjacentRoomsListFromRoom(activeRoom: &D2ActiveRoom) -> Option<&[*mut D2ActiveRoom]> {
         let mut rooms: *mut *mut D2ActiveRoom = null_mut();
         let mut room_count = 0_usize;
 
-        addr_to_stdcall(_GetAdjacentRoomsListFromRoom, AddressTable.Dungeon.GetAdjacentRoomsListFromRoom)(&activeRoom, &mut rooms, &mut room_count);
+        addr_to_stdcall(
+            _GetAdjacentRoomsListFromRoom,
+            AddressTable.Dungeon.GetAdjacentRoomsListFromRoom,
+        )(activeRoom, &mut rooms, &mut room_count);
 
         if room_count == 0 {
             return None;
@@ -423,80 +553,82 @@ pub mod Dungeon {
     pub fn GetLevelIdFromRoom(room: &D2ActiveRoom) -> D2LevelId {
         addr_to_stdcall(GetLevelIdFromRoom, AddressTable.Dungeon.GetLevelIdFromRoom)(room)
     }
-
 }
 
 pub mod DrlgPreset {
     use super::super::common::*;
-    use super::AddressTable;
     pub use super::drlg::*;
+    use super::AddressTable;
 
     pub fn GetLevelPrestIdFromRoomEx(drlg_room: &D2DrlgRoom) -> i32 {
-        addr_to_fastcall(GetLevelPrestIdFromRoomEx, AddressTable.DrlgPreset.GetLevelPrestIdFromRoomEx)(drlg_room)
+        addr_to_fastcall(
+            GetLevelPrestIdFromRoomEx,
+            AddressTable.DrlgPreset.GetLevelPrestIdFromRoomEx,
+        )(drlg_room)
     }
 }
 
 pub fn init(d2common: usize) {
-    AddressTable.initialize(D2CommonOffset{
-        DataTbls: DataTblsOffset{
-            CompileTxt                          : d2common + D2RVA::D2Common(0x6FDAEF40),
-            GetLevelDefRecord                   : d2common + D2RVA::D2Common(0x6FDBCB20),
-            GetObjectsTxtRecord                 : d2common + D2RVA::D2Common(0x6FD8E980),
-            GetItemDataTables                   : d2common + D2RVA::D2Common(0x6FDC1A40),
-            GetNextHirelingTxtRecordFromClassId : d2common + D2RVA::D2Common(0x6FDA3190),
-            sgptDataTables                      : d2common + D2RVA::D2Common(0x6FDE9E1C),
+    AddressTable.initialize(D2CommonOffset {
+        DataTbls: DataTblsOffset {
+            CompileTxt: d2common + D2RVA::D2Common(0x6FDAEF40),
+            GetLevelDefRecord: d2common + D2RVA::D2Common(0x6FDBCB20),
+            GetObjectsTxtRecord: d2common + D2RVA::D2Common(0x6FD8E980),
+            GetItemDataTables: d2common + D2RVA::D2Common(0x6FDC1A40),
+            GetNextHirelingTxtRecordFromClassId: d2common + D2RVA::D2Common(0x6FDA3190),
+            sgptDataTables: d2common + D2RVA::D2Common(0x6FDE9E1C),
         },
-        StatList: StatListOffset{
-            GetUnitBaseStat                     : d2common + D2RVA::D2Common(0x6FD88B70),
-            GetStatListFromUnitStateAndFlag     : d2common + D2RVA::D2Common(0x6FD87EC0),
-            GetUnitAlignment                    : d2common + D2RVA::D2Common(0x6FD891F0),
+        StatList: StatListOffset {
+            GetUnitBaseStat: d2common + D2RVA::D2Common(0x6FD88B70),
+            GetStatListFromUnitStateAndFlag: d2common + D2RVA::D2Common(0x6FD87EC0),
+            GetUnitAlignment: d2common + D2RVA::D2Common(0x6FD891F0),
         },
-        Units: UnitsOffset{
-            TestCollisionWithUnit               : d2common + D2RVA::D2Common(0x6FD814A0),
-            GetRoom                             : d2common + D2RVA::D2Common(0x6FD7FE10),
-            GetNearestTestedUnit                : d2common + D2RVA::D2Common(0x6FD62330),
-            GetClientCoordX                     : d2common + D2RVA::D2Common(0x6FD80290),
-            GetClientCoordY                     : d2common + D2RVA::D2Common(0x6FD80240),
-            GetDistanceToCoordinates            : d2common + D2RVA::D2Common(0x6FDCF5E0),
-            GetCoords                           : d2common + D2RVA::D2Common(0x6FD80050),
-            GetInventoryRecordId                : d2common + D2RVA::D2Common(0x6FD7FB60),
-            GetPlayerName                       : d2common + D2RVA::D2Common(0x6FD7EBB0),
+        Units: UnitsOffset {
+            TestCollisionWithUnit: d2common + D2RVA::D2Common(0x6FD814A0),
+            GetRoom: d2common + D2RVA::D2Common(0x6FD7FE10),
+            GetNearestTestedUnit: d2common + D2RVA::D2Common(0x6FD62330),
+            GetClientCoordX: d2common + D2RVA::D2Common(0x6FD80290),
+            GetClientCoordY: d2common + D2RVA::D2Common(0x6FD80240),
+            GetDistanceToCoordinates: d2common + D2RVA::D2Common(0x6FDCF5E0),
+            GetCoords: d2common + D2RVA::D2Common(0x6FD80050),
+            GetInventoryRecordId: d2common + D2RVA::D2Common(0x6FD7FB60),
+            GetPlayerName: d2common + D2RVA::D2Common(0x6FD7EBB0),
         },
-        Items: ItemsOffset{
-            GetItemType                         : d2common + D2RVA::D2Common(0x6FD730F0),
-            GetItemQuality                      : d2common + D2RVA::D2Common(0x6FD73B40),
-            GetInvPage                          : d2common + D2RVA::D2Common(0x6FD737C0),
-            GetBaseCode                         : d2common + D2RVA::D2Common(0x6FD73290),
-            CheckItemTypeId                     : d2common + D2RVA::D2Common(0x6FD74430),
-            CheckItemFlag                       : d2common + D2RVA::D2Common(0x6FD73940),
+        Items: ItemsOffset {
+            GetItemType: d2common + D2RVA::D2Common(0x6FD730F0),
+            GetItemQuality: d2common + D2RVA::D2Common(0x6FD73B40),
+            GetInvPage: d2common + D2RVA::D2Common(0x6FD737C0),
+            GetBaseCode: d2common + D2RVA::D2Common(0x6FD73290),
+            CheckItemTypeId: d2common + D2RVA::D2Common(0x6FD74430),
+            CheckItemFlag: d2common + D2RVA::D2Common(0x6FD73940),
         },
-        Inventory: InventoryOffset{
-            UnitIsItem                          : d2common + D2RVA::D2Common(0x6FD6E400),
-            GetFirstItem                        : d2common + D2RVA::D2Common(0x6FD6E190),
-            GetNextItem                         : d2common + D2RVA::D2Common(0x6FD6E8F0),
-            GetCursorItem                       : d2common + D2RVA::D2Common(0x6FD6DFB0),
-            GetFreePosition                     : d2common + D2RVA::D2Common(0x6FD708E0),
-            GetFreeBeltSlot                     : d2common + D2RVA::D2Common(0x6FD700D0),
+        Inventory: InventoryOffset {
+            UnitIsItem: d2common + D2RVA::D2Common(0x6FD6E400),
+            GetFirstItem: d2common + D2RVA::D2Common(0x6FD6E190),
+            GetNextItem: d2common + D2RVA::D2Common(0x6FD6E8F0),
+            GetCursorItem: d2common + D2RVA::D2Common(0x6FD6DFB0),
+            GetFreePosition: d2common + D2RVA::D2Common(0x6FD708E0),
+            GetFreeBeltSlot: d2common + D2RVA::D2Common(0x6FD700D0),
         },
-        DrlgDrlg: DrlgDrlgOffset{
-            GetActNoFromLevelId                 : d2common + D2RVA::D2Common(0x6FD7D2C0),
-            GetLevel                            : d2common + D2RVA::D2Common(0x6FD7DD80),
+        DrlgDrlg: DrlgDrlgOffset {
+            GetActNoFromLevelId: d2common + D2RVA::D2Common(0x6FD7D2C0),
+            GetLevel: d2common + D2RVA::D2Common(0x6FD7DD80),
         },
-        DrlgRoom: DrlgRoomOffset{
-            GetPresetUnits                      : d2common + D2RVA::D2Common(0x6FD94460),
-            GetLevelId                          : d2common + D2RVA::D2Common(0x6FD94690),
+        DrlgRoom: DrlgRoomOffset {
+            GetPresetUnits: d2common + D2RVA::D2Common(0x6FD94460),
+            GetLevelId: d2common + D2RVA::D2Common(0x6FD94690),
         },
-        DrlgPreset: DrlgPresetOffset{
-            GetLevelPrestIdFromRoomEx           : d2common + D2RVA::D2Common(0x6FD59C20),
+        DrlgPreset: DrlgPresetOffset {
+            GetLevelPrestIdFromRoomEx: d2common + D2RVA::D2Common(0x6FD59C20),
         },
-        Dungeon: DungeonOffset{
-            GetDrlgFromAct                      : d2common + D2RVA::D2Common(0x6FD8B270),
-            IsTownLevelId                       : d2common + D2RVA::D2Common(0x6FD8B230),
-            IsRoomInTown                        : d2common + D2RVA::D2Common(0x6FD8C390),
-            GetHoradricStaffTombLevelId         : d2common + D2RVA::D2Common(0x6FD8B080),
-            GetRoomFromAct                      : d2common + D2RVA::D2Common(0x6FD8B550),
-            GetAdjacentRoomsListFromRoom        : d2common + D2RVA::D2Common(0x6FD8BA20),
-            GetLevelIdFromRoom                  : d2common + D2RVA::D2Common(0x6FD8C000),
+        Dungeon: DungeonOffset {
+            GetDrlgFromAct: d2common + D2RVA::D2Common(0x6FD8B270),
+            IsTownLevelId: d2common + D2RVA::D2Common(0x6FD8B230),
+            IsRoomInTown: d2common + D2RVA::D2Common(0x6FD8C390),
+            GetHoradricStaffTombLevelId: d2common + D2RVA::D2Common(0x6FD8B080),
+            GetRoomFromAct: d2common + D2RVA::D2Common(0x6FD8B550),
+            GetAdjacentRoomsListFromRoom: d2common + D2RVA::D2Common(0x6FD8BA20),
+            GetLevelIdFromRoom: d2common + D2RVA::D2Common(0x6FD8C000),
         },
     });
 }

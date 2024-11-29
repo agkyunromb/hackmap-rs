@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
-use std::ptr::addr_of;
 use std::ops::Deref;
 use std::os::raw::c_void;
+use std::ptr::addr_of;
 use std::sync::OnceLock;
 
 pub type FuncAddress = usize;
@@ -18,7 +18,9 @@ impl CStringToStr for *const u8 {
         }
 
         unsafe {
-            std::ffi::CStr::from_ptr(self as *const i8).to_str().unwrap()
+            std::ffi::CStr::from_ptr(self as *const i8)
+                .to_str()
+                .unwrap()
         }
     }
 }
@@ -74,45 +76,25 @@ impl StrToUTF16 for String {
 }
 
 pub fn read_at<R>(addr: usize) -> R {
-    unsafe {
-        (addr as *const R).read()
-    }
+    unsafe { (addr as *const R).read() }
 }
 
 pub fn write_at<R>(addr: usize, v: R) {
-    unsafe {
-        (addr as *mut R).write(v)
-    }
+    unsafe { (addr as *mut R).write(v) }
 }
 
+#[derive(Default)]
 pub struct D2Modules {
-    pub D2Sigma     : Option<usize>,
-    pub D2Client    : Option<usize>,
-    pub D2Win       : Option<usize>,
-    pub D2Common    : Option<usize>,
-    pub D2Gfx       : Option<usize>,
-    pub D2CMP       : Option<usize>,
-    pub D2Multi     : Option<usize>,
-    pub Fog         : Option<usize>,
-    pub Storm       : Option<usize>,
-    pub glide3x     : Option<usize>,
-}
-
-impl Default for D2Modules {
-    fn default() -> Self {
-        Self {
-            D2Sigma   : None,
-            D2Client  : None,
-            D2Win     : None,
-            D2Common  : None,
-            D2Gfx     : None,
-            D2CMP     : None,
-            D2Multi   : None,
-            Fog       : None,
-            Storm     : None,
-            glide3x   : None,
-        }
-    }
+    pub D2Sigma: Option<usize>,
+    pub D2Client: Option<usize>,
+    pub D2Win: Option<usize>,
+    pub D2Common: Option<usize>,
+    pub D2Gfx: Option<usize>,
+    pub D2CMP: Option<usize>,
+    pub D2Multi: Option<usize>,
+    pub Fog: Option<usize>,
+    pub Storm: Option<usize>,
+    pub glide3x: Option<usize>,
 }
 
 // https://github.com/actix/actix-web/blob/66905efd7b02a464f0becff59685c8ce58f243c2/actix-web/src/handler.rs#L89
@@ -145,14 +127,13 @@ macro_rules! factory_tuple ({ $($param:ident)* } => {
     }
 });
 
-
 /*
 for i in range(11):
     args = ' '.join(['Arg%d' % (n + 1) for n in range(i)])
     print(f'factory_tuple! {{ {args} }}')
 */
 
-factory_tuple! { }
+factory_tuple! {}
 factory_tuple! { Arg1 }
 factory_tuple! { Arg1 Arg2 }
 factory_tuple! { Arg1 Arg2 Arg3 }
@@ -168,47 +149,49 @@ pub fn addr_to_stdcall<F, T>(_: F, addr: usize) -> F::StdCall
 where
     F: Handler<T>,
 {
-    unsafe {
-        std::mem::transmute_copy(&addr)
-    }
+    unsafe { std::mem::transmute_copy(&addr) }
 }
 
 pub fn addr_to_fastcall<F, T>(_: F, addr: usize) -> F::FastCall
 where
     F: Handler<T>,
 {
-    unsafe {
-        std::mem::transmute_copy(&addr)
-    }
+    unsafe { std::mem::transmute_copy(&addr) }
 }
 
 pub fn addr_to_cdecl<F, T>(_: F, addr: usize) -> F::Cdecl
 where
     F: Handler<T>,
 {
-    unsafe {
-        std::mem::transmute_copy(&addr)
-    }
+    unsafe { std::mem::transmute_copy(&addr) }
 }
 
 pub fn ptr_to_ref<T>(ptr: *const T) -> Option<&'static T> {
-    if ptr.is_null() { None } else { unsafe { Some(&*ptr) } }
+    if ptr.is_null() {
+        None
+    } else {
+        unsafe { Some(&*ptr) }
+    }
 }
 
 pub fn ptr_to_ref_mut<T>(ptr: *mut T) -> Option<&'static mut T> {
-    if ptr.is_null() { None } else { unsafe { Some(&mut *ptr) } }
+    if ptr.is_null() {
+        None
+    } else {
+        unsafe { Some(&mut *ptr) }
+    }
 }
 
 pub struct OnceHolder<T> {
-    inner       : OnceLock<T>,
-    initialized : OnceLock<bool>,
+    inner: OnceLock<T>,
+    initialized: OnceLock<bool>,
 }
 
 impl<T> OnceHolder<T> {
     pub const fn new() -> Self {
         Self {
-            inner       : OnceLock::new(),
-            initialized : OnceLock::new(),
+            inner: OnceLock::new(),
+            initialized: OnceLock::new(),
         }
     }
 
@@ -230,14 +213,14 @@ impl<T> Deref for OnceHolder<T> {
 }
 
 pub trait D2ImageBase {
-    const D2Client  : usize;
-    const D2Common  : usize;
-    const D2Win     : usize;
-    const D2Multi   : usize;
-    const D2Gfx     : usize;
-    const D2CMP     : usize;
-    const Fog       : usize;
-    const Storm     : usize;
+    const D2Client: usize;
+    const D2Common: usize;
+    const D2Win: usize;
+    const D2Multi: usize;
+    const D2Gfx: usize;
+    const D2CMP: usize;
+    const Fog: usize;
+    const Storm: usize;
 }
 
 pub(crate) struct D2RVA_BASE<T: D2ImageBase>(PhantomData<T>);

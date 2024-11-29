@@ -4,30 +4,30 @@ use std::sync::OnceLock;
 
 use D2Common::D2Unit;
 
-use crate::d2api::d2ex::common::*;
 use crate::d2api::d2consts::*;
+use crate::d2api::d2ex::common::*;
 
 use super::D2CommonEx;
 
 #[repr(C, packed(4))]
 struct FormatItemPropertiesContext {
-    pub buf1                    : [u8; 0x100],          // 0x0000
-    pub text                    : [u16; 0x4000],        // 0x0100
-    pub text2                   : [u16; 0x4000],        // 0x8100
-    pub text3                   : [[u16; 0x400]; 3],    // 0xC100
-    pub client_unit_type_table  : PVOID,                // 0xD900
-    pub unit                    : *mut D2Unit,          // 0xD904
-    pub owner                   : *mut D2Unit,          // 0xD908
+    pub buf1: [u8; 0x100],             // 0x0000
+    pub text: [u16; 0x4000],           // 0x0100
+    pub text2: [u16; 0x4000],          // 0x8100
+    pub text3: [[u16; 0x400]; 3],      // 0xC100
+    pub client_unit_type_table: PVOID, // 0xD900
+    pub unit: *mut D2Unit,             // 0xD904
+    pub owner: *mut D2Unit,            // 0xD908
 }
 
 struct D2SigmaEx {
-    is_getting_item_properties  : bool,
+    is_getting_item_properties: bool,
 }
 
 impl D2SigmaEx {
     const fn new() -> Self {
         Self {
-            is_getting_item_properties  : false,
+            is_getting_item_properties: false,
         }
     }
 
@@ -35,12 +35,15 @@ impl D2SigmaEx {
     pub fn get() -> &'static mut Self {
         static mut OBJ: D2SigmaEx = D2SigmaEx::new();
 
-        unsafe {
-            &mut OBJ
-        }
+        unsafe { &mut OBJ }
     }
 
-    fn get_item_properties(&mut self, unit: &D2Common::D2Unit, get_name_only: bool, strip_color_code: bool) -> String {
+    fn get_item_properties(
+        &mut self,
+        unit: &D2Common::D2Unit,
+        get_name_only: bool,
+        strip_color_code: bool,
+    ) -> String {
         let player = match D2Client::Units::GetClientPlayer() {
             None => return String::new(),
             Some(p) => p,
@@ -52,7 +55,7 @@ impl D2SigmaEx {
 
         D2Sigma::ItemText::GetItemPropertiesInit(&mut ctx, player, unit, null_mut());
 
-        if get_name_only == false {
+        if !get_name_only {
             D2Sigma::ItemText::GetItemProperties1(&mut ctx);
             D2Sigma::ItemText::GetItemProperties3(&mut ctx);
             D2Sigma::ItemText::GetItemProperties2(&mut ctx);
@@ -93,13 +96,12 @@ impl D2SigmaEx {
 
         let text = text.join("\n");
 
-        if strip_color_code == false {
+        if !strip_color_code {
             return text;
         }
 
         D2CommonEx::Items::strip_all_color_codes(&text)
     }
-
 }
 
 pub mod Items {

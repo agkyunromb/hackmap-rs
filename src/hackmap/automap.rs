@@ -6,17 +6,18 @@ use D2Gfx::D2GfxData;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
 
 struct Stubs {
-    Handle_D2GS_LOADCOMPLETE_04                 : Option<D2Client::Net::D2GSHandler>,
-    D2Client_AutoMap_Init_CurrentAutoMapLayer   : Option<extern "stdcall" fn()>,
-    D2Client_AutoMap_DrawCells                  : Option<extern "fastcall" fn(cell: &D2AutoMapCellDataEx, arg2: usize)>,
-    D2Client_LeaveGameCleanUp                   : Option<extern "stdcall" fn()>,
+    Handle_D2GS_LOADCOMPLETE_04: Option<D2Client::Net::D2GSHandler>,
+    D2Client_AutoMap_Init_CurrentAutoMapLayer: Option<extern "stdcall" fn()>,
+    D2Client_AutoMap_DrawCells:
+        Option<extern "fastcall" fn(cell: &D2AutoMapCellDataEx, arg2: usize)>,
+    D2Client_LeaveGameCleanUp: Option<extern "stdcall" fn()>,
 }
 
-static mut STUBS: Stubs = Stubs{
-    Handle_D2GS_LOADCOMPLETE_04                 : None,
-    D2Client_AutoMap_Init_CurrentAutoMapLayer   : None,
-    D2Client_AutoMap_DrawCells                  : None,
-    D2Client_LeaveGameCleanUp                   : None,
+static mut STUBS: Stubs = Stubs {
+    Handle_D2GS_LOADCOMPLETE_04: None,
+    D2Client_AutoMap_Init_CurrentAutoMapLayer: None,
+    D2Client_AutoMap_DrawCells: None,
+    D2Client_LeaveGameCleanUp: None,
 };
 
 #[allow(static_mut_refs)]
@@ -33,18 +34,18 @@ pub enum ExtraCellType {
 
 #[repr(C, packed(1))]
 pub(super) struct D2AutoMapCellDataEx {
-    pub data        : D2Client::AutoMap::D2AutoMapCellData,
-    pub cell_type   : ExtraCellType,
+    pub data: D2Client::AutoMap::D2AutoMapCellData,
+    pub cell_type: ExtraCellType,
 
-    _pad            : u32,
+    _pad: u32,
 }
 
 const _: () = assert!(0x2800 % size_of::<D2AutoMapCellDataEx>() == 0);
 
 #[repr(C, packed(1))]
 struct D2AutoMapCellBlockEx {
-    pub Elements    : [D2AutoMapCellDataEx; 0x2800 / std::mem::size_of::<D2AutoMapCellDataEx>()],
-    pub NextBlock   : *mut D2AutoMapCellBlockEx,
+    pub Elements: [D2AutoMapCellDataEx; 0x2800 / std::mem::size_of::<D2AutoMapCellDataEx>()],
+    pub NextBlock: *mut D2AutoMapCellBlockEx,
 }
 
 extern "fastcall" fn Handle_D2GS_LOADCOMPLETE_04(payload: *const u8) {
@@ -82,12 +83,12 @@ extern "stdcall" fn D2Client_LeaveGameCleanUp() {
 }
 
 fn reveal_map_ex() -> Option<()> {
-    let client_player   = D2Client::Units::GetClientPlayer()?;
-    let drlg_act        = client_player.get_drlg_act();
+    let client_player = D2Client::Units::GetClientPlayer()?;
+    let drlg_act = client_player.get_drlg_act();
 
-    let drlg            = D2Common::Dungeon::GetDrlgFromAct(drlg_act)?;
-    let current_act     = drlg_act.nAct;
-    let max_level_id    = D2Common::DataTbls::sgptDataTables().levels_txt_record_count();
+    let drlg = D2Common::Dungeon::GetDrlgFromAct(drlg_act)?;
+    let current_act = drlg_act.nAct;
+    let max_level_id = D2Common::DataTbls::sgptDataTables().levels_txt_record_count();
 
     for level_id in 1..max_level_id {
         if D2Common::DrlgDrlg::GetActNoFromLevelId(level_id) != current_act {
@@ -132,7 +133,7 @@ fn reveal_level_ex(level: &mut D2Common::D2DrlgLevel) -> Option<()> {
     }
 }
 
-fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()>  {
+fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()> {
     let mut preset_unit = D2Common::DrlgRoom::GetPresetUnits(drlg_room)?;
 
     let level_id = D2Common::DrlgRoom::GetLevelId(drlg_room);
@@ -143,57 +144,60 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()>  
 
     loop {
         loop {
-            let mut x                                   = 0;
-            let mut y                                   = 0;
-            let preset_unit_index                       = preset_unit.nIndex as u32;
-            let mut cell_type: Option<ExtraCellType>    = None;
+            let mut x = 0;
+            let mut y = 0;
+            let preset_unit_index = preset_unit.nIndex as u32;
+            let mut cell_type: Option<ExtraCellType> = None;
 
             match preset_unit.nUnitType {
                 D2UnitTypes::Monster => {
                     if preset_unit_index == 256 {
                         // A4 衣卒尔
-                        cell_type = Some(ExtraCellType::CellNo(300));   // 红色十字
+                        cell_type = Some(ExtraCellType::CellNo(300)); // 红色十字
                     }
-                },
+                }
                 D2UnitTypes::Object => {
                     match preset_unit_index {
                         152 => {
                             // 塔拉夏古墓插杖的地方
                             // orifice, Where you place the Horadric staff
 
-                            cell_type = Some(ExtraCellType::CellNo(300));   // 红色十字
-                        },
+                            cell_type = Some(ExtraCellType::CellNo(300)); // 红色十字
+                        }
 
                         397 => {
                             // 黄金宝箱
                             // sparkly chest
                             cell_type = Some(ExtraCellType::CellNo(D2AutoMapCells::QChest as u32));
-                        },
+                        }
 
                         460 => {
                             cell_type = Some(ExtraCellType::CellNo(1468));
-                        },
+                        }
 
                         _ => {
-                            let object_txt = match D2Common::DataTbls::GetObjectsTxtRecord(preset_unit_index) {
-                                Some(txt) => txt,
-                                None => break,
-                            };
+                            let object_txt =
+                                match D2Common::DataTbls::GetObjectsTxtRecord(preset_unit_index) {
+                                    Some(txt) => txt,
+                                    None => break,
+                                };
 
                             let cellno = object_txt.dwAutomap;
 
                             if cellno != 0 {
                                 cell_type = Some(ExtraCellType::CellNo(cellno));
                             }
-                        },
+                        }
                     }
-                },
+                }
 
                 D2UnitTypes::Tile => {
                     let mut room_tiles = ptr_to_ref_mut(drlg_room.pRoomTiles);
 
                     while let Some(tiles) = room_tiles {
-                        if ptr_to_ref_mut(tiles.pLvlWarpTxtRecord).unwrap().dwLevelId == preset_unit_index {
+                        if ptr_to_ref_mut(tiles.pLvlWarpTxtRecord).unwrap().dwLevelId
+                            == preset_unit_index
+                        {
                             x = 8;
                             y = -0x15;
 
@@ -212,8 +216,8 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()>  
 
                         room_tiles = ptr_to_ref_mut(tiles.pNext);
                     }
-                },
-                _ => {},
+                }
+                _ => {}
             }
 
             let cell_type = match cell_type {
@@ -227,10 +231,18 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()>  
             let x2 = ((x1 - y1) * 16) / 10 + 1;
             let y2 = ((x1 + y1) * 8) / 10 - 3;
 
-            let mut cell = D2AutoMapCellDataEx{
-                data        : D2Client::AutoMap::D2AutoMapCellData { fSaved: 0, nCellNo: 0, xPixel: 0, yPixel: 0, wWeight: 0, pPrev: null_mut(), pNext: null_mut() },
-                cell_type   : ExtraCellType::None,
-                _pad        : 0,
+            let mut cell = D2AutoMapCellDataEx {
+                data: D2Client::AutoMap::D2AutoMapCellData {
+                    fSaved: 0,
+                    nCellNo: 0,
+                    xPixel: 0,
+                    yPixel: 0,
+                    wWeight: 0,
+                    pPrev: null_mut(),
+                    pNext: null_mut(),
+                },
+                cell_type: ExtraCellType::None,
+                _pad: 0,
             };
 
             match cell_type {
@@ -239,22 +251,26 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()>  
                     cell.data.nCellNo = cellno as u16;
                     cell.data.xPixel = (x2 + x) as u16;
                     cell.data.yPixel = (y2 + y) as u16;
-                },
+                }
 
                 ExtraCellType::LevelId(_) => {
                     cell.cell_type = cell_type;
                     cell.data.nCellNo = 0;
                     cell.data.xPixel = (x2 + x) as u16;
                     cell.data.yPixel = (y2 + y) as u16;
-                },
+                }
 
-                _ => {},
+                _ => {}
             }
 
             // let cell2 = ptr_to_ref_mut(NewAutomapCell()).unwrap();
             // *cell2 = cell;
 
-            HackMap::automap().automap_cells.entry(layer_id).or_insert(vec![]).push(cell);
+            HackMap::automap()
+                .automap_cells
+                .entry(layer_id)
+                .or_default()
+                .push(cell);
 
             // let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
             // D2Client::AutoMap::AddAutomapCell(&cell2.data, &mut layer.pObjects);
@@ -266,7 +282,10 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()>  
     }
 }
 
-fn new_automap_cell(g_cell_block_head: *mut *mut D2AutoMapCellBlockEx, g_automap_cell_count: &mut usize) -> *mut D2AutoMapCellDataEx {
+fn new_automap_cell(
+    g_cell_block_head: *mut *mut D2AutoMapCellBlockEx,
+    g_automap_cell_count: &mut usize,
+) -> *mut D2AutoMapCellDataEx {
     unsafe {
         let element_count = &(**g_cell_block_head).Elements.len();
         let block_count = *g_automap_cell_count / element_count;
@@ -279,7 +298,7 @@ fn new_automap_cell(g_cell_block_head: *mut *mut D2AutoMapCellBlockEx, g_automap
 
         for _ in 0..block_count {
             prev = head;
-            head = (&*head).NextBlock;
+            head = (*head).NextBlock;
             if head.is_null() {
                 break;
             }
@@ -291,11 +310,11 @@ fn new_automap_cell(g_cell_block_head: *mut *mut D2AutoMapCellBlockEx, g_automap
             if prev.is_null() {
                 *g_cell_block_head = head;
             } else {
-                (&mut *prev).NextBlock = head;
+                (*prev).NextBlock = head;
             }
         }
 
-        let cell = &mut (&mut *head).Elements[block_index];
+        let cell = &mut (*head).Elements[block_index];
         std::ptr::write_bytes(cell, 0, 1);
 
         cell.cell_type = ExtraCellType::None;
@@ -305,13 +324,22 @@ fn new_automap_cell(g_cell_block_head: *mut *mut D2AutoMapCellBlockEx, g_automap
 }
 
 extern "stdcall" fn NewAutoMapCell() -> *mut D2AutoMapCellDataEx {
-    new_automap_cell(D2Client::AutoMap::AutoMapCellBlockHead() as *mut *mut D2AutoMapCellBlockEx, D2Client::AutoMap::AutoMapCellCount())
+    new_automap_cell(
+        D2Client::AutoMap::AutoMapCellBlockHead() as *mut *mut D2AutoMapCellBlockEx,
+        D2Client::AutoMap::AutoMapCellCount(),
+    )
 }
 
-extern "stdcall" fn CelDrawClipped(data: &D2GfxData, x: i32, y: i32, crop_rect: PVOID, draw_mode: D2DrawMode) {
+extern "stdcall" fn CelDrawClipped(
+    data: &D2GfxData,
+    x: i32,
+    y: i32,
+    crop_rect: PVOID,
+    draw_mode: D2DrawMode,
+) {
     let cell: &mut D2AutoMapCellDataEx = read_at(data as *const D2GfxData as usize - 0x20);
 
-    if HackMap::automap().draw_automap_cell(cell, x, y) == false {
+    if !HackMap::automap().draw_automap_cell(cell, x, y) {
         D2Gfx::Texture::CelDrawClipped(data, x, y, crop_rect, draw_mode)
     }
 }
@@ -337,10 +365,10 @@ impl AutoMap {
                 self.draw_tile_name(level_id, x, y);
 
                 return true;
-            },
+            }
 
-            ExtraCellType::ShrineType(_shrine_type) => {},
-            _ => {},
+            ExtraCellType::ShrineType(_shrine_type) => {}
+            _ => {}
         }
 
         false
@@ -353,7 +381,11 @@ impl AutoMap {
 
         let player = D2Client::Units::GetClientPlayer().unwrap();
         let drlg_act = ptr_to_ref_mut(player.pDrlgAct).unwrap();
-        let color = if D2Common::Dungeon::GetHoradricStaffTombLevelId(drlg_act) == level_id { D2StringColorCodes::LightGreen } else { D2StringColorCodes::White };
+        let color = if D2Common::Dungeon::GetHoradricStaffTombLevelId(drlg_act) == level_id {
+            D2StringColorCodes::LightGreen
+        } else {
+            D2StringColorCodes::White
+        };
 
         D2WinEx::Text::draw_text(level_name, x, y, D2Font::Font6, color);
     }
@@ -369,11 +401,32 @@ impl AutoMap {
         });
 
         unsafe {
-            STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(0x04, Handle_D2GS_LOADCOMPLETE_04));
+            STUBS.Handle_D2GS_LOADCOMPLETE_04 = Some(D2Client::Net::SwapD2GSHandler(
+                0x04,
+                Handle_D2GS_LOADCOMPLETE_04,
+            ));
 
-            inline_hook_call(modules.D2Client.unwrap(), D2RVA::D2Client(0x6FB10E34), D2Client_AutoMap_DrawCells as usize, Some(&mut STUBS.D2Client_AutoMap_DrawCells), None)?;
-            inline_hook_jmp::<()>(0, D2Client::AddressTable.AutoMap.NewAutoMapCell, NewAutoMapCell as usize, None, None)?;
-            inline_hook_call::<()>(0, D2Client::AddressTable.AutoMap.CallDrawAutoMapCell, CelDrawClipped as usize, None, None)?;
+            inline_hook_call(
+                modules.D2Client.unwrap(),
+                D2RVA::D2Client(0x6FB10E34),
+                D2Client_AutoMap_DrawCells as usize,
+                Some(&mut STUBS.D2Client_AutoMap_DrawCells),
+                None,
+            )?;
+            inline_hook_jmp::<()>(
+                0,
+                D2Client::AddressTable.AutoMap.NewAutoMapCell,
+                NewAutoMapCell as usize,
+                None,
+                None,
+            )?;
+            inline_hook_call::<()>(
+                0,
+                D2Client::AddressTable.AutoMap.CallDrawAutoMapCell,
+                CelDrawClipped as usize,
+                None,
+                None,
+            )?;
         }
 
         Ok(())

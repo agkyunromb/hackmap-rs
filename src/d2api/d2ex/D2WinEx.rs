@@ -1,5 +1,5 @@
-use crate::d2api::d2ex::common::*;
 use crate::d2api::d2consts::*;
+use crate::d2api::d2ex::common::*;
 
 pub mod Text {
     use super::*;

@@ -1,21 +1,23 @@
 use D2Common::D2Unit;
 
 use super::common::*;
-use super::HackMap;
 use super::config::ConfigRef;
+use super::HackMap;
 
 struct Stubs {
-    UI_HandleUIVars                             : Option<extern "stdcall" fn(PVOID)>,
-    continue_attacking_after_target_dead_left   : Option<extern "stdcall" fn()>,
-    continue_attacking_after_target_dead_right  : Option<extern "stdcall" fn()>,
-    MPQLoadFile                                 : Option<extern "stdcall" fn(*const u8, *mut u8, usize, *mut usize, *const u8, usize, usize) -> BOOL>,
+    UI_HandleUIVars: Option<extern "stdcall" fn(PVOID)>,
+    continue_attacking_after_target_dead_left: Option<extern "stdcall" fn()>,
+    continue_attacking_after_target_dead_right: Option<extern "stdcall" fn()>,
+    MPQLoadFile: Option<
+        extern "stdcall" fn(*const u8, *mut u8, usize, *mut usize, *const u8, usize, usize) -> BOOL,
+    >,
 }
 
-static mut STUBS: Stubs = Stubs{
-    UI_HandleUIVars                             : None,
-    continue_attacking_after_target_dead_left   : None,
-    continue_attacking_after_target_dead_right  : None,
-    MPQLoadFile                                 : None,
+static mut STUBS: Stubs = Stubs {
+    UI_HandleUIVars: None,
+    continue_attacking_after_target_dead_left: None,
+    continue_attacking_after_target_dead_right: None,
+    MPQLoadFile: None,
 };
 
 #[allow(static_mut_refs)]
@@ -34,8 +36,12 @@ extern "stdcall" fn MISC_CalculateShadowRGBA(r: &mut u8, g: &mut u8, b: &mut u8,
     *b = 0xFF;
 }
 
-extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(_unit1: PVOID, _unit2: PVOID, _collision_mask: i32) -> BOOL {
-    return FALSE;
+extern "stdcall" fn D2Common_Units_TestCollisionWithUnit(
+    _unit1: PVOID,
+    _unit2: PVOID,
+    _collision_mask: i32,
+) -> BOOL {
+    FALSE
     // let (success, hide) = HackMap::tweaks().should_hide_unit(unit2);
 
     // if success == false {
@@ -62,12 +68,12 @@ fn D2Sigma_Units_GetName(unit: &D2Unit, is_boss: bool) -> PCWSTR {
     let cfg = cfg.borrow();
 
     let monster_name = if cfg.tweaks.show_monster_id {
-        format!("{name}({class_id}, 0x{class_id:X}) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
-
+        format!(
+            "{name}({class_id}, 0x{class_id:X}) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}"
+        )
     } else if is_boss {
         let percent = (hp * 100.0 / max_hp) as usize;
         format!("{name}({percent}%) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
-
     } else {
         let percent = (hp * 100.0 / max_hp) as usize;
         format!("{name}({percent}%%) ÿc7{dr} ÿc8{mr} ÿc1{fr} ÿc9{lr} ÿc3{cr} ÿc2{pr}")
@@ -92,7 +98,7 @@ extern "C" fn is_player_in_town() -> bool {
         None => return false,
     };
 
-    let active_room = D2Common::Units::GetRoom(&player).unwrap();
+    let active_room = D2Common::Units::GetRoom(player).unwrap();
 
     D2Common::Dungeon::IsRoomInTown(active_room) != FALSE
 }
@@ -156,28 +162,49 @@ extern "C" {
 fn continue_attacking_after_target_dead() {
     D2Client::UI::SetAttackWithLeftButton(0);
 
-    if HackMap::config().borrow().tweaks.continue_attacking_after_target_dead == false {
+    if !HackMap::config()
+        .borrow()
+        .tweaks
+        .continue_attacking_after_target_dead
+    {
         D2Client::UI::SetAttackWithRightButton(0);
     }
 }
 
-extern "stdcall" fn MPQLoadFile(fileInfo: *const u8, buffer: *mut u8, bufferSize: usize, mut fileSize: *mut usize, eventInfo: *const u8, arg6: usize, arg7: usize) -> BOOL {
+extern "stdcall" fn MPQLoadFile(
+    fileInfo: *const u8,
+    buffer: *mut u8,
+    bufferSize: usize,
+    mut fileSize: *mut usize,
+    eventInfo: *const u8,
+    arg6: usize,
+    arg7: usize,
+) -> BOOL {
     let mut file_size: usize = 0;
 
     if fileSize.is_null() {
         fileSize = &mut file_size;
     }
 
-    let file_name = ((fileInfo as usize + 8) as *const u8).to_str().to_lowercase();
+    let file_name = ((fileInfo as usize + 8) as *const u8)
+        .to_str()
+        .to_lowercase();
     let file_name = file_name.as_str();
 
     // println!("load {file_name}");
 
-    if HackMap::config().borrow().tweaks.excluded_dc6.contains(file_name) {
+    if HackMap::config()
+        .borrow()
+        .tweaks
+        .excluded_dc6
+        .contains(file_name)
+    {
         return FALSE;
     }
 
-    let success = get_stubs().MPQLoadFile.unwrap()(fileInfo, buffer, bufferSize, fileSize, eventInfo, arg6, arg7);
+    let success = get_stubs().MPQLoadFile.unwrap()(
+        fileInfo, buffer, bufferSize, fileSize, eventInfo, arg6, arg7,
+    );
 
     while success != FALSE {
         if true {
@@ -210,8 +237,8 @@ impl Tweaks {
     pub const MAX_GLOBAL_MESSAGE_COUNT: i32 = 30;
     pub const MAX_QUICK_MESSAGE_COUNT: i32 = 20;
 
-    pub fn new(cfg: ConfigRef) -> Self{
-        Self{
+    pub fn new(cfg: ConfigRef) -> Self {
+        Self {
             cfg,
             current_monster_name: vec![],
         }
@@ -227,7 +254,9 @@ impl Tweaks {
     fn handle_perm_show_items(&self, obj: PVOID) {
         let UI_HandleUIVars = get_stubs().UI_HandleUIVars.unwrap();
 
-        if self.cfg.borrow_mut().tweaks.perm_show_items == false || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0 {
+        if !self.cfg.borrow_mut().tweaks.perm_show_items
+            || D2Client::UI::GetUIVar(D2UIvars::HoldAlt) != 0
+        {
             UI_HandleUIVars(obj);
             return;
         }
@@ -241,55 +270,130 @@ impl Tweaks {
         let D2Client = modules.D2Client.unwrap();
 
         unsafe {
-            inline_hook_jmp(0, Storm::AddressTable.MPQLoadFile, MPQLoadFile as usize, Some(&mut STUBS.MPQLoadFile), None)?;
+            inline_hook_jmp(
+                0,
+                Storm::AddressTable.MPQLoadFile,
+                MPQLoadFile as usize,
+                Some(&mut STUBS.MPQLoadFile),
+                None,
+            )?;
 
             // 永久显示地面物品
             let glide3x = &*RtlImageNtHeader(modules.glide3x.unwrap() as PVOID);
 
-            inline_hook_call(0, D2Client::AddressTable.UI.CallHandleUIVars, HandleUIVars as usize, Some(&mut STUBS.UI_HandleUIVars), None)?;
+            inline_hook_call(
+                0,
+                D2Client::AddressTable.UI.CallHandleUIVars,
+                HandleUIVars as usize,
+                Some(&mut STUBS.UI_HandleUIVars),
+                None,
+            )?;
             patch_memory_value(D2Client, D2RVA::D2Client(0x6FB0948B), 0xEB, 1)?;
 
             // global message 上限
-            patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D9B2), Self::MAX_GLOBAL_MESSAGE_COUNT as u64, 1)?;
+            patch_memory_value(
+                D2Client,
+                D2RVA::D2Client(0x6FB2D9B2),
+                Self::MAX_GLOBAL_MESSAGE_COUNT as u64,
+                1,
+            )?;
 
             // quick message 上限
-            patch_memory_value(D2Client, D2RVA::D2Client(0x6FB2D7E3), Self::MAX_QUICK_MESSAGE_COUNT as u64, 1)?;
+            patch_memory_value(
+                D2Client,
+                D2RVA::D2Client(0x6FB2D7E3),
+                Self::MAX_QUICK_MESSAGE_COUNT as u64,
+                1,
+            )?;
 
             // HDText_drawFramedText_is_alt_clicked
             match glide3x.FileHeader.TimeDateStamp {
                 0x6606E04D => {
                     patch_memory_value(modules.glide3x.unwrap(), 0x55F2E, 0x80, 1)?;
-                },
+                }
 
                 0x6727FC35 => {
                     patch_memory_value(modules.glide3x.unwrap(), 0x54EC9, 0xEB, 1)?;
-                },
+                }
 
-                _ => {},
+                _ => {}
             }
 
             // 去除阴影
             if HackMap::config().borrow().tweaks.remove_shadow {
-                inline_hook_jmp::<()>(D2Client, D2RVA::D2Client(0x6FB59A20), MISC_CalculateShadowRGBA as usize, None, None)?;
+                inline_hook_jmp::<()>(
+                    D2Client,
+                    D2RVA::D2Client(0x6FB59A20),
+                    MISC_CalculateShadowRGBA as usize,
+                    None,
+                    None,
+                )?;
             }
 
             // 透视
-            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FB16695), D2Common_Units_TestCollisionWithUnit as usize, None, None)?;
+            inline_hook_call::<()>(
+                D2Client,
+                D2RVA::D2Client(0x6FB16695),
+                D2Common_Units_TestCollisionWithUnit as usize,
+                None,
+                None,
+            )?;
 
             // 在城里默认跑步
-            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF27D7), naked_is_player_running_1 as usize, None, None)?;
-            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF4930), naked_is_player_running_2 as usize, None, None)?;
+            inline_hook_call::<()>(
+                D2Client,
+                D2RVA::D2Client(0x6FAF27D7),
+                naked_is_player_running_1 as usize,
+                None,
+                None,
+            )?;
+            inline_hook_call::<()>(
+                D2Client,
+                D2RVA::D2Client(0x6FAF4930),
+                naked_is_player_running_2 as usize,
+                None,
+                None,
+            )?;
 
             // 显示抗性
             if D2Sigma::initialized() {
-                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.BossLifeBar_Call_Units_GetName, D2Sigma_Units_GetNameForBoss as usize, None, None)?;
-                inline_hook_call::<()>(0, D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName, D2Sigma_Units_GetNameForMonster as usize, None, None)?;
-                patch_memory_value(0, D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar, 0x80, 1)?;
+                inline_hook_call::<()>(
+                    0,
+                    D2Sigma::AddressTable.UI.BossLifeBar_Call_Units_GetName,
+                    D2Sigma_Units_GetNameForBoss as usize,
+                    None,
+                    None,
+                )?;
+                inline_hook_call::<()>(
+                    0,
+                    D2Sigma::AddressTable.UI.MonsterLifeBar_Call_Units_GetName,
+                    D2Sigma_Units_GetNameForMonster as usize,
+                    None,
+                    None,
+                )?;
+                patch_memory_value(
+                    0,
+                    D2Sigma::AddressTable.UI.CheckIsMonsterShouldDisplayLifeBar,
+                    0x80,
+                    1,
+                )?;
             }
 
             // 目标死亡后不松开鼠标
-            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF2AE1), continue_attacking_after_target_dead as usize, None, None)?;
-            inline_hook_call::<()>(D2Client, D2RVA::D2Client(0x6FAF2AE6), continue_attacking_after_target_dead as usize, None, None)?;
+            inline_hook_call::<()>(
+                D2Client,
+                D2RVA::D2Client(0x6FAF2AE1),
+                continue_attacking_after_target_dead as usize,
+                None,
+                None,
+            )?;
+            inline_hook_call::<()>(
+                D2Client,
+                D2RVA::D2Client(0x6FAF2AE6),
+                continue_attacking_after_target_dead as usize,
+                None,
+                None,
+            )?;
         }
 
         HackMap::input().reg_toggle("show_monster_id", |vk| {
@@ -298,7 +402,7 @@ impl Tweaks {
 
             if vk == cfg.hotkey.show_monster_id {
                 cfg.tweaks.show_monster_id = !cfg.tweaks.show_monster_id;
-                return (true, cfg.tweaks.show_monster_id)
+                return (true, cfg.tweaks.show_monster_id);
             }
 
             (false, false)
@@ -310,7 +414,7 @@ impl Tweaks {
 
             if vk == cfg.hotkey.perm_show_items {
                 cfg.tweaks.perm_show_items = !cfg.tweaks.perm_show_items;
-                return (true, cfg.tweaks.perm_show_items)
+                return (true, cfg.tweaks.perm_show_items);
             }
 
             (false, false)

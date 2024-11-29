@@ -1,17 +1,18 @@
 use super::common::*;
+use super::config::ConfigRef;
 use super::config_deserializer::VirtualKeyCode;
 use super::HackMap;
-use super::config::ConfigRef;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
 
 struct Stubs {
-    RegisterMsgHandler: Option<extern "fastcall" fn(hwnd: HWND, msg_type: u32, msg:u32, handler: StormMsgHandler)>,
+    RegisterMsgHandler:
+        Option<extern "fastcall" fn(hwnd: HWND, msg_type: u32, msg: u32, handler: StormMsgHandler)>,
     InGame_OnKeyDown: Option<extern "stdcall" fn(&mut StormMsgHandlerParams)>,
 }
 
-static mut STUBS: Stubs = Stubs{
-    RegisterMsgHandler    : None,
-    InGame_OnKeyDown      : None,
+static mut STUBS: Stubs = Stubs {
+    RegisterMsgHandler: None,
+    InGame_OnKeyDown: None,
 };
 
 #[allow(static_mut_refs)]
@@ -24,12 +25,22 @@ extern "stdcall" fn InGame_OnKeyDown(msg: &mut StormMsgHandlerParams) {
     get_stubs().InGame_OnKeyDown.unwrap()(msg)
 }
 
-extern "fastcall" fn RegisterMsgHandler(hwnd: HWND, msg_type: u32, msg: u32, handler: StormMsgHandler) {
-    if msg_type == 0 && msg == WM_KEYDOWN {
-        if get_stubs().InGame_OnKeyDown.is_none() {
-            unsafe {
-                inline_hook_jmp(0, handler as usize, InGame_OnKeyDown as usize, Some(&mut STUBS.InGame_OnKeyDown), None).unwrap();
-            }
+extern "fastcall" fn RegisterMsgHandler(
+    hwnd: HWND,
+    msg_type: u32,
+    msg: u32,
+    handler: StormMsgHandler,
+) {
+    if msg_type == 0 && msg == WM_KEYDOWN && get_stubs().InGame_OnKeyDown.is_none() {
+        unsafe {
+            inline_hook_jmp(
+                0,
+                handler as usize,
+                InGame_OnKeyDown as usize,
+                Some(&mut STUBS.InGame_OnKeyDown),
+                None,
+            )
+            .unwrap();
         }
     }
 
@@ -39,21 +50,25 @@ extern "fastcall" fn RegisterMsgHandler(hwnd: HWND, msg_type: u32, msg: u32, han
 pub(super) type OnKeyDownCallback = fn(vk: u16) -> bool;
 
 pub(super) struct Input {
-    cfg                     : ConfigRef,
-    on_keydown_callbacks    : Vec<Box<dyn FnMut(u16) -> bool>>,
-    toggles                 : Vec<(&'static str, Box<dyn FnMut(u16) -> (bool, bool)>)>,
+    cfg: ConfigRef,
+    on_keydown_callbacks: Vec<Box<dyn FnMut(u16) -> bool>>,
+    toggles: Vec<(&'static str, Box<dyn FnMut(u16) -> (bool, bool)>)>,
 }
 
 impl Input {
-    pub fn new(cfg: ConfigRef) -> Self{
-        Self{
+    pub fn new(cfg: ConfigRef) -> Self {
+        Self {
             cfg,
             on_keydown_callbacks: vec![],
             toggles: vec![],
         }
     }
 
-    pub fn reg_toggle<F: FnMut(u16) -> (bool, bool) + 'static>(&mut self, name: &'static str, cb: F) {
+    pub fn reg_toggle<F: FnMut(u16) -> (bool, bool) + 'static>(
+        &mut self,
+        name: &'static str,
+        cb: F,
+    ) {
         self.toggles.push((name, Box::new(cb)));
     }
 
@@ -78,18 +93,28 @@ impl Input {
 
         for (name, cb) in self.toggles.iter_mut() {
             let (handled, toggle_enabled) = cb(vk);
-            if handled == false {
+            if !handled {
                 continue;
             }
 
             let toggle_state = if toggle_enabled { "ON" } else { "OFF" };
-            let toggle_color = if toggle_enabled { D2StringColorCodes::LightGreen } else { D2StringColorCodes::Red };
+            let toggle_color = if toggle_enabled {
+                D2StringColorCodes::LightGreen
+            } else {
+                D2StringColorCodes::Red
+            };
 
-            lines.push(format!("{name} -> {}{toggle_state}", toggle_color.to_str_code()));
+            lines.push(format!(
+                "{name} -> {}{toggle_state}",
+                toggle_color.to_str_code()
+            ));
         }
 
-        if lines.is_empty() == false {
-            let empty_lines = std::cmp::max(super::tweaks::Tweaks::MAX_QUICK_MESSAGE_COUNT - lines.len() as i32, 0);
+        if !lines.is_empty() {
+            let empty_lines = std::cmp::max(
+                super::tweaks::Tweaks::MAX_QUICK_MESSAGE_COUNT - lines.len() as i32,
+                0,
+            );
 
             for l in lines {
                 D2Client::UI::DisplayQuickMessage(&l, D2StringColorCodes::Orange);
@@ -109,7 +134,13 @@ impl Input {
 
     pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {
         unsafe {
-            inline_hook_jmp(0, D2Win::AddressTable.MsgHandler.RegisterMsgHandler, RegisterMsgHandler as usize, Some(&mut STUBS.RegisterMsgHandler), None)?;
+            inline_hook_jmp(
+                0,
+                D2Win::AddressTable.MsgHandler.RegisterMsgHandler,
+                RegisterMsgHandler as usize,
+                Some(&mut STUBS.RegisterMsgHandler),
+                None,
+            )?;
         }
 
         Ok(())

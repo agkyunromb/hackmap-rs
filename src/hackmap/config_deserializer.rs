@@ -1,10 +1,10 @@
-use serde::Deserialize;
-use std::collections::HashSet;
-use serde::de::{self, Deserializer, Unexpected};
 use super::common::*;
+use super::config::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use super::config::*;
+use serde::de::{self, Deserializer, Unexpected};
+use serde::Deserialize;
+use std::collections::HashSet;
 
 lazy_static! {
     static ref VK_MAP: HashMap<&'static str, u16> = [
@@ -209,14 +209,12 @@ impl<'de> Deserialize<'de> for RegexWrapper {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub(super) struct VirtualKeyCode(u16);
 
 impl VirtualKeyCode {
     fn from_str(vk: &str) -> Self {
-        VK_MAP.get(vk).map_or(Self::default(), |&v| {
-            v.into()
-        })
+        VK_MAP.get(vk).map_or(Self::default(), |&v| v.into())
     }
 }
 
@@ -226,9 +224,9 @@ impl From<u16> for VirtualKeyCode {
     }
 }
 
-impl Into<u16> for VirtualKeyCode {
-    fn into(self) -> u16 {
-        self.0
+impl From<VirtualKeyCode> for u16 {
+    fn from(val: VirtualKeyCode) -> Self {
+        val.0
     }
 }
 
@@ -241,12 +239,6 @@ impl PartialEq<u16> for VirtualKeyCode {
 impl PartialEq<VirtualKeyCode> for u16 {
     fn eq(&self, other: &VirtualKeyCode) -> bool {
         *self == other.0
-    }
-}
-
-impl Default for VirtualKeyCode {
-    fn default() -> Self {
-        Self(0)
     }
 }
 
@@ -296,15 +288,15 @@ impl<'de> Deserialize<'de> for D2ItemQualities {
     {
         let s = String::deserialize(deserializer)?.to_lowercase();
         match s.as_str() {
-            "inferior"  => Ok(Self::Inferior),
-            "normal"    => Ok(Self::Normal),
-            "superior"  => Ok(Self::Superior),
-            "magic"     => Ok(Self::Magic),
-            "set"       => Ok(Self::Set),
-            "rare"      => Ok(Self::Rare),
-            "unique"    => Ok(Self::Unique),
-            "craft"     => Ok(Self::Craft),
-            "tempered"  => Ok(Self::Tempered),
+            "inferior" => Ok(Self::Inferior),
+            "normal" => Ok(Self::Normal),
+            "superior" => Ok(Self::Superior),
+            "magic" => Ok(Self::Magic),
+            "set" => Ok(Self::Set),
+            "rare" => Ok(Self::Rare),
+            "unique" => Ok(Self::Unique),
+            "craft" => Ok(Self::Craft),
+            "tempered" => Ok(Self::Tempered),
             _ => Err(serde::de::Error::custom("Unknown D2ItemQualities value")),
         }
     }
@@ -316,25 +308,27 @@ impl<'de> Deserialize<'de> for D2StringColorCodes {
         D: Deserializer<'de>,
     {
         match u8::deserialize(deserializer)? {
-            0  => Ok(Self::White),
-            1  => Ok(Self::Red),
-            2  => Ok(Self::LightGreen),
-            3  => Ok(Self::Blue),
-            4  => Ok(Self::DarkGold),
-            5  => Ok(Self::Grey),
-            6  => Ok(Self::Black),
-            7  => Ok(Self::Tan),
-            8  => Ok(Self::Orange),
-            9  => Ok(Self::Yellow),
+            0 => Ok(Self::White),
+            1 => Ok(Self::Red),
+            2 => Ok(Self::LightGreen),
+            3 => Ok(Self::Blue),
+            4 => Ok(Self::DarkGold),
+            5 => Ok(Self::Grey),
+            6 => Ok(Self::Black),
+            7 => Ok(Self::Tan),
+            8 => Ok(Self::Orange),
+            9 => Ok(Self::Yellow),
             10 => Ok(Self::DarkGreen),
             11 => Ok(Self::Purple),
             12 => Ok(Self::DarkGreen2),
-            _  => Ok(Self::Invalid),
+            _ => Ok(Self::Invalid),
         }
     }
 }
 
-fn deserialize_option_qualities<'de, D>(deserializer: D) -> Result<Option<D2ItemQualities>, D::Error>
+fn deserialize_option_qualities<'de, D>(
+    deserializer: D,
+) -> Result<Option<D2ItemQualities>, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -369,14 +363,18 @@ where
     Ok(Some(bool_from_int(deserializer)?))
 }
 
-pub fn opt_d2_str_color_code_from_int<'de, D>(deserializer: D) -> Result<Option<D2StringColorCodes>, D::Error>
+pub fn opt_d2_str_color_code_from_int<'de, D>(
+    deserializer: D,
+) -> Result<Option<D2StringColorCodes>, D::Error>
 where
     D: Deserializer<'de>,
 {
     Ok(Some(D2StringColorCodes::deserialize(deserializer)?))
 }
 
-pub fn opt_d2_item_quality_from_str<'de, D>(deserializer: D) -> Result<Option<D2ItemQualities>, D::Error>
+pub fn opt_d2_item_quality_from_str<'de, D>(
+    deserializer: D,
+) -> Result<Option<D2ItemQualities>, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -391,7 +389,11 @@ where
     let mut result = HashMap::new();
 
     for (key, color) in intermediate {
-        let id = u32::from_str_radix(&key.trim_start_matches("0x"), if key.starts_with("0x") { 16 } else { 10 }).map_err(serde::de::Error::custom)?;
+        let id = u32::from_str_radix(
+            key.trim_start_matches("0x"),
+            if key.starts_with("0x") { 16 } else { 10 },
+        )
+        .map_err(serde::de::Error::custom)?;
         result.insert(id, color);
     }
 

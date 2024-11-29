@@ -1,74 +1,74 @@
 use super::common::*;
 
 pub struct NetOffset {
-    pub SendPacket          : FuncAddress,
-    pub DoSendPacket        : FuncAddress,
-    pub Call_GSCmdHandler   : FuncAddress,
-    pub gD2GSHandlers       : FuncAddress,
+    pub SendPacket: FuncAddress,
+    pub DoSendPacket: FuncAddress,
+    pub Call_GSCmdHandler: FuncAddress,
+    pub gD2GSHandlers: FuncAddress,
 }
 
 pub struct UIOffset {
-    pub SetUIVar                : FuncAddress,
-    pub HandleUIVars            : FuncAddress,
-    pub DisplayGlobalMessage    : FuncAddress,
-    pub DisplayQuickMessage     : FuncAddress,
-    pub PlaySound               : FuncAddress,
+    pub SetUIVar: FuncAddress,
+    pub HandleUIVars: FuncAddress,
+    pub DisplayGlobalMessage: FuncAddress,
+    pub DisplayQuickMessage: FuncAddress,
+    pub PlaySound: FuncAddress,
 
-    pub CallHandleUIVars        : FuncAddress,
+    pub CallHandleUIVars: FuncAddress,
 
-    pub gUIVars                 : FuncAddress,
-    pub gUIOpenMode             : FuncAddress,
-    pub gAttackWithLeftButton   : FuncAddress,
-    pub gAttackWithRightButton  : FuncAddress,
-    pub gIsStashOpened          : FuncAddress,
+    pub gUIVars: FuncAddress,
+    pub gUIOpenMode: FuncAddress,
+    pub gAttackWithLeftButton: FuncAddress,
+    pub gAttackWithRightButton: FuncAddress,
+    pub gIsStashOpened: FuncAddress,
 }
 
 pub struct GameOffset {
-    pub RunGameLoop             : FuncAddress,
-    pub SaveAndExitGame         : FuncAddress,
-    pub Info                    : FuncAddress,
-    pub Call_D2SoundCleanup     : FuncAddress,
-    pub Call_D2GFX_GetWindow    : FuncAddress,
-    pub IsLodGame               : FuncAddress,
-    pub gIsGameExited               : FuncAddress,
+    pub RunGameLoop: FuncAddress,
+    pub SaveAndExitGame: FuncAddress,
+    pub Info: FuncAddress,
+    pub Call_D2SoundCleanup: FuncAddress,
+    pub Call_D2GFX_GetWindow: FuncAddress,
+    pub IsLodGame: FuncAddress,
+    pub gIsGameExited: FuncAddress,
 }
 
 pub struct AutoMapOffset {
-    pub NewAutoMapCell          : FuncAddress,
-    pub AddAutoMapCell          : FuncAddress,
-    pub DrawAutoMapCells        : FuncAddress,
+    pub NewAutoMapCell: FuncAddress,
+    pub AddAutoMapCell: FuncAddress,
+    pub DrawAutoMapCells: FuncAddress,
 
-    pub CallDrawAutoMapCell     : FuncAddress,
+    pub CallDrawAutoMapCell: FuncAddress,
 
-    pub gAutoMapCellBlockHead   : FuncAddress,
-    pub gAutoMapCellCount       : FuncAddress,
-    pub gCurrentAutoMapLayer    : FuncAddress,
-    pub gPointDivisor           : FuncAddress,
-    pub gPointOffsetX           : FuncAddress,
-    pub gPointOffsetY           : FuncAddress,
-    pub gRect                   : FuncAddress,
-    pub gIsMiniMapOn            : FuncAddress,
+    pub gAutoMapCellBlockHead: FuncAddress,
+    pub gAutoMapCellCount: FuncAddress,
+    pub gCurrentAutoMapLayer: FuncAddress,
+    pub gPointDivisor: FuncAddress,
+    pub gPointOffsetX: FuncAddress,
+    pub gPointOffsetY: FuncAddress,
+    pub gRect: FuncAddress,
+    pub gIsMiniMapOn: FuncAddress,
 }
 
 pub struct UnitsOffset {
-    pub GetMonsterOwnerID       : FuncAddress,
-    pub GetName                 : FuncAddress,
-    pub ShouldShowUnit          : FuncAddress,
-    pub GetClientUnit           : FuncAddress,
-    pub SetUnitUninterruptable  : FuncAddress,
-    pub GetItemUseSound         : FuncAddress,
-    pub TryUseItemAtPos         : FuncAddress,
-    pub gClientPlayer           : FuncAddress,
-    pub gClientUnitTypeTable    : FuncAddress,
-    pub gHasNpcSelected         : FuncAddress,
+    pub GetMonsterOwnerID: FuncAddress,
+    pub GetName: FuncAddress,
+    pub ShouldShowUnit: FuncAddress,
+    pub GetClientUnit: FuncAddress,
+    pub SetUnitUninterruptable: FuncAddress,
+    pub GetItemUseSound: FuncAddress,
+    pub TryUseItemAtPos: FuncAddress,
+    pub gClientPlayer: FuncAddress,
+    pub gClientUnitTypeTable: FuncAddress,
+    pub gHasNpcSelected: FuncAddress,
 }
 
 pub struct D2ClientOffset {
-    pub UI      : UIOffset,
-    pub Net     : NetOffset,
-    pub Game    : GameOffset,
-    pub AutoMap : AutoMapOffset,
-    pub Units   : UnitsOffset,
+    pub UI: UIOffset,
+    pub Net: NetOffset,
+    pub Game: GameOffset,
+    pub AutoMap: AutoMapOffset,
+    pub Units: UnitsOffset,
 }
 
 pub static AddressTable: OnceHolder<D2ClientOffset> = OnceHolder::new();
@@ -84,14 +84,17 @@ pub mod Net {
 
     #[repr(C)]
     pub struct D2GSMsgStruct {
-        handler         : D2GSHandler,
-        cmdSize         : u32,
-        process_unit    : UnitProcessor,
+        handler: D2GSHandler,
+        cmdSize: u32,
+        process_unit: UnitProcessor,
     }
 
     pub fn GetD2GSHandlers() -> &'static mut [D2GSMsgStruct] {
         unsafe {
-            std::slice::from_raw_parts_mut(AddressTable.Net.gD2GSHandlers as *mut D2GSMsgStruct, D2GS_MAX_CMD)
+            std::slice::from_raw_parts_mut(
+                AddressTable.Net.gD2GSHandlers as *mut D2GSMsgStruct,
+                D2GS_MAX_CMD,
+            )
         }
     }
 
@@ -166,11 +169,17 @@ pub mod UI {
     pub fn _DisplayGlobalMessage(_text: PCWSTR, _color: D2StringColorCodes) {}
 
     pub fn DisplayGlobalMessage(text: &str, color: D2StringColorCodes) {
-        addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayGlobalMessage)(text.to_utf16().as_ptr(), color)
+        addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayGlobalMessage)(
+            text.to_utf16().as_ptr(),
+            color,
+        )
     }
 
     pub fn DisplayQuickMessage(text: &str, color: D2StringColorCodes) {
-        addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayQuickMessage)(text.to_utf16().as_ptr(), color)
+        addr_to_stdcall(_DisplayGlobalMessage, AddressTable.UI.DisplayQuickMessage)(
+            text.to_utf16().as_ptr(),
+            color,
+        )
     }
 
     pub fn PlaySound(soundId: i32) {
@@ -227,30 +236,30 @@ pub mod AutoMap {
 
     #[repr(C, packed(1))]
     pub struct D2AutoMapCellData {
-        pub fSaved     : u32,                       // 0x00
-        pub nCellNo    : u16,                       // 0x04
-        pub xPixel     : u16,                       // 0x06
-        pub yPixel     : u16,                       // 0x08
-        pub wWeight    : u16,                       // 0x0a
-        pub pPrev      : *mut D2AutoMapCellData,    // 0x0c
-        pub pNext      : *mut D2AutoMapCellData,    // 0x10
+        pub fSaved: u32,                   // 0x00
+        pub nCellNo: u16,                  // 0x04
+        pub xPixel: u16,                   // 0x06
+        pub yPixel: u16,                   // 0x08
+        pub wWeight: u16,                  // 0x0a
+        pub pPrev: *mut D2AutoMapCellData, // 0x0c
+        pub pNext: *mut D2AutoMapCellData, // 0x10
     }
 
     #[repr(C, packed(1))]
     pub struct D2AutoMapCellBlock {
-        pub Elements    : [D2AutoMapCellData; 0x200],
-        pub NextBlock   : *mut D2AutoMapCellBlock,
+        pub Elements: [D2AutoMapCellData; 0x200],
+        pub NextBlock: *mut D2AutoMapCellBlock,
     }
 
     #[repr(C, packed(4))]
     pub struct D2AutoMapLayer {
-        pub nLayerNo    : u32,                      // 0x00
-        pub fSaved      : u32,                      // 0x04
-        pub pFloors     : *mut D2AutoMapCellData,   // 0x08
-        pub pWalls      : *mut D2AutoMapCellData,   // 0x0c
-        pub pObjects    : *mut D2AutoMapCellData,   // 0x10
-        pub pExtras     : *mut D2AutoMapCellData,   // 0x14
-        pub pNext       : *mut D2AutoMapCellData,   // 0x18
+        pub nLayerNo: u32,                    // 0x00
+        pub fSaved: u32,                      // 0x04
+        pub pFloors: *mut D2AutoMapCellData,  // 0x08
+        pub pWalls: *mut D2AutoMapCellData,   // 0x0c
+        pub pObjects: *mut D2AutoMapCellData, // 0x10
+        pub pExtras: *mut D2AutoMapCellData,  // 0x14
+        pub pNext: *mut D2AutoMapCellData,    // 0x18
     }
 
     pub fn NewAutoMapCell() -> &'static mut D2AutoMapCellData {
@@ -266,7 +275,9 @@ pub mod AutoMap {
     }
 
     pub fn AutoMapCellBlockHead() -> *mut *mut D2AutoMapCellBlock {
-        unsafe { &mut *(AddressTable.AutoMap.gAutoMapCellBlockHead as *mut *mut D2AutoMapCellBlock) }
+        unsafe {
+            &mut *(AddressTable.AutoMap.gAutoMapCellBlockHead as *mut *mut D2AutoMapCellBlock)
+        }
     }
 
     pub fn AutoMapCellCount() -> &'static mut usize {
@@ -284,12 +295,10 @@ pub mod AutoMap {
 
     pub fn PointOffsetX() -> &'static mut i32 {
         unsafe { &mut *(AddressTable.AutoMap.gPointOffsetX as *mut i32) }
-
     }
 
     pub fn PointOffsetY() -> &'static mut i32 {
         unsafe { &mut *(AddressTable.AutoMap.gPointOffsetY as *mut i32) }
-
     }
 
     pub fn Rect() -> &'static mut RECT {
@@ -299,7 +308,6 @@ pub mod AutoMap {
     pub fn IsMiniMapOn() -> BOOL {
         read_at(AddressTable.AutoMap.gIsMiniMapOn)
     }
-
 }
 
 pub mod Units {
@@ -308,8 +316,8 @@ pub mod Units {
     use crate::d2113c::D2Common::D2Inventory;
 
     use super::super::common::*;
-    use super::AddressTable;
     use super::super::D2Common::D2Unit;
+    use super::AddressTable;
 
     pub fn GetMonsterOwnerID(unitId: u32) -> u32 {
         addr_to_fastcall(GetMonsterOwnerID, AddressTable.Units.GetMonsterOwnerID)(unitId)
@@ -330,10 +338,15 @@ pub mod Units {
         name
     }
 
-    pub fn _GetClientUnit(_unitId: u32, _unitType: D2UnitTypes) -> *mut D2Unit { null_mut() }
+    pub fn _GetClientUnit(_unitId: u32, _unitType: D2UnitTypes) -> *mut D2Unit {
+        null_mut()
+    }
 
     pub fn GetClientUnit(unitId: u32, unitType: D2UnitTypes) -> Option<&'static mut D2Unit> {
-        ptr_to_ref_mut(addr_to_fastcall(_GetClientUnit, AddressTable.Units.GetClientUnit)(unitId, unitType))
+        ptr_to_ref_mut(addr_to_fastcall(
+            _GetClientUnit,
+            AddressTable.Units.GetClientUnit,
+        )(unitId, unitType))
     }
 
     pub fn GetClientPlayer() -> Option<&'static mut D2Unit> {
@@ -359,10 +372,12 @@ pub mod Units {
         match unit.dwUnitType {
             D2UnitTypes::Player => {
                 let anim_mode = unsafe { unit.Mode.dwAnimMode };
-                if anim_mode == D2PlayerModes::Death as u32 || anim_mode == D2PlayerModes::Dead as u32 {
+                if anim_mode == D2PlayerModes::Death as u32
+                    || anim_mode == D2PlayerModes::Dead as u32
+                {
                     return true;
                 }
-            },
+            }
 
             D2UnitTypes::Monster => {
                 let anim_mode = unsafe { unit.Mode.dwAnimMode };
@@ -371,7 +386,7 @@ pub mod Units {
                 }
             }
 
-            _ => {},
+            _ => {}
         }
 
         false
@@ -405,7 +420,13 @@ pub mod Units {
         sound_id
     }
 
-    pub fn TryUseItemAtPos(item: &D2Unit, inventory: &D2Inventory, x: i32, y: i32, invPage: D2ItemInvPage) -> i32 {
+    pub fn TryUseItemAtPos(
+        item: &D2Unit,
+        inventory: &D2Inventory,
+        x: i32,
+        y: i32,
+        invPage: D2ItemInvPage,
+    ) -> i32 {
         let mut success: i32;
 
         unsafe {
@@ -425,69 +446,68 @@ pub mod Units {
 
         success
     }
-
 }
 
 pub fn init(d2client: usize) {
-    AddressTable.initialize(D2ClientOffset{
+    AddressTable.initialize(D2ClientOffset {
         UI: UIOffset {
-            SetUIVar                : d2client + D2RVA::D2Client(0x6FB72790),
-            HandleUIVars            : d2client + D2RVA::D2Client(0x6FB739E0),
-            DisplayGlobalMessage    : d2client + D2RVA::D2Client(0x6FB2D850),
-            DisplayQuickMessage     : d2client + D2RVA::D2Client(0x6FB2D610),
-            PlaySound               : d2client + D2RVA::D2Client(0x6FB38A70),
+            SetUIVar: d2client + D2RVA::D2Client(0x6FB72790),
+            HandleUIVars: d2client + D2RVA::D2Client(0x6FB739E0),
+            DisplayGlobalMessage: d2client + D2RVA::D2Client(0x6FB2D850),
+            DisplayQuickMessage: d2client + D2RVA::D2Client(0x6FB2D610),
+            PlaySound: d2client + D2RVA::D2Client(0x6FB38A70),
 
-            CallHandleUIVars        : d2client + D2RVA::D2Client(0x6FAF437B),
+            CallHandleUIVars: d2client + D2RVA::D2Client(0x6FAF437B),
 
-            gUIVars                 : d2client + D2RVA::D2Client(0x6FBAAD80),
-            gUIOpenMode             : d2client + D2RVA::D2Client(0x6FBCC414),
-            gAttackWithLeftButton   : d2client + D2RVA::D2Client(0x6FBCC3DC),
-            gAttackWithRightButton  : d2client + D2RVA::D2Client(0x6FBCC3E0),
-            gIsStashOpened          : d2client + D2RVA::D2Client(0x6FBCBC98),
+            gUIVars: d2client + D2RVA::D2Client(0x6FBAAD80),
+            gUIOpenMode: d2client + D2RVA::D2Client(0x6FBCC414),
+            gAttackWithLeftButton: d2client + D2RVA::D2Client(0x6FBCC3DC),
+            gAttackWithRightButton: d2client + D2RVA::D2Client(0x6FBCC3E0),
+            gIsStashOpened: d2client + D2RVA::D2Client(0x6FBCBC98),
         },
-        Net: NetOffset{
-            SendPacket              : d2client + D2RVA::D2Client(0x6FAC43E0),
-            DoSendPacket            : d2client + D2RVA::D2Client(0x6FABD252),
-            Call_GSCmdHandler       : d2client + D2RVA::D2Client(0x6FB5CFAF),
-            gD2GSHandlers           : d2client + D2RVA::D2Client(0x6FB8DE60),
+        Net: NetOffset {
+            SendPacket: d2client + D2RVA::D2Client(0x6FAC43E0),
+            DoSendPacket: d2client + D2RVA::D2Client(0x6FABD252),
+            Call_GSCmdHandler: d2client + D2RVA::D2Client(0x6FB5CFAF),
+            gD2GSHandlers: d2client + D2RVA::D2Client(0x6FB8DE60),
         },
-        Game: GameOffset{
-            RunGameLoop             : d2client + D2RVA::D2Client(0x6FAF4F40),
-            SaveAndExitGame         : d2client + D2RVA::D2Client(0x6FB15E00),
-            Info                    : d2client + D2RVA::D2Client(0x6FBCB980),
-            Call_D2SoundCleanup     : d2client + D2RVA::D2Client(0x6FAF515D),
-            Call_D2GFX_GetWindow    : d2client + D2RVA::D2Client(0x6FAF423C),
-            IsLodGame               : d2client + D2RVA::D2Client(0x6FAF1940),
-            gIsGameExited           : d2client + D2RVA::D2Client(0x6FBCC404),
+        Game: GameOffset {
+            RunGameLoop: d2client + D2RVA::D2Client(0x6FAF4F40),
+            SaveAndExitGame: d2client + D2RVA::D2Client(0x6FB15E00),
+            Info: d2client + D2RVA::D2Client(0x6FBCB980),
+            Call_D2SoundCleanup: d2client + D2RVA::D2Client(0x6FAF515D),
+            Call_D2GFX_GetWindow: d2client + D2RVA::D2Client(0x6FAF423C),
+            IsLodGame: d2client + D2RVA::D2Client(0x6FAF1940),
+            gIsGameExited: d2client + D2RVA::D2Client(0x6FBCC404),
         },
-        AutoMap: AutoMapOffset{
-            NewAutoMapCell          : d2client + D2RVA::D2Client(0x6FB0F6B0),
-            AddAutoMapCell          : d2client + D2RVA::D2Client(0x6FB11320),
-            DrawAutoMapCells        : d2client + D2RVA::D2Client(0x6FB10C40),
+        AutoMap: AutoMapOffset {
+            NewAutoMapCell: d2client + D2RVA::D2Client(0x6FB0F6B0),
+            AddAutoMapCell: d2client + D2RVA::D2Client(0x6FB11320),
+            DrawAutoMapCells: d2client + D2RVA::D2Client(0x6FB10C40),
 
-            CallDrawAutoMapCell     : d2client + D2RVA::D2Client(0x6FB104EA),
+            CallDrawAutoMapCell: d2client + D2RVA::D2Client(0x6FB104EA),
 
-            gAutoMapCellBlockHead   : d2client + D2RVA::D2Client(0x6FBCC1B8),
-            gAutoMapCellCount       : d2client + D2RVA::D2Client(0x6FBCC1BC),
-            gCurrentAutoMapLayer    : d2client + D2RVA::D2Client(0x6FBCC1C4),
+            gAutoMapCellBlockHead: d2client + D2RVA::D2Client(0x6FBCC1B8),
+            gAutoMapCellCount: d2client + D2RVA::D2Client(0x6FBCC1BC),
+            gCurrentAutoMapLayer: d2client + D2RVA::D2Client(0x6FBCC1C4),
 
-            gPointDivisor           : d2client + D2RVA::D2Client(0x6FBA16B0),
-            gPointOffsetX           : d2client + D2RVA::D2Client(0x6FBCC1F8),
-            gPointOffsetY           : d2client + D2RVA::D2Client(0x6FBCC1FC),
-            gRect                   : d2client + D2RVA::D2Client(0x6FBCC228),
-            gIsMiniMapOn            : d2client + D2RVA::D2Client(0x6FBCC1B0),
+            gPointDivisor: d2client + D2RVA::D2Client(0x6FBA16B0),
+            gPointOffsetX: d2client + D2RVA::D2Client(0x6FBCC1F8),
+            gPointOffsetY: d2client + D2RVA::D2Client(0x6FBCC1FC),
+            gRect: d2client + D2RVA::D2Client(0x6FBCC228),
+            gIsMiniMapOn: d2client + D2RVA::D2Client(0x6FBCC1B0),
         },
-        Units: UnitsOffset{
-            GetMonsterOwnerID       : d2client + D2RVA::D2Client(0x6FAD16A0),
-            GetName                 : d2client + D2RVA::D2Client(0x6FB55D90),
-            ShouldShowUnit          : d2client + D2RVA::D2Client(0x6FB16620),
-            GetClientUnit           : d2client + D2RVA::D2Client(0x6FB55B40),
-            SetUnitUninterruptable  : d2client + D2RVA::D2Client(0x6FB31CE0),
-            GetItemUseSound         : d2client + D2RVA::D2Client(0x6FB31D70),
-            TryUseItemAtPos         : d2client + D2RVA::D2Client(0x6FB48B60),
-            gClientPlayer           : d2client + D2RVA::D2Client(0x6FBCBBFC),
-            gClientUnitTypeTable    : d2client + D2RVA::D2Client(0x6FBBA608),
-            gHasNpcSelected         : d2client + D2RVA::D2Client(0x6FBC9721),
+        Units: UnitsOffset {
+            GetMonsterOwnerID: d2client + D2RVA::D2Client(0x6FAD16A0),
+            GetName: d2client + D2RVA::D2Client(0x6FB55D90),
+            ShouldShowUnit: d2client + D2RVA::D2Client(0x6FB16620),
+            GetClientUnit: d2client + D2RVA::D2Client(0x6FB55B40),
+            SetUnitUninterruptable: d2client + D2RVA::D2Client(0x6FB31CE0),
+            GetItemUseSound: d2client + D2RVA::D2Client(0x6FB31D70),
+            TryUseItemAtPos: d2client + D2RVA::D2Client(0x6FB48B60),
+            gClientPlayer: d2client + D2RVA::D2Client(0x6FBCBBFC),
+            gClientUnitTypeTable: d2client + D2RVA::D2Client(0x6FBBA608),
+            gHasNpcSelected: d2client + D2RVA::D2Client(0x6FBC9721),
         },
     });
 }

@@ -20,9 +20,9 @@ pub mod BNet {
 }
 
 pub fn init(d2multi: usize) {
-    AddressTable.initialize(D2MultiOffset{
-        BNet: BNetOffset{
-            EnterBNLobby    : d2multi + D2RVA::D2Multi(0x6F9DB670),
+    AddressTable.initialize(D2MultiOffset {
+        BNet: BNetOffset {
+            EnterBNLobby: d2multi + D2RVA::D2Multi(0x6F9DB670),
         },
     });
 }

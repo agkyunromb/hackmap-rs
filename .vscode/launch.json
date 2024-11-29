@@ -8,9 +8,9 @@
             "type": "cppvsdbg",
             "request": "launch",
             "name": "Launch",
-            "program": "D:/Game/median-xl/Game.exe",
-            "args": ["-lang", "zh", "-3dfx", "-direct"],
-            "cwd": "D:/Game/median-xl"
+            "program": "D:/MedianSigma/Game.exe",
+            "args": ["-3dfx", "-direct"],
+            "cwd": "D:/MedianSigma/"
         }
     ]
 }

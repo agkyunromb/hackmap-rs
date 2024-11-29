@@ -1,16 +1,7 @@
 use windows_sys::Win32::UI::WindowsAndMessaging::{MessageBoxW, MB_OKCANCEL};
 
 use super::common::*;
-use super::{
-    config,
-    image_loader,
-    automap,
-    unit_color,
-    tweaks,
-    input,
-    quick_next,
-    helper_bot,
-};
+use super::{automap, config, helper_bot, image_loader, input, quick_next, tweaks, unit_color};
 
 pub(super) struct HackMapConfig {
     pub(super) perm_show_items_toggle: bool,
@@ -25,29 +16,29 @@ impl HackMapConfig {
 }
 
 pub(super) struct HackMap {
-    pub config                  : config::ConfigRef,
-    pub image_loader            : image_loader::ImageLoader,
-    pub input                   : input::Input,
-    pub automap                 : automap::AutoMap,
-    pub quick_next_game         : quick_next::QuickNextGame,
-    pub tweaks                  : tweaks::Tweaks,
-    pub unit_color              : unit_color::UnitColor,
-    pub helper_bot              : helper_bot::HelperBot,
+    pub config: config::ConfigRef,
+    pub image_loader: image_loader::ImageLoader,
+    pub input: input::Input,
+    pub automap: automap::AutoMap,
+    pub quick_next_game: quick_next::QuickNextGame,
+    pub tweaks: tweaks::Tweaks,
+    pub unit_color: unit_color::UnitColor,
+    pub helper_bot: helper_bot::HelperBot,
 }
 
 impl HackMap {
     fn new() -> Self {
         let config = config::Config::new();
 
-        Self{
-            config              : Rc::clone(&config),
-            image_loader        : image_loader::ImageLoader::new(Rc::clone(&config)),
-            input               : input::Input::new(Rc::clone(&config)),
-            automap             : automap::AutoMap::new(),
-            quick_next_game     : quick_next::QuickNextGame::new(),
-            tweaks              : tweaks::Tweaks::new(Rc::clone(&config)),
-            unit_color          : unit_color::UnitColor::new(Rc::clone(&config)),
-            helper_bot          : helper_bot::HelperBot::new(Rc::clone(&config)),
+        Self {
+            config: Rc::clone(&config),
+            image_loader: image_loader::ImageLoader::new(Rc::clone(&config)),
+            input: input::Input::new(Rc::clone(&config)),
+            automap: automap::AutoMap::new(),
+            quick_next_game: quick_next::QuickNextGame::new(),
+            tweaks: tweaks::Tweaks::new(Rc::clone(&config)),
+            unit_color: unit_color::UnitColor::new(Rc::clone(&config)),
+            helper_bot: helper_bot::HelperBot::new(Rc::clone(&config)),
         }
     }
 
@@ -71,10 +62,8 @@ impl HackMap {
                 if let Err(err) = cfg.load("hackmap\\hackmap.cfg.toml") {
                     // println!("{}", err);
 
-                    std::thread::spawn(move || {
-                        unsafe {
-                            MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
-                        }
+                    std::thread::spawn(move || unsafe {
+                        MessageBoxW(0, format!("{err}").to_utf16().as_ptr(), null(), MB_OK);
                     });
                 }
             }

@@ -1,14 +1,14 @@
+mod automap;
 mod common;
 mod config;
 mod config_deserializer;
-mod image_loader;
 mod hackmap;
-mod automap;
-mod unit_color;
-mod tweaks;
-mod input;
-mod quick_next;
 mod helper_bot;
+mod image_loader;
+mod input;
 mod item_state_monitor;
+mod quick_next;
+mod tweaks;
+mod unit_color;
 
 pub use hackmap::*;

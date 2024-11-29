@@ -1,20 +1,20 @@
-use std::collections::HashMap;
-use std::time::{SystemTime, Duration, UNIX_EPOCH};
-use std::ops::Add;
 use super::common::*;
+use super::config::ConfigRef;
 use super::item_state_monitor::ItemStateMonitor;
 use super::HackMap;
-use super::config::ConfigRef;
+use std::collections::HashMap;
+use std::ops::Add;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use windows_sys::Win32::UI::Input::KeyboardAndMouse::{GetKeyState, VK_CONTROL};
+use D2Common::{D2Inventory, D2Unit, SCMD_PACKET_3F_USE_STACKABLE_ITEM};
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
-use D2Common::{SCMD_PACKET_3F_USE_STACKABLE_ITEM, D2Inventory, D2Unit};
 
 struct Stubs {
-    Handle_D2GS_CHAT_26 : Option<D2Client::Net::D2GSHandler>,
+    Handle_D2GS_CHAT_26: Option<D2Client::Net::D2GSHandler>,
 }
 
-static mut STUBS: Stubs = Stubs{
-    Handle_D2GS_CHAT_26 : None,
+static mut STUBS: Stubs = Stubs {
+    Handle_D2GS_CHAT_26: None,
 };
 
 #[allow(static_mut_refs)]
@@ -32,13 +32,13 @@ fn get_current_timestamp() -> u64 {
 extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
     #[repr(C, packed(1))]
     struct D2GS_CHAT {
-        PacketId        : u8,
-        chat_type       : u8,
-        language_code   : u8,
-        unit_type       : u8,
-        unit_guid       : i32,
-        chat_color      : D2StringColorCodes,
-        chat_sub_type    : u8,
+        PacketId: u8,
+        chat_type: u8,
+        language_code: u8,
+        unit_type: u8,
+        unit_guid: i32,
+        chat_color: D2StringColorCodes,
+        chat_sub_type: u8,
         // std::string szNick;
         // std::string szMessage;
     }
@@ -83,18 +83,18 @@ extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
 pub(super) struct HelperBot {
     pub cfg: super::config::ConfigRef,
 
-    items_removing              : HashMap<u32, SystemTime>,
-    next_fill_belt_timestamp    : SystemTime,
-    belt_free_slots             : u32,
+    items_removing: HashMap<u32, SystemTime>,
+    next_fill_belt_timestamp: SystemTime,
+    belt_free_slots: u32,
 }
 
 impl HelperBot {
-    pub fn new(cfg: ConfigRef) -> Self{
+    pub fn new(cfg: ConfigRef) -> Self {
         Self {
             cfg,
-            items_removing          : HashMap::new(),
+            items_removing: HashMap::new(),
             next_fill_belt_timestamp: SystemTime::now(),
-            belt_free_slots         : 0,
+            belt_free_slots: 0,
         }
     }
 
@@ -103,7 +103,7 @@ impl HelperBot {
             return;
         }
 
-        if HackMap::config().borrow().tweaks.auto_item_to_belt == false {
+        if !HackMap::config().borrow().tweaks.auto_item_to_belt {
             self.belt_free_slots = 0;
             return;
         }
@@ -125,7 +125,8 @@ impl HelperBot {
             None => return,
         };
 
-        self.items_removing.retain(|_, &mut expire_time| expire_time < now);
+        self.items_removing
+            .retain(|_, &mut expire_time| expire_time < now);
 
         self.belt_free_slots -= 1;
 
@@ -148,7 +149,7 @@ impl HelperBot {
                 Some(_) => {
                     last_item_id = item.dwUnitId;
                     false
-                },
+                }
                 None => false,
             };
 
@@ -162,12 +163,13 @@ impl HelperBot {
             };
 
             D2ClientEx::Utils::send_item_to_belt(item);
-            self.items_removing.insert(item.dwUnitId, now.add(Duration::from_secs(5)));
+            self.items_removing
+                .insert(item.dwUnitId, now.add(Duration::from_secs(5)));
         }
     }
 
     fn on_use_stackable_item(&mut self, cmd: D2GSCmd, payload: *const u8) {
-        if HackMap::config().borrow().tweaks.auto_item_to_belt == false {
+        if !HackMap::config().borrow().tweaks.auto_item_to_belt {
             return;
         }
 
@@ -180,7 +182,7 @@ impl HelperBot {
             return;
         }
 
-        if state.remove_from_belt == false {
+        if !state.remove_from_belt {
             return;
         }
 
@@ -189,7 +191,6 @@ impl HelperBot {
         }
 
         self.belt_free_slots += 1;
-
     }
 
     fn on_fast_drop(&mut self) -> Option<()> {
@@ -202,24 +203,23 @@ impl HelperBot {
             return None;
         }
 
-        D2ClientEx::Utils::use_item(D2Client::Units::GetClientPlayer()?, D2ClientEx::Utils::get_cube_from_inv()?);
+        D2ClientEx::Utils::use_item(
+            D2Client::Units::GetClientPlayer()?,
+            D2ClientEx::Utils::get_cube_from_inv()?,
+        );
 
         None
     }
 
     pub fn init(&mut self, _modules: &D2Modules) -> Result<(), HookError> {
         unsafe {
-            STUBS.Handle_D2GS_CHAT_26 = Some(D2Client::Net::SwapD2GSHandler(0x26, Handle_D2GS_CHAT_26));
+            STUBS.Handle_D2GS_CHAT_26 =
+                Some(D2Client::Net::SwapD2GSHandler(0x26, Handle_D2GS_CHAT_26));
         }
 
         D2ClientEx::Net::on_post_recv(|cmd, payload| {
-            match cmd {
-                D2GSCmd::ITEM_ACTION => {
-                    HackMap::helper_bot().on_use_stackable_item(cmd, payload);
-                    return;
-                },
-
-                _ => {},
+            if cmd == D2GSCmd::ITEM_ACTION {
+                HackMap::helper_bot().on_use_stackable_item(cmd, payload);
             }
         });
 
@@ -237,7 +237,7 @@ impl HelperBot {
 
             if vk == cfg.hotkey.auto_item_to_belt {
                 cfg.tweaks.auto_item_to_belt = !cfg.tweaks.auto_item_to_belt;
-                return (true, cfg.tweaks.auto_item_to_belt)
+                return (true, cfg.tweaks.auto_item_to_belt);
             }
 
             (false, false)

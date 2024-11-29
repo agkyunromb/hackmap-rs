@@ -1,6 +1,6 @@
-use crate::d2api::d2ex::common::*;
 use crate::d2api::d2consts::*;
-use D2Common::{D2Unit, D2Inventory};
+use crate::d2api::d2ex::common::*;
+use D2Common::{D2Inventory, D2Unit};
 
 pub mod Inventory {
     use std::u32;
@@ -13,7 +13,10 @@ pub mod Inventory {
         D2Common::Inventory::GetCursorItem(inv)
     }
 
-    pub fn iter_inventory<F: FnMut(&D2Inventory, &mut D2Unit) -> bool>(unit: &D2Unit, mut cb: F) -> Option<&mut D2Unit> {
+    pub fn iter_inventory<F: FnMut(&D2Inventory, &mut D2Unit) -> bool>(
+        unit: &D2Unit,
+        mut cb: F,
+    ) -> Option<&mut D2Unit> {
         let mut opt_item = D2Common::Inventory::GetFirstItem(ptr_to_ref(unit.pInventory)?);
 
         while let Some(item) = opt_item {
@@ -50,7 +53,7 @@ pub mod Items {
             }
         }
 
-        return ss;
+        ss
     }
 }
 
