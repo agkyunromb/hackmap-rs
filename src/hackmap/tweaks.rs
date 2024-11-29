@@ -206,23 +206,13 @@ extern "stdcall" fn MPQLoadFile(
         fileInfo, buffer, bufferSize, fileSize, eventInfo, arg6, arg7,
     );
 
-    while success != FALSE {
-        if true {
-            break;
-        }
-
-        if file_name == "(attributes)" {
-            break;
-        }
-
+    if success != FALSE && file_name != "(attributes)" {
         let dump_path = std::path::Path::new("MPQDumped").join(file_name);
         std::fs::create_dir_all(dump_path.parent().unwrap()).unwrap();
 
         let content = unsafe { std::slice::from_raw_parts(buffer, *fileSize) };
 
         std::fs::write(dump_path, content).unwrap();
-
-        break;
     }
 
     success

@@ -2,6 +2,7 @@ use super::common::*;
 use super::HackMap;
 use windows_sys::Win32::System::Console::AllocConsole;
 use D2Common::D2LevelId;
+use D2Common::D2PresetUnit;
 use D2Gfx::D2GfxData;
 use D2Win::MsgHandler::{StormMsgHandler, StormMsgHandlerParams};
 
@@ -142,144 +143,135 @@ fn add_custom_automap_cell(drlg_room: &mut D2Common::D2DrlgRoom) -> Option<()> {
 
     let levels_txt_record_count = D2Common::DataTbls::sgptDataTables().levels_txt_record_count();
 
-    loop {
-        loop {
-            let mut x = 0;
-            let mut y = 0;
-            let preset_unit_index = preset_unit.nIndex as u32;
-            let mut cell_type: Option<ExtraCellType> = None;
-
-            match preset_unit.nUnitType {
-                D2UnitTypes::Monster => {
-                    if preset_unit_index == 256 {
-                        // A4 衣卒尔
-                        cell_type = Some(ExtraCellType::CellNo(300)); // 红色十字
-                    }
-                }
-                D2UnitTypes::Object => {
-                    match preset_unit_index {
-                        152 => {
-                            // 塔拉夏古墓插杖的地方
-                            // orifice, Where you place the Horadric staff
-
-                            cell_type = Some(ExtraCellType::CellNo(300)); // 红色十字
-                        }
-
-                        397 => {
-                            // 黄金宝箱
-                            // sparkly chest
-                            cell_type = Some(ExtraCellType::CellNo(D2AutoMapCells::QChest as u32));
-                        }
-
-                        460 => {
-                            cell_type = Some(ExtraCellType::CellNo(1468));
-                        }
-
-                        _ => {
-                            let object_txt =
-                                match D2Common::DataTbls::GetObjectsTxtRecord(preset_unit_index) {
-                                    Some(txt) => txt,
-                                    None => break,
-                                };
-
-                            let cellno = object_txt.dwAutomap;
-
-                            if cellno != 0 {
-                                cell_type = Some(ExtraCellType::CellNo(cellno));
-                            }
-                        }
-                    }
-                }
-
-                D2UnitTypes::Tile => {
-                    let mut room_tiles = ptr_to_ref_mut(drlg_room.pRoomTiles);
-
-                    while let Some(tiles) = room_tiles {
-                        if ptr_to_ref_mut(tiles.pLvlWarpTxtRecord).unwrap().dwLevelId
-                            == preset_unit_index
-                        {
-                            x = 8;
-                            y = -0x15;
-
-                            let level_id = D2Common::DrlgRoom::GetLevelId(tiles.pDrlgRoom);
-
-                            if level_id >= levels_txt_record_count {
-                                break;
-                            }
-
-                            // let data_tables = D2Common::DataTbls::sgptDataTables();
-                            // let level_txt = data_tables.get_levels_txt_record(level_id).unwrap();
-                            // let level_name = level_txt.get_level_name();
-
-                            cell_type = Some(ExtraCellType::LevelId(level_id));
-                        }
-
-                        room_tiles = ptr_to_ref_mut(tiles.pNext);
-                    }
-                }
-                _ => {}
-            }
-
-            let cell_type = match cell_type {
-                Some(t) => t,
-                None => break,
-            };
-
-            let x1 = drlg_room.nTileXPos * 5 + preset_unit.nXpos;
-            let y1 = drlg_room.nTileYPos * 5 + preset_unit.nYpos;
-
-            let x2 = ((x1 - y1) * 16) / 10 + 1;
-            let y2 = ((x1 + y1) * 8) / 10 - 3;
-
-            let mut cell = D2AutoMapCellDataEx {
-                data: D2Client::AutoMap::D2AutoMapCellData {
-                    fSaved: 0,
-                    nCellNo: 0,
-                    xPixel: 0,
-                    yPixel: 0,
-                    wWeight: 0,
-                    pPrev: null_mut(),
-                    pNext: null_mut(),
-                },
-                cell_type: ExtraCellType::None,
-                _pad: 0,
-            };
-
-            match cell_type {
-                ExtraCellType::CellNo(cellno) => {
-                    cell.cell_type = ExtraCellType::None;
-                    cell.data.nCellNo = cellno as u16;
-                    cell.data.xPixel = (x2 + x) as u16;
-                    cell.data.yPixel = (y2 + y) as u16;
-                }
-
-                ExtraCellType::LevelId(_) => {
-                    cell.cell_type = cell_type;
-                    cell.data.nCellNo = 0;
-                    cell.data.xPixel = (x2 + x) as u16;
-                    cell.data.yPixel = (y2 + y) as u16;
-                }
-
-                _ => {}
-            }
-
-            // let cell2 = ptr_to_ref_mut(NewAutomapCell()).unwrap();
-            // *cell2 = cell;
-
-            HackMap::automap()
-                .automap_cells
-                .entry(layer_id)
-                .or_default()
-                .push(cell);
-
-            // let layer = D2Client::AutoMap::CurrentAutoMapLayer().unwrap();
-            // D2Client::AutoMap::AddAutomapCell(&cell2.data, &mut layer.pObjects);
-
+    while let Some(unit) = ptr_to_ref_mut(preset_unit.pNext) {
+        if process_preset_unit(unit, drlg_room, layer_id, levels_txt_record_count).is_none() {
             break;
         }
-
-        preset_unit = ptr_to_ref_mut(preset_unit.pNext)?;
+        preset_unit = unit;
     }
+
+    Some(())
+}
+
+fn process_preset_unit(
+    preset_unit: &mut D2PresetUnit,
+    drlg_room: &D2Common::D2DrlgRoom,
+    layer_id: u32,
+    levels_txt_record_count: i32,
+) -> Option<()> {
+    let mut x = 0;
+    let mut y = 0;
+    let preset_unit_index = preset_unit.nIndex as u32;
+    let mut cell_type: Option<ExtraCellType> = None;
+
+    match preset_unit.nUnitType {
+        D2UnitTypes::Monster => {
+            if preset_unit_index == 256 {
+                // A4 衣卒尔
+                cell_type = Some(ExtraCellType::CellNo(300)); // 红色十字
+            }
+        }
+        D2UnitTypes::Object => {
+            match preset_unit_index {
+                152 => {
+                    // 塔拉夏古墓插杖的地方
+                    cell_type = Some(ExtraCellType::CellNo(300)); // 红色十字
+                }
+                397 => {
+                    // 黄金宝箱
+                    cell_type = Some(ExtraCellType::CellNo(D2AutoMapCells::QChest as u32));
+                }
+                460 => {
+                    cell_type = Some(ExtraCellType::CellNo(1468));
+                }
+                _ => {
+                    let object_txt = D2Common::DataTbls::GetObjectsTxtRecord(preset_unit_index)?;
+
+                    let cellno = object_txt.dwAutomap;
+
+                    if cellno != 0 {
+                        cell_type = Some(ExtraCellType::CellNo(cellno));
+                    }
+                }
+            }
+        }
+        D2UnitTypes::Tile => {
+            let mut room_tiles = ptr_to_ref_mut(drlg_room.pRoomTiles);
+
+            while let Some(tiles) = room_tiles {
+                if ptr_to_ref_mut(tiles.pLvlWarpTxtRecord).unwrap().dwLevelId == preset_unit_index {
+                    x = 8;
+                    y = -0x15;
+
+                    let level_id = D2Common::DrlgRoom::GetLevelId(tiles.pDrlgRoom);
+
+                    if level_id >= levels_txt_record_count {
+                        break;
+                    }
+
+                    cell_type = Some(ExtraCellType::LevelId(level_id));
+                }
+
+                room_tiles = ptr_to_ref_mut(tiles.pNext);
+            }
+        }
+        _ => {}
+    }
+
+    let cell_type = cell_type?;
+
+    let (x1, y1) = calculate_positions(drlg_room, preset_unit);
+    let (x2, y2) = calculate_pixel_positions(x1, y1);
+
+    let mut cell = D2AutoMapCellDataEx {
+        data: D2Client::AutoMap::D2AutoMapCellData {
+            fSaved: 0,
+            nCellNo: 0,
+            xPixel: 0,
+            yPixel: 0,
+            wWeight: 0,
+            pPrev: null_mut(),
+            pNext: null_mut(),
+        },
+        cell_type: ExtraCellType::None,
+        _pad: 0,
+    };
+
+    match cell_type {
+        ExtraCellType::CellNo(cellno) => {
+            cell.cell_type = ExtraCellType::None;
+            cell.data.nCellNo = cellno as u16;
+            cell.data.xPixel = (x2 + x) as u16;
+            cell.data.yPixel = (y2 + y) as u16;
+        }
+        ExtraCellType::LevelId(_) => {
+            cell.cell_type = cell_type;
+            cell.data.nCellNo = 0;
+            cell.data.xPixel = (x2 + x) as u16;
+            cell.data.yPixel = (y2 + y) as u16;
+        }
+        _ => {}
+    }
+
+    HackMap::automap()
+        .automap_cells
+        .entry(layer_id)
+        .or_default()
+        .push(cell);
+
+    Some(())
+}
+
+fn calculate_positions(drlg_room: &D2Common::D2DrlgRoom, preset_unit: &D2PresetUnit) -> (i32, i32) {
+    let x1 = drlg_room.nTileXPos * 5 + preset_unit.nXpos;
+    let y1 = drlg_room.nTileYPos * 5 + preset_unit.nYpos;
+    (x1, y1)
+}
+
+fn calculate_pixel_positions(x1: i32, y1: i32) -> (i32, i32) {
+    let x2 = ((x1 - y1) * 16) / 10 + 1;
+    let y2 = ((x1 + y1) * 8) / 10 - 3;
+    (x2, y2)
 }
 
 fn new_automap_cell(

@@ -3,7 +3,7 @@ use crate::d2api::d2ex::common::*;
 use D2Common::{D2Inventory, D2Unit};
 
 pub mod Inventory {
-    use std::u32;
+    //use std::u32;
 
     use super::*;
 

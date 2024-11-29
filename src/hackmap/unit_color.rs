@@ -6,7 +6,7 @@ use super::HackMap;
 use std::alloc::System;
 use std::ops::Add;
 use std::time::{Duration, SystemTime};
-use std::u32;
+//use std::u32;
 use D2Client::D2ClientOffset;
 use D2Common::D2Unit;
 
@@ -171,9 +171,9 @@ impl UnitColor {
         for i in 0..mon_stats_txt_record_count {
             // let mon_stats_flags = mon_stats_txt[i].dwMonStatsFlags;
 
-            if mon_stats_3[0] & 0x01 != 0 || mon_stats_3[1] & 0x02 != 0 {
-                self.boss_monster_id.insert(i as u32, 1);
-            } else if mon_stats_3[0] & 4 != 0 {
+            if (mon_stats_3[0] & 0x01 != 0 || mon_stats_3[1] & 0x02 != 0)
+                || (mon_stats_3[0] & 4 != 0)
+            {
                 self.boss_monster_id.insert(i as u32, 1);
             }
 
@@ -394,17 +394,27 @@ impl UnitColor {
 
         let mut desc = "ÿc1".to_string();
 
-        if show_name || (type_flag & D2MonTypeFlags::SuperUnique == D2MonTypeFlags::SuperUnique) {
-            desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
-        } else if type_flag == D2MonTypeFlags::Unique
-            && mon_stats_txt
-                .dwMonStatsFlags
-                .contains(D2MonStatsTxtFlags::Boss)
-            && monster_data.wBossHcIdx == 0
-        {
+        // if show_name || (type_flag & D2MonTypeFlags::SuperUnique == D2MonTypeFlags::SuperUnique) {
+        //     desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
+        // } else if type_flag == D2MonTypeFlags::Unique
+        //     && mon_stats_txt
+        //         .dwMonStatsFlags
+        //         .contains(D2MonStatsTxtFlags::Boss)
+        //     && monster_data.wBossHcIdx == 0
+        // {
+        //     desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
+        // }
+        let should_show_name = show_name
+            || (type_flag & D2MonTypeFlags::SuperUnique == D2MonTypeFlags::SuperUnique)
+            || (type_flag == D2MonTypeFlags::Unique
+                && mon_stats_txt
+                    .dwMonStatsFlags
+                    .contains(D2MonStatsTxtFlags::Boss)
+                && monster_data.wBossHcIdx == 0);
+
+        if should_show_name {
             desc += &format!("ÿc1{}", D2Client::Units::GetName(unit).to_string());
         }
-
         if type_flag.contains(D2MonTypeFlags::Unique) {
             let empty_str = String::new();
             for umod in monster_data.nMonUmod {
@@ -643,7 +653,7 @@ impl UnitColor {
                             name = name.trim_start_matches("ÿc")[1..].to_string();
                         }
 
-                        name.insert_str(0, text_color.to_str_code());
+                        name.insert_str(0, text_color.as_str_code());
                     }
 
                     None
@@ -764,8 +774,8 @@ impl UnitColor {
         }
 
         let (has_color, name_color) = match item_color.text_color {
-            Some(c) => (true, c.to_str_code()),
-            None => (false, D2Sigma::Items::GetItemNameColor(item).to_str_code()),
+            Some(c) => (true, c.as_str_code()),
+            None => (false, D2Sigma::Items::GetItemNameColor(item).as_str_code()),
         };
 
         if let Some(notify_text) = item_color.notify_text.as_ref() {

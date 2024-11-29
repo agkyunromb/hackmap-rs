@@ -2,6 +2,7 @@ mod automap;
 mod common;
 mod config;
 mod config_deserializer;
+#[allow(clippy::module_inception)]
 mod hackmap;
 mod helper_bot;
 mod image_loader;

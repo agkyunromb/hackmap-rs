@@ -45,36 +45,15 @@ extern "fastcall" fn Handle_D2GS_CHAT_26(payload: *const u8) {
 
     let chat = unsafe { &*(payload as *const D2GS_CHAT) };
 
-    loop {
-        if chat.chat_type != 3 {
-            break;
-        }
-
-        if chat.language_code != 0 {
-            break;
-        }
-
-        if chat.unit_type != 0 {
-            break;
-        }
-
-        if chat.unit_guid != 0 {
-            break;
-        }
-
-        if chat.chat_color != D2StringColorCodes::Red {
-            break;
-        }
-
-        if chat.chat_sub_type != 1 {
-            break;
-        }
-
+    if chat.chat_type == 3
+        && chat.language_code == 0
+        && chat.unit_type == 0
+        && chat.unit_guid == 0
+        && chat.chat_color == D2StringColorCodes::Red
+        && chat.chat_sub_type == 1
+    {
         let ActiveMessage: &[u8] = &[0x15, 0x01, 0x09, b'1', 0x00, 0x00, 0x00];
-
         D2Client::Net::SendPacket(ActiveMessage.as_ptr(), ActiveMessage.len());
-
-        break;
     }
 
     get_stubs().Handle_D2GS_CHAT_26.unwrap()(payload);

@@ -5,6 +5,7 @@ use std::ptr::addr_of;
 use std::sync::OnceLock;
 
 pub type FuncAddress = usize;
+#[allow(clippy::upper_case_acronyms)]
 pub type PVOID = *mut c_void;
 
 pub trait CStringToStr {

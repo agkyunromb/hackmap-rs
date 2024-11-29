@@ -83,7 +83,7 @@ fn init(base_address: PVOID) -> BOOL {
     }
 
     let mut d2modules = d2api::types::D2Modules::default();
-
+    #[allow(clippy::type_complexity)]
     let dlls: &mut [(&mut Option<usize>, Option<fn(usize)>, &str)] = &mut [
         (
             &mut d2modules.D2Sigma,

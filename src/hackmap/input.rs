@@ -52,6 +52,7 @@ pub(super) type OnKeyDownCallback = fn(vk: u16) -> bool;
 pub(super) struct Input {
     cfg: ConfigRef,
     on_keydown_callbacks: Vec<Box<dyn FnMut(u16) -> bool>>,
+    #[allow(clippy::type_complexity)]
     toggles: Vec<(&'static str, Box<dyn FnMut(u16) -> (bool, bool)>)>,
 }
 
@@ -106,7 +107,7 @@ impl Input {
 
             lines.push(format!(
                 "{name} -> {}{toggle_state}",
-                toggle_color.to_str_code()
+                toggle_color.as_str_code()
             ));
         }
 

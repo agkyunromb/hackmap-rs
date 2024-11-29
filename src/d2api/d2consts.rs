@@ -20,7 +20,7 @@ pub enum D2StringColorCodes {
 }
 
 impl D2StringColorCodes {
-    pub fn to_str_code(&self) -> &'static str {
+    pub fn as_str_code(&self) -> &'static str {
         // *self as u8 + 0x30
 
         match self {
@@ -647,6 +647,7 @@ pub enum D2MonUMods {
     NovaDeath = 42,
 }
 
+#[allow(clippy::upper_case_acronyms)]
 #[repr(u8)]
 #[derive(PartialEq, Copy, Clone)]
 pub enum D2ClientCmd {
@@ -743,6 +744,7 @@ pub enum D2ClientCmd {
     FINDME_70 = 0x70,
 }
 
+#[allow(clippy::upper_case_acronyms)]
 #[repr(u8)]
 #[derive(PartialEq, Copy, Clone)]
 pub enum D2GSCmd {

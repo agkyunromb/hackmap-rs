@@ -56,7 +56,7 @@ pub struct D2Unit {
 }
 
 impl D2Unit {
-    pub fn get_drlg_act(&self) -> &mut D2DrlgAct {
+    pub fn get_drlg_act(&self) -> &D2DrlgAct {
         unsafe { &mut *self.pDrlgAct }
     }
 

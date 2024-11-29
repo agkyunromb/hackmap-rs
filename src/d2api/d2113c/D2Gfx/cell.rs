@@ -53,7 +53,7 @@ pub struct D2CellFileHeader {
 }
 
 impl D2CellFileHeader {
-    pub fn get_frame(&self, frame_index: usize) -> &mut D2CellFileFrame {
+    pub fn get_frame(&self, frame_index: usize) -> &D2CellFileFrame {
         unsafe {
             let frames = std::slice::from_raw_parts(addr_of!(self.Frames), frame_index + 1);
             &mut *frames[frame_index]
